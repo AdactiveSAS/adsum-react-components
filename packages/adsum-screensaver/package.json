@@ -1,6 +1,6 @@
 {
   "name": "@adactive/arc-screensaver",
-  "version": "0.0.1-y.3",
+  "version": "0.0.1-y.4",
   "description": "Adsum Screensaver Component",
   "main": "index.js",
   "author": "Stanley Ong <stanley.ong@adactive.com>",
@@ -14,6 +14,9 @@
     "url": "https://github.com/AdactiveSAS/adsum-react-components.git/issues"
   },
   "scripts": {},
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "adsum",
     "react",
