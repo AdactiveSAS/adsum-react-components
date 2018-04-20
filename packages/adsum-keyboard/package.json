@@ -1,5 +1,5 @@
 {
-  "name": "@adactive/arc/keyboard",
+  "name": "@adactive/arc-keyboard",
   "version": "0.0.1-y.1",
   "description": "Adsum Keyboard Component",
   "main": "index.js",

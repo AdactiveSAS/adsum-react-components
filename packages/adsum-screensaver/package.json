@@ -1,5 +1,5 @@
 {
-  "name": "@adactive/arc/screensaver",
+  "name": "@adactive/arc-screensaver",
   "version": "0.0.1-y.1",
   "description": "Adsum Screensaver Component",
   "main": "index.js",
