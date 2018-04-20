@@ -1,6 +1,6 @@
 {
   "name": "@adsum-react-components/screensaver",
-  "version": "0.1.0",
+  "version": "0.0.1-0",
   "description": "Adsum Screensaver Component",
   "main": "index.js",
   "author": "Stanley Ong <stanley.ong@adactive.com>",
@@ -14,12 +14,7 @@
     "url": "https://github.com/AdactiveSAS/adsum-react-components.git/issues"
   },
   "private": true,
-  "devDependencies": {
-  },
-  "dependencies": {
-  },
-  "scripts": {
-  },
+  "scripts": {},
   "keywords": [
     "adsum",
     "react",
