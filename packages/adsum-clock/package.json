@@ -25,5 +25,11 @@
     "adsum",
     "react",
     "redux"
+  ],
+  "files": [
+    "index.js",
+    "src",
+    "CHANGELOG.md",
+    "README.md"
   ]
 }
