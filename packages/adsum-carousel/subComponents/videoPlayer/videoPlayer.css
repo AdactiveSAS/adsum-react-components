@@ -1,0 +1,8 @@
+.vjs-control-bar,
+.vjs-error-display,
+.vjs-modal-dialog-description,
+.vjs-caption-settings,
+.vjs-control-text,
+.vjs-big-play-button {
+  display: none;
+}
