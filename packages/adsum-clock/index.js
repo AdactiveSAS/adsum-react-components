@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import translate from './adsumClock.lang.json';
 
+require('./clock.less');
+
 class AdsumClock extends Component {
     constructor(props) {
         super(props);
