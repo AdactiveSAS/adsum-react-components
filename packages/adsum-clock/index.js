@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import translate from './adsumClock.lang.json';
 
-require('./clock.less');
+require('./clock.css');
 
 class AdsumClock extends Component {
     constructor(props) {
@@ -34,7 +34,14 @@ class AdsumClock extends Component {
     }
 
     getTime() {
-        const { lang, timeFormat } = this.props;
+        const { timeFormat } = this.props;
+        let { lang } = this.props;
+
+        if(Object.keys(translate).indexOf(lang) === -1) {
+            console.warn(`AdsumClock does not support language: ${lang}, goes to default ${this.defaultProps.lang}`);
+            lang = this.defaultProps.lang;
+        }
+
         const time = new Date();
         const day = translate[lang].days[time.getDay()];
 
