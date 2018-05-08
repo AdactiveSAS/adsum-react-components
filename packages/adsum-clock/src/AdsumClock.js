@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import translate from './adsumClock.lang.json';
-
-require('./adsumClock.css');
+import './adsumClock.css';
 
 class AdsumClock extends Component {
     constructor(props) {
