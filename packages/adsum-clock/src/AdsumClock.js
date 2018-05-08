@@ -37,8 +37,8 @@ class AdsumClock extends Component {
         let { lang } = this.props;
 
         if(Object.keys(translate).indexOf(lang) === -1) {
-            console.warn(`AdsumClock does not support language: ${lang}, goes to default ${this.defaultProps.lang}`);
-            lang = this.defaultProps.lang;
+            console.warn(`AdsumClock does not support language: ${lang}, goes to default ${AdsumClock.defaultProps.lang}`);
+            lang = AdsumClock.defaultProps.lang;
         }
 
         const time = new Date();
