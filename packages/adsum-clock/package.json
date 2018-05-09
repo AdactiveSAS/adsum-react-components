@@ -38,6 +38,6 @@
     "cli.js"
   ],
   "bin": {
-    "arc": "./cli.js"
+    "arc-clock": "./cli.js"
   }
 }
