@@ -2,21 +2,9 @@
 
 'use strict';
 
-var chalk = require('chalk');
+const chalk = require('chalk');
+const fs = require('fs-extra');
 
-var currentNodeVersion = process.versions.node;
-var semver = currentNodeVersion.split('.');
-var major = semver[0];
-
-if (major < 10) {
-  console.error(
-    chalk.red(
-      'You are running Node ' +
-        currentNodeVersion +
-        '.\n' +
-        'Create React App requires Node 4 or higher. \n' +
-        'Please update your version of Node.'
-    )
-  );
-  process.exit(1);
-}
+fs.copy(`${__dirname}/src/adsumClock.less`, path.resolve('src/components/adsum-clock/adsumClock.less'))
+  .then(() => console.log(chalk.green("Success!")) )
+  .catch(err => console.error(err))
