@@ -17,6 +17,10 @@
   "publishConfig": {
     "access": "public"
   },
+  "dependencies": {
+    "chalk": "^1.1.3",
+    "commander": "^2.9.0"
+  },
   "devDependencies": {
     "prop-types": "^15.6.1",
     "react": "^16.3.2"
@@ -31,5 +35,8 @@
     "src",
     "CHANGELOG.md",
     "README.md"
-  ]
+  ],
+  "bin": {
+    "arc": "./cli.js"
+  }
 }
