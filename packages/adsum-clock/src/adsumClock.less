@@ -1,3 +1,5 @@
+@import "../../adsum-utils/less/colors-default";
+
 @media (orientation: landscape) {
   .adsum-clock-wrapper {
     height: 100%;
@@ -10,7 +12,7 @@
 
     .adsum-clock {
       font-size: 2em;
-      color: #5a5b5a;
+      color: @primary-text-color;
       text-align: right;
 
       .day-date {
@@ -41,7 +43,7 @@
       text-align: right;
 
       .day-date {
-        color: #5a5b5a;
+        color: @primary-text-color;
         letter-spacing: -2px;
         text-transform: uppercase;
       }

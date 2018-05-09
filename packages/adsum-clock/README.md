@@ -1,6 +1,10 @@
 # Clock component
 
 
+## Demo
+
+[Example here](https://adactivesas.github.io/adsum-react-components/packages/adsum-clock/examples/index.html)
+
 ## Getting started
 
 ```javascript
