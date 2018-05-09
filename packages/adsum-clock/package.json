@@ -34,7 +34,8 @@
     "index.js",
     "src",
     "CHANGELOG.md",
-    "README.md"
+    "README.md",
+    "cli.js"
   ],
   "bin": {
     "arc": "./cli.js"
