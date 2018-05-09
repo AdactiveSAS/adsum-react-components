@@ -1,0 +1,26 @@
+{
+  "en": {
+    "date": "",
+    "days": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    "month": ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"],
+    "year": "",
+    "am": "AM",
+    "pm": "PM"
+  },
+  "zh":{
+    "date": "日",
+    "days": ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"],
+    "month": "月",
+    "year": "年",
+    "am": "上午",
+    "pm": "下午"
+  },
+  "fr":{
+    "date": "",
+    "days": ["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"],
+    "month": ["Jan", "Fév", "Mars", "Avril", "Mai", "Juin", "Juil", "Août", "Sept", "Oct", "Nov", "Déc"],
+    "year": "",
+    "am": "AM",
+    "pm": "PM"
+  }
+}
