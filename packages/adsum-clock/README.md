@@ -4,6 +4,14 @@
 ## Getting started
 
 ```javascript
+    npm i --save-dev @adactive/arc-clock
+```
+OR
+```javascript
+    yarn add --dev @adactive/arc-clock
+```
+
+```javascript
     import AdsumClock from "@adactive/arc-clock"
      ...
     <AdsumClock lang="en" timeFormat="12hrs" />

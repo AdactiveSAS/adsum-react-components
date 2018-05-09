@@ -1,0 +1,49 @@
+{
+	"metadata": {
+		"version": 4.5,
+		"type": "Object",
+		"generator": "Object3D.toJSON"
+	},
+	"geometries": [
+		{
+			"uuid": "F3AA3F14-F1A3-4B1B-B5E8-7AC9FFACA7B4",
+			"type": "SphereBufferGeometry",
+			"radius": 1,
+			"widthSegments": 32,
+			"heightSegments": 16,
+			"phiStart": 0,
+			"phiLength": 6.283185,
+			"thetaStart": 0,
+			"thetaLength": 3.141593
+		}],
+	"materials": [
+		{
+			"uuid": "7C273ABB-91CB-4221-A149-0E6DEA5B58C0",
+			"type": "MeshPhongMaterial",
+			"color": 15279758,
+			"emissive": 0,
+			"specular": 1118481,
+			"shininess": 30,
+			"depthFunc": 3,
+			"depthTest": true,
+			"depthWrite": true,
+			"skinning": false,
+			"morphTargets": false,
+			"dithering": false
+		}],
+	"object": {
+		"uuid": "7CA3876B-7989-46F9-A43C-6FA8EF82EA9D",
+		"type": "Scene",
+		"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
+		"children": [
+			{
+				"uuid": "AB278D21-C7B1-43BF-B745-01306CF673B8",
+				"type": "Mesh",
+				"name": "Sphere 1",
+				"matrix": [0.56,0,0,0,0,0.56,0,0,0,0,0.56,0,0,0.559787,0,1],
+				"geometry": "F3AA3F14-F1A3-4B1B-B5E8-7AC9FFACA7B4",
+				"material": "7C273ABB-91CB-4221-A149-0E6DEA5B58C0"
+			}],
+		"background": 11184810
+	}
+}

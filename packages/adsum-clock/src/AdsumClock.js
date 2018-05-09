@@ -87,7 +87,7 @@ class AdsumClock extends Component {
 
     render() {
         return (
-            <div role="presentation" className="adsum-clock-wrapper" style={this.props.style ? this.props.style : null}>
+            <div role="presentation" className="adsum-clock-wrapper">
                 <div className="adsum-clock">
                     <div className="day-date">{this.state.date}</div>
                     <div className="time">{this.state.time}</div>
