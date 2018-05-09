@@ -1,6 +1,5 @@
 @media (orientation: landscape) {
   .adsum-clock-wrapper {
-    width: 30%;
     height: 100%;
     float: right;
     display: flex;
