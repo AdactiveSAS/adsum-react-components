@@ -1,0 +1,17 @@
+{
+    "siteId": 240,
+    "map": {
+        "deviceId": 170
+    },
+    "api": {
+        "endpoint": "https://asia-api.adsum.io",
+        "site": 240,
+        "username": "170-device",
+        "key": "6c15cae0c6594c063a713b91b2e0cb0c56a9d0cee823f16ff80606d1e91ef19b"
+    },
+    "analyticsLegacy": {
+        "endpoint": "https://analytics.adsum.io/piwik.php",
+        "site": 1,
+        "token": "f4a8be0670524ee957374a44dfe278e9"
+    }
+}
