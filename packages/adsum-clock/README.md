@@ -42,3 +42,12 @@ lang : "en" | "fr" | "zh"
 timeFormat : "24hrs" | "12hrs"
 style : Css react object
 ```
+
+
+## Copy component inside your project src folder  
+
+### Less only
+    `npx @adactive/arc-clock copy --less-only`
+    
+### Full copy
+    `npx @adactive/arc-clock copy`
