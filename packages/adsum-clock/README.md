@@ -1,9 +1,8 @@
 # Clock component
 
+![image](https://user-images.githubusercontent.com/6003532/39854315-ce02252c-5459-11e8-826a-f59717fbff0f.png)
 
-## Demo
-
-[Example here](https://adactivesas.github.io/adsum-react-components/packages/adsum-clock/examples/index.html)
+[Live examples here](https://adactivesas.github.io/adsum-react-components/packages/adsum-clock/examples/index.html)
 
 ## Getting started
 

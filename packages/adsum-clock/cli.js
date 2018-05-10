@@ -19,8 +19,6 @@ program
   })
   .parse(process.argv);
 
-console.log(program)
-
 if(cmdValue === "copy") {
   if(program.lessOnly) {
       fs.copy(`${__dirname}/src/adsumClock.less`, path.resolve('src/components/adsum-clock/adsumClock.less'))
