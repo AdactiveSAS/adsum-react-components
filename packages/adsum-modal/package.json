@@ -1,6 +1,6 @@
 {
   "name": "@adactive/arc-modal",
-  "version": "0.0.1-y.34",
+  "version": "0.0.1-y.35",
   "description": "Adsum Modal Component",
   "main": "index.js",
   "author": "Stanley Ong <stanley.ong@adactive.com>",
@@ -17,27 +17,11 @@
   "publishConfig": {
     "access": "public"
   },
+  "dependencies": {
+    "chalk": "^1.1.3",
+    "commander": "^2.9.0"
+  },
   "devDependencies": {
-    "babel": "^6.23.0",
-    "babel-cli": "~6.3",
-    "babel-core": "^6.7.7",
-    "babel-env": "^2.4.1",
-    "babel-eslint": "~6.0",
-    "babel-loader": "^7.1.4",
-    "babel-minify-webpack-plugin": "^0.3.0",
-    "babel-plugin-add-module-exports": "^0.1.2",
-    "babel-plugin-react-html-attrs": "^2.0.0",
-    "babel-plugin-transform-class-properties": "^6.3.13",
-    "babel-plugin-transform-decorators-legacy": "^1.3.4",
-    "babel-plugin-transform-es2015-duplicate-keys": "^6.8.0",
-    "babel-plugin-transform-object-rest-spread": "^6.8.0",
-    "babel-plugin-transform-proto-to-assign": "^6.9.0",
-    "babel-plugin-transform-runtime": "~6.9",
-    "babel-polyfill": "^6.9.1",
-    "babel-preset-es2015": "^6.3.13",
-    "babel-preset-es2015-loose": "^7.0.0",
-    "babel-preset-minify": "^0.2.0",
-    "babel-preset-react": "^6.3.13",
     "prop-types": "^15.6.1",
     "react": "^16.3.1"
   },
@@ -45,5 +29,15 @@
     "adsum",
     "react",
     "redux"
-  ]
+  ],
+  "files": [
+    "index.js",
+    "src",
+    "CHANGELOG.md",
+    "README.md",
+    "cli.js"
+  ],
+  "bin": {
+    "arc-modal": "./cli.js"
+  }
 }

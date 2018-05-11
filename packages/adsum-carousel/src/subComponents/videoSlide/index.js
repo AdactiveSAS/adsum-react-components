@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import VideoPlayer from '../videoPlayer';
 import SlideWrapper from '../slideWrapper';
 
-require('./videoSlide.less');
+import './videoSlide.css';
 
 const VideoSlide = ({ index, media, onPlayerInit, onVideoEnded, shouldReplayVideo }) => {
     const videoOptions = {
