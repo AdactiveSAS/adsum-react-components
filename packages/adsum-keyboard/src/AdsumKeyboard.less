@@ -1,5 +1,65 @@
-@import "./less/themes/colors-default";
-@import "./less/AdsumKeyboard";
+@import "../../adsum-utils/less/colors-default";
+
+.templateKeyboard {
+  button.key {
+    margin-top: 8px;
+    margin-left: 3px;
+  }
+
+  .backspace-icon {
+    background-size: 25px !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+  }
+
+  .shift-icon {
+    display:none !important;
+    width: 76px !important;
+    background-size: 25px !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+  }
+
+  .spaceBar {
+    width: 495.32px !important;
+  }
+
+  .spaceBar-short {
+    width: 386px !important;
+  }
+
+  .zeroKey {
+    width: 124px !important;
+  }
+
+  .invisible{
+    opacity: 0 !important;
+  }
+}
+
+@keyframes dropIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes activeKey {
+  0% {
+    background-color: white;
+  }
+  50% {
+    background-color: red;
+  }
+  100% {
+    background-color: white;
+  }
+}
 
 @media (orientation: landscape) {
   .templateKeyboard {
