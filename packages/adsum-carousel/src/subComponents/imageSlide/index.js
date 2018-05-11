@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import SlideWrapper from '../slideWrapper';
 
-require('./imageSlide.less');
+import './imageSlide.css';
 
 const ImageSlide = ({ media }) => <img src={media.uri} />;
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Player } from 'video-react';
 
-require('./videoPlayer.less');
+import './videoPlayer.css';
 
 class VideoPlayer extends Component {
     constructor(props) {
