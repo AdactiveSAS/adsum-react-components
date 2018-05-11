@@ -1,6 +1,6 @@
 import React from 'react';
 
-require('./slideWrapper.less');
+import './slideWrapper.css';
 
 export default Slide => (
     props => (
