@@ -18,6 +18,8 @@
    
 3. Set up your git environment
 
+    `git config --global credential.helper wincred`
+
     `git config --global user.name "name"`
     
     `git config --global user.email yourEmail`
@@ -35,7 +37,7 @@
 
     `git checkout -b feature/componentName`
 
-2. Create a new folder name 'adsum-component' in packages. For example to create a screensaver component: 
+2. Create a new folder name 'adsum-component' in packages. For example to create a keyboard component: 
     
     `adsum-keyboard`
     
