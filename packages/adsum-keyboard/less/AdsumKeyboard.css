@@ -1,0 +1,50 @@
+.templateKeyboard button.key {
+  margin-top: 8px;
+  margin-left: 3px;
+}
+.templateKeyboard .backspace-icon {
+  background-size: 25px !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+}
+.templateKeyboard .shift-icon {
+  display: none !important;
+  width: 76px !important;
+  background-size: 25px !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+}
+.templateKeyboard .spaceBar {
+  width: 495.32px !important;
+}
+.templateKeyboard .spaceBar-short {
+  width: 386px !important;
+}
+.templateKeyboard .zeroKey {
+  width: 124px !important;
+}
+.templateKeyboard .invisible {
+  opacity: 0 !important;
+}
+@keyframes dropIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Chrome, Safari, Opera */
+@-webkit-keyframes activeKey {
+  0% {
+    background-color: white;
+  }
+  50% {
+    background-color: red;
+  }
+  100% {
+    background-color: white;
+  }
+}
