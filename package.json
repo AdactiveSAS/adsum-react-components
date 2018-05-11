@@ -1,5 +1,9 @@
 {
 	"devDependencies": {
-		"lerna": "^2.10.2"
+		"lerna": "^2.10.2",
+		"node-less-chokidar": "^0.1.2"
+	},
+	"scripts": {
+		"build-css": "node-less-chokidar packages"
 	}
 }

@@ -1,0 +1,224 @@
+.templateKeyboard button.key {
+  margin-top: 8px;
+  margin-left: 3px;
+}
+.templateKeyboard .backspace-icon {
+  background-size: 25px !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+}
+.templateKeyboard .shift-icon {
+  display: none !important;
+  width: 76px !important;
+  background-size: 25px !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+}
+.templateKeyboard .spaceBar {
+  width: 495.32px !important;
+}
+.templateKeyboard .spaceBar-short {
+  width: 386px !important;
+}
+.templateKeyboard .zeroKey {
+  width: 124px !important;
+}
+.templateKeyboard .invisible {
+  opacity: 0 !important;
+}
+@keyframes dropIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Chrome, Safari, Opera */
+@-webkit-keyframes activeKey {
+  0% {
+    background-color: white;
+  }
+  50% {
+    background-color: red;
+  }
+  100% {
+    background-color: white;
+  }
+}
+@media (orientation: landscape) {
+  .templateKeyboard {
+    width: 90%;
+    bottom: -55px;
+    z-index: 99;
+    margin: auto;
+  }
+  .templateKeyboard.active {
+    display: block;
+  }
+  .templateKeyboard .keyboard {
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    resize: both;
+    padding: 1% 0.5%;
+  }
+  .templateKeyboard .keyboard .layout {
+    width: 100%;
+    pointer-events: none;
+    opacity: 0;
+    -webkit-transition: opacity 0.2s;
+    transition: opacity 0.2s;
+    -webkit-transition-delay: 0.3s;
+    transition-delay: 0.3s;
+  }
+  .templateKeyboard .keyboard .layout.active {
+    opacity: 1;
+    pointer-events: auto;
+    -webkit-transition: opacity 0.2s;
+    transition: opacity 0.2s;
+    -webkit-transition-delay: 0.3s;
+    transition-delay: 0.3s;
+  }
+  .templateKeyboard .keyboard .keyboardLine {
+    align-items: stretch;
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    text-align: center;
+    outline: none;
+    padding: 5px;
+  }
+  .templateKeyboard .keyboard button {
+    background: #FFFFFF;
+    border: none;
+    color: #2e2a5b;
+    cursor: pointer;
+    padding: 0;
+    outline: none;
+    width: 58px;
+    height: 54px;
+    font-size: 1.5em;
+    border-radius: 5px;
+    font-weight: lighter;
+    text-transform: uppercase;
+    margin: 4px;
+    box-shadow: #d8d8d8 5px 5px 0;
+  }
+  .templateKeyboard .keyboard button.disabled {
+    color: #5C5C5C !important;
+  }
+  .templateKeyboard .keyboard button.active,
+  .templateKeyboard .keyboard button:active {
+    background: white;
+    color: #4B5051;
+    animation: bounceIn 0.5s 1;
+  }
+  .templateKeyboard .keyboard button.wide {
+    flex-grow: 1.5;
+  }
+  .templateKeyboard .keyboard button.wider {
+    flex-grow: 2;
+  }
+  .templateKeyboard .keyboard button.widest {
+    flex-grow: 2.5;
+  }
+  .templateKeyboard .keyboard button.keyIcon {
+    background: #2e2a5b;
+    color: #FFFFFF;
+  }
+  .templateKeyboard.lightgrey .keyboard button {
+    background: #c8c8cb;
+    color: #000;
+  }
+}
+@media (orientation: portrait) {
+  .templateKeyboard {
+    width: 90%;
+    bottom: -55px;
+    z-index: 99;
+    margin: auto;
+  }
+  .templateKeyboard.active {
+    display: block;
+  }
+  .templateKeyboard .keyboard {
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    resize: both;
+    padding: 1% 0.5%;
+  }
+  .templateKeyboard .keyboard .layout {
+    width: 100%;
+    pointer-events: none;
+    opacity: 0;
+    -webkit-transition: opacity 0.2s;
+    transition: opacity 0.2s;
+    -webkit-transition-delay: 0.3s;
+    transition-delay: 0.3s;
+  }
+  .templateKeyboard .keyboard .layout.active {
+    opacity: 1;
+    pointer-events: auto;
+    -webkit-transition: opacity 0.2s;
+    transition: opacity 0.2s;
+    -webkit-transition-delay: 0.3s;
+    transition-delay: 0.3s;
+  }
+  .templateKeyboard .keyboard .keyboardLine {
+    align-items: stretch;
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    text-align: center;
+    outline: none;
+    padding: 5px 0px;
+  }
+  .templateKeyboard .keyboard button {
+    background: #FFFFFF;
+    border: none;
+    color: #2e2a5b;
+    cursor: pointer;
+    padding: 0;
+    outline: none;
+    width: 58px;
+    height: 54px;
+    font-size: 1.5em;
+    border-radius: 5px;
+    font-weight: lighter;
+    text-transform: uppercase;
+    margin: 4px;
+    box-shadow: #d8d8d8 5px 5px 0;
+  }
+  .templateKeyboard .keyboard button.disabled {
+    color: #5C5C5C !important;
+  }
+  .templateKeyboard .keyboard button.active,
+  .templateKeyboard .keyboard button:active {
+    background: white;
+    color: #4B5051;
+    animation: bounceIn 0.5s 1;
+  }
+  .templateKeyboard .keyboard button.wide {
+    flex-grow: 1.5;
+  }
+  .templateKeyboard .keyboard button.wider {
+    flex-grow: 2;
+  }
+  .templateKeyboard .keyboard button.widest {
+    flex-grow: 2.5;
+  }
+  .templateKeyboard .keyboard button.keyIcon {
+    background: #2e2a5b;
+    color: #FFFFFF;
+  }
+  .templateKeyboard.lightgrey .keyboard button {
+    background: #c8c8cb;
+    color: #000;
+  }
+}
