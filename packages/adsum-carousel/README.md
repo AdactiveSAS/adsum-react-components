@@ -1,5 +1,9 @@
 # Carousel component
 
+![image](https://user-images.githubusercontent.com/6003532/39986925-bebf3d72-5795-11e8-91bb-ae8235ac5896.png)
+
+[Live examples here](https://adactivesas.github.io/adsum-react-components/packages/adsum-carousel/examples/index.html)
+
 ## Getting started
 
 ```javascript
