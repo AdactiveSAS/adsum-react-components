@@ -140,14 +140,12 @@ class AdsumCarousel extends Component {
 }
 
 AdsumCarousel.propTypes = {
-    lang: PropTypes.string.isRequired,
     isOpen: PropTypes.bool.isRequired,
     medias: PropTypes.arrayOf(PropTypes.object).isRequired,
     onTouchToNavigate: PropTypes.func.isRequired
 };
 
 AdsumCarousel.defaultProps = {
-    lang: 'en',
     isOpen: false,
     medias: [],
     onTouchToNavigate: null
