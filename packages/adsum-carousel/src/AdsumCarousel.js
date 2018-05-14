@@ -73,6 +73,8 @@ class AdsumCarousel extends Component {
     generateSlides() {
         const {medias, onMediaTouch} = this.props;
 
+        const parentStyle = this.props.style? this.props.style : null ;
+
         const ret = [];
         medias.forEach((media, index) => {
             if (media.file.file_type === 'video/mp4') {
@@ -84,6 +86,7 @@ class AdsumCarousel extends Component {
                         onPlayerInit={this.onPlayerInit}
                         onVideoEnded={this.goToNextSlide}
                         shouldReplayVideo={medias.length === 1 && medias[0].file.file_type === 'video/mp4'}
+                        parentStyle={parentStyle}
                     />
                 </div>
             );
@@ -92,7 +95,7 @@ class AdsumCarousel extends Component {
         } else {
             const component = (
                 <div key={media.file.uri} onClick={()=>{onMediaTouch(media)}} onTouchEndCapture={()=>{onMediaTouch(media)}} >
-                    <ImageSlide media={media} />
+                    <ImageSlide media={media} parentStyle={parentStyle} />
                 </div>
         );
 

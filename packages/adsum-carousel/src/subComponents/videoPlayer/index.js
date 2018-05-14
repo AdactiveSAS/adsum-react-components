@@ -60,6 +60,7 @@ class VideoPlayer extends Component {
                 ref={(player) => {
                     this._player = player;
                 }}
+                fluid={false}
             >
                 <source src={sources[0].src} />
             </Player>

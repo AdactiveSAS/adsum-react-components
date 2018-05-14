@@ -12,3 +12,6 @@
 .video-react-loading-spinner {
   display: none;
 }
+.video-react-video {
+  position: inherit !important;
+}
