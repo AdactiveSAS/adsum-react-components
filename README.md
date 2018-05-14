@@ -35,7 +35,7 @@
 
     `git checkout -b feature/componentName`
 
-2. Create a new folder name 'adsum-component' in packages. For example to create a screensaver component: 
+2. Create a new folder name 'adsum-component' in packages. For example to create a keyboard component: 
     
     `adsum-keyboard`
     
