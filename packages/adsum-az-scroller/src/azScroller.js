@@ -16,6 +16,7 @@ export type ListSectionType = {|
 |};
 export type ListType = Array<ListSectionType>;
 export type LetterIndexesMappingType = { [string]: number };
+export type ListEnumType = 'simple' | 'variable' | 'uniform';
 type PropsType = {|
     +listClassNames?: string,
     +alphabetListClassNames?: string,
@@ -23,12 +24,14 @@ type PropsType = {|
     +maxHeight: number,
     +list: ListType,
     +shouldShowSectionHeaders: boolean,
-    +renderListItem: (ListItemType, key: string) => Node,
-    +renderListSectionHeader: ?(headerInfo: SectionHeaderInfoType, key: string) => Node
+    +renderListItem: (ListItemType, key: string | number) => Node,
+    +renderListSectionHeader: ?(headerInfo: SectionHeaderInfoType, key: string | number) => Node,
+    +sectionHeaderHeight?: number,
+    +listItemHeight?: number
 |};
-type StateType = {
+type StateType = {|
     letterIndexesMapping: LetterIndexesMappingType
-};
+|};
 
 /**
  * @class
@@ -41,7 +44,9 @@ class AzScroller extends React.Component<PropsType, StateType> {
 
     onLetterClicked: (index: number) => () => void
     renderListItem: (index: number, key: string) => Node
+    itemSizeGetter: (index: number) => ?number
     reactListComponent: ?ReactList
+    alphabetListComponent: ?AlphabetList
     listToRender: Array<SectionHeaderInfoType | ListItemType> = []
 
     constructor(props: PropsType) {
@@ -57,6 +62,7 @@ class AzScroller extends React.Component<PropsType, StateType> {
     bindAll() {
         this.renderListItem = this.renderListItem.bind(this);
         this.onLetterClicked = this.onLetterClicked.bind(this);
+        this.itemSizeGetter = this.itemSizeGetter.bind(this);
     }
 
     componentDidMount() {
@@ -87,16 +93,34 @@ class AzScroller extends React.Component<PropsType, StateType> {
                 sectionIndex++;
             }
 
-            this.listToRender = [...this.listToRender, ...listSection.items];
+            const items = [...listSection.items];
+
+            items.forEach((item: ListItemType) => {
+                item.letter = listSection.sectionHeaderInfo.letter;
+            });
+
+            this.listToRender = [...this.listToRender, ...items];
         });
 
         return letterIndexesMapping;
     }
 
-    renderListItem(index: number, key: string): Node {
+    getLetterFromIndex(index: number): string {
+        return this.listToRender[index].letter;
+    }
+
+    renderListItem(index: number, key: number): Node {
         const { renderListItem, renderListSectionHeader, shouldShowSectionHeaders } = this.props;
         const itemToRender = this.listToRender[index];
 
+        if (this.reactListComponent) {
+            const topItemInVisibleRange = this.reactListComponent.getVisibleRange()[0];
+            const currentLetter = this.getLetterFromIndex(topItemInVisibleRange);
+
+            if (this.alphabetListComponent) {
+                this.alphabetListComponent.setCurrentLetter(currentLetter);
+            }
+        }
         if (!shouldShowSectionHeaders) return renderListItem(itemToRender, key);
         if (itemToRender.type && itemToRender.type === 'SectionHeaderInfo' && renderListSectionHeader) {
             return renderListSectionHeader(itemToRender, itemToRender.letter);
@@ -105,10 +129,22 @@ class AzScroller extends React.Component<PropsType, StateType> {
         return renderListItem(itemToRender, key);
     }
 
+    itemSizeGetter(index: number): ?number {
+        const { sectionHeaderHeight, listItemHeight } = this.props;
+        const item = this.listToRender[index];
+
+        if (item.type && item.type === 'SectionHeaderInfo') {
+            return sectionHeaderHeight;
+        }
+
+        return listItemHeight;
+    }
+
     render(): Node {
         const {
-            maxHeight, listClassNames, alphabetListClassNames, letterClassNames
+            maxHeight, listClassNames, alphabetListClassNames, letterClassNames, listItemHeight
         } = this.props;
+        const listType: ListEnumType = listItemHeight ? 'variable' : 'uniform';
 
         return (
             <div className="azScroller">
@@ -117,17 +153,22 @@ class AzScroller extends React.Component<PropsType, StateType> {
                         ref={(list: ReactList) => {
                             this.reactListComponent = list;
                         }}
+                        itemSizeGetter={listType === 'variable' ? this.itemSizeGetter : null}
                         itemRenderer={this.renderListItem}
                         length={this.listToRender.length}
                         useTranslate3d
-                        type="uniform"
+                        type={listType}
                     />
                 </div>
                 <AlphabetList
+                    ref={(alphabetList: ReactList) => {
+                        this.alphabetListComponent = alphabetList;
+                    }}
                     alphabetListClassNames={alphabetListClassNames}
                     letterClassNames={letterClassNames}
                     letterIndexesMapping={this.state.letterIndexesMapping}
                     onLetterClicked={this.onLetterClicked}
+                    letterToHighlight={this.state.currentLetter}
                 />
             </div>
         );
