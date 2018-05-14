@@ -1,3 +1,5 @@
 .idea
+.DS_Store
 /packages/*/node_modules
 /node_modules
+lerna-debug.log
