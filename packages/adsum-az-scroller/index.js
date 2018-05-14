@@ -1,5 +1,5 @@
 // @flow
 
-import AzScroller from './azScroller';
+import AzScroller from './src/azScroller';
 
-export { AzScroller };
+export default AzScroller;
