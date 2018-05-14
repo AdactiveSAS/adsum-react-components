@@ -1,0 +1,17 @@
+.vjs-control-bar,
+.vjs-error-display,
+.vjs-modal-dialog-description,
+.vjs-caption-settings,
+.vjs-control-text,
+.vjs-big-play-button {
+  display: none;
+}
+.video-react-big-play-button,
+.video-react-control-bar,
+.video-react-bezel,
+.video-react-loading-spinner {
+  display: none;
+}
+.video-react-video {
+  position: inherit !important;
+}
