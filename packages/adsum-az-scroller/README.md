@@ -1,5 +1,7 @@
 # Scrolling list with letters for easier navigation
 
+![2018-05-11 0 17 34](https://user-images.githubusercontent.com/5297278/39992222-c13dfc3e-577a-11e8-9d6e-d6cbdd8f40e1.png)
+
 ## Getting started
 
 ```javascript
@@ -162,15 +164,23 @@ type LetterIndexesMappingType = { [string]: number };
 type ListEnumType = 'simple' | 'variable' | 'uniform';
 ```
 
-listClassNames -> classNames, which will be added to list wrapper element
-alphabetListClassNames -> classNames, which will be added to wrapper of alphabetList
-letterClassNames -> classNames, which will be added to each letter in alphabetList
-maxHeight -> the maximum height of the items list, at which the scrolling starts
-list -> the list of items to scroll through
-shouldShowSectionHeader -> shows if you need to display each section height, or you need just a list without any headers
-renderListItem -> a function, which you should provide and which will be called for each listItem. Should return a JSX component
-renderListSectionHeader -> same as renderListItem, but the purpose is to render list section headers
-sectionHeaderHeight and listItemHeight -> should be provided, if their heights are not equal. If not provided -> considered same height both.
+**listClassNames** -> classNames, which will be added to list wrapper element
+
+**alphabetListClassNames** -> classNames, which will be added to wrapper of alphabetList
+
+**letterClassNames** -> classNames, which will be added to each letter in alphabetList
+
+**maxHeight** -> the maximum height of the items list, at which the scrolling starts
+
+**list** -> the list of items to scroll through
+
+**shouldShowSectionHeader** -> shows if you need to display each section height, or you need just a list without any headers
+
+**renderListItem** -> a function, which you should provide and which will be called for each listItem. Should return a JSX component
+
+**renderListSectionHeader** -> same as renderListItem, but the purpose is to render list section headers
+
+**sectionHeaderHeight** and **listItemHeight** -> should be provided, if their heights are not equal. If not provided -> considered same height both.
 
 ## Copy component inside your project src folder  
 
