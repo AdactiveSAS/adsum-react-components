@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Player } from 'video-react';
+import { Player, ControlBar } from 'video-react';
 
 import './videoPlayer.css';
 

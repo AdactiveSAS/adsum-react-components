@@ -9,8 +9,8 @@ import './videoSlide.css';
 const VideoSlide = ({ index, media, onPlayerInit, onVideoEnded, shouldReplayVideo }) => {
     const videoOptions = {
         sources: [{
-            src: media.uri,
-            type: media.type
+            src: media.file.uri,
+            type: media.file.file_type
         }]
     };
 
