@@ -25,11 +25,11 @@ class AlphabeticList extends React.Component<PropsType, StateType> {
     static defaultProps = {
         alphabetListClassNames: '',
         letterClassNames: ''
-    }
+    };
 
     state: StateType = {
         letterToHighlight: null
-    }
+    };
 
     setCurrentLetter(letterToHighlight: string): void {
         this.setState({ letterToHighlight });
