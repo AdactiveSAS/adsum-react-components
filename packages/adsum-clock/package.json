@@ -1,6 +1,6 @@
 {
   "name": "@adactive/arc-clock",
-  "version": "0.0.1-y.37",
+  "version": "0.0.1-y.38",
   "description": "Adsum Clock Component",
   "main": "index.js",
   "author": "Stanley Ong <stanley.ong@adactive.com>",
