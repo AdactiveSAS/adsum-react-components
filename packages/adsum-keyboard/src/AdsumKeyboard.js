@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { keysets } from './keysets/keysets.js';
 
-import './AdsumKeyboard.css';
+import './adsumKeyboard.css';
 
 class AdsumKeyboard extends Component {
     constructor(props) {
