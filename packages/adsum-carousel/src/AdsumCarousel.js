@@ -70,19 +70,23 @@ class AdsumCarousel extends Component {
      * Create carousel slides content images or videos
      *
      */
-    generateSlides(medias) {
-        const ret = [];
+    generateSlides() {
+        const {medias, onMediaTouch} = this.props;
 
+        const parentStyle = this.props.style? this.props.style : null ;
+
+        const ret = [];
         medias.forEach((media, index) => {
-            if (media.type === 'video/mp4') {
+            if (media.file.file_type === 'video/mp4') {
             const component = (
-                <div key={media.uri}>
+                <div key={media.file.uri} onClick={()=>{onMediaTouch(media)}} onTouchEndCapture={()=>{onMediaTouch(media)}} >
                     <VideoSlide
                         index={index}
                         media={media}
                         onPlayerInit={this.onPlayerInit}
                         onVideoEnded={this.goToNextSlide}
-                        shouldReplayVideo={medias.length === 1 && medias[0].type.indexOf('video/') !== -1}
+                        shouldReplayVideo={medias.length === 1 && medias[0].file.file_type === 'video/mp4'}
+                        parentStyle={parentStyle}
                     />
                 </div>
             );
@@ -90,8 +94,8 @@ class AdsumCarousel extends Component {
             ret.push(component);
         } else {
             const component = (
-                <div key={media.uri}>
-                    <ImageSlide media={media} />
+                <div key={media.file.uri} onClick={()=>{onMediaTouch(media)}} onTouchEndCapture={()=>{onMediaTouch(media)}} >
+                    <ImageSlide media={media} parentStyle={parentStyle} />
                 </div>
         );
 
@@ -104,7 +108,7 @@ class AdsumCarousel extends Component {
 
     render() {
         const {
-            isOpen, medias, onTouchToNavigate
+            isOpen,autoplayInterval
         } = this.props;
 
         if (!isOpen) return null;
@@ -113,7 +117,7 @@ class AdsumCarousel extends Component {
             dragging: false,
             swiping: false,
             autoplay: this.state.autoplay,
-            autoplayInterval: 10000,
+            autoplayInterval,
             speed: 1000,
             afterSlide: this.slideDidChange,
             renderCenterLeftControls: null,
@@ -130,9 +134,9 @@ class AdsumCarousel extends Component {
         };
 
         return (
-            <div onClick={onTouchToNavigate} onTouchEndCapture={onTouchToNavigate}>
+            <div style={this.props.style? this.props.style: null} >
                 <Carousel {...carouselSettings} className="adsumCarousel" ref={carousel => this.carousel = carousel}>
-                    { this.generateSlides(medias) }
+                    { this.generateSlides() }
                 </Carousel>
             </div>
         );
@@ -140,17 +144,17 @@ class AdsumCarousel extends Component {
 }
 
 AdsumCarousel.propTypes = {
-    lang: PropTypes.string.isRequired,
     isOpen: PropTypes.bool.isRequired,
     medias: PropTypes.arrayOf(PropTypes.object).isRequired,
-    onTouchToNavigate: PropTypes.func.isRequired
+    onMediaTouch: PropTypes.func.isRequired,
+    autoplayInterval: PropTypes.number,
 };
 
 AdsumCarousel.defaultProps = {
-    lang: 'en',
     isOpen: false,
     medias: [],
-    onTouchToNavigate: null
+    onMediaTouch: null,
+    autoplayInterval: 10000
 };
 
 export default AdsumCarousel;

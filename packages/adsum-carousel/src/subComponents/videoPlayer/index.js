@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Player } from 'video-react';
+import { Player, ControlBar } from 'video-react';
 
 import './videoPlayer.css';
 
@@ -60,6 +60,7 @@ class VideoPlayer extends Component {
                 ref={(player) => {
                     this._player = player;
                 }}
+                fluid={false}
             >
                 <source src={sources[0].src} />
             </Player>
