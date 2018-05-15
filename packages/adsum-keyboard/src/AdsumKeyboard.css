@@ -67,13 +67,13 @@
     padding: 1% 0.5%;
   }
   .templateKeyboard .keyboard .layout {
-    width: 100%;
     pointer-events: none;
     opacity: 0;
     -webkit-transition: opacity 0.2s;
     transition: opacity 0.2s;
     -webkit-transition-delay: 0.3s;
     transition-delay: 0.3s;
+    position: absolute;
   }
   .templateKeyboard .keyboard .layout.active {
     opacity: 1;
@@ -101,7 +101,7 @@
     outline: none;
     width: 58px;
     height: 54px;
-    font-size: 1.5em;
+    font-size: 1.2em;
     border-radius: 5px;
     font-weight: lighter;
     text-transform: uppercase;
@@ -154,13 +154,13 @@
     padding: 1% 0.5%;
   }
   .templateKeyboard .keyboard .layout {
-    width: 100%;
     pointer-events: none;
     opacity: 0;
     -webkit-transition: opacity 0.2s;
     transition: opacity 0.2s;
     -webkit-transition-delay: 0.3s;
     transition-delay: 0.3s;
+    position: absolute;
   }
   .templateKeyboard .keyboard .layout.active {
     opacity: 1;
@@ -188,7 +188,7 @@
     outline: none;
     width: 58px;
     height: 54px;
-    font-size: 1.5em;
+    font-size: 1.2em;
     border-radius: 5px;
     font-weight: lighter;
     text-transform: uppercase;
