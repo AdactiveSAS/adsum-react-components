@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { keysets } from '../keysets/keysets.js';
+import { keysets } from './keysets/keysets.js';
 
 import './AdsumKeyboard.css';
 
