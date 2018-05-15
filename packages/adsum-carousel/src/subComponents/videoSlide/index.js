@@ -1,16 +1,34 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+// @flow
+
+import * as React from 'react';
+import type { Node } from 'react';
 
 import VideoPlayer from '../videoPlayer';
 import SlideWrapper from '../slideWrapper';
 
 import './videoSlide.css';
 
-const VideoSlide = ({ index, media, onPlayerInit, onVideoEnded, shouldReplayVideo }) => {
+import { MediaType } from '../../AdsumCarousel';
+
+type PropsType = {|
+    index: number,
+    media: MediaType,
+    onPlayerInit: () => void,
+    onVideoEnded: () => void,
+    shouldReplayVideo: boolean
+|};
+
+const VideoSlide = ({
+    index,
+    media,
+    onPlayerInit,
+    onVideoEnded,
+    shouldReplayVideo
+}: PropsType): Node => {
     const videoOptions = {
         sources: [{
-            src: media.uri,
-            type: media.type
+            src: media.file.uri,
+            type: media.file.file_type
         }]
     };
 
@@ -26,12 +44,5 @@ const VideoSlide = ({ index, media, onPlayerInit, onVideoEnded, shouldReplayVide
     );
 };
 
-VideoSlide.propTypes = {
-    media: PropTypes.object.isRequired,
-    index: PropTypes.number.isRequired,
-    onPlayerInit: PropTypes.func.isRequired,
-    onVideoEnded: PropTypes.func.isRequired,
-    shouldReplayVideo: PropTypes.bool.isRequired
-};
-
+export { VideoSlide as VideoSlideType };
 export default SlideWrapper(VideoSlide);
