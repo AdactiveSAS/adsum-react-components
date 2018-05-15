@@ -1,5 +1,9 @@
 #Keyboard component
 
+![image](https://user-images.githubusercontent.com/8574893/40049349-257a9756-5867-11e8-92f1-fc8b811ca5ab.png)
+
+[Live examples here](https://adactivesas.github.io/adsum-react-components/packages/adsum-keyboard/examples/index.html)
+
 ## Getting started
 
 ```javascript
