@@ -92,6 +92,12 @@
     outline: none;
     padding: 5px;
   }
+  .templateKeyboard .keyboard .keyboardLine .backspace-icon {
+    background-image: url('assets/img/keyboard/white-backspaceKey.png');
+  }
+  .templateKeyboard .keyboard .keyboardLine .shift-icon {
+    background-image: url('assets/img/keyboard/shiftKey.png');
+  }
   .templateKeyboard .keyboard button {
     background: #FFFFFF;
     border: none;
@@ -178,6 +184,12 @@
     text-align: center;
     outline: none;
     padding: 5px 0px;
+  }
+  .templateKeyboard .keyboard .keyboardLine .backspace-icon {
+    background-image: url('assets/img/keyboard/white-backspaceKey.png');
+  }
+  .templateKeyboard .keyboard .keyboardLine .shift-icon {
+    background-image: url('assets/img/keyboard/shiftKey.png');
   }
   .templateKeyboard .keyboard button {
     background: #FFFFFF;

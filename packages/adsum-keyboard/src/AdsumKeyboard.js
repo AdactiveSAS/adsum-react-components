@@ -40,21 +40,6 @@ class AdsumKeyboard extends Component {
     }
 
     /**
-     * Get images for certain keys
-     */
-    getAssetsStyle(classes) {
-        if (classes.includes('backspace-icon')) {
-            return {
-                backgroundImage: "url('./assets/img/keyboard/white-backspaceKey.png')"
-            };
-        } else if (classes.includes('shift-icon')) {
-            return {
-                backgroundImage: "url('./assets/img/keyboard/white-shiftKey.png')"
-            };
-        }
-    }
-
-    /**
      * React render keyboard based on lang
      */
     render() {
@@ -79,7 +64,6 @@ class AdsumKeyboard extends Component {
                                                         className={key.class}
                                                         data-action={key.dataAction}
                                                         key={`key ${i + j + k}`}
-                                                        style={this.getAssetsStyle(key.class)}
                                                         onClick={() => this.onKeyClick(key)}
                                                     >
                                                         {key.text}
