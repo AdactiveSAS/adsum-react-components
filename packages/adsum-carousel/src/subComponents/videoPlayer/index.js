@@ -1,11 +1,27 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Player, ControlBar } from 'video-react';
+// @flow
+
+import * as React from 'react';
+
+import { Player } from 'video-react';
 
 import './videoPlayer.css';
 
-class VideoPlayer extends Component {
-    constructor(props) {
+type PropsType = {|
+    id: string | number,
+    sources: Array<{
+        src: string,
+        type: string
+    }>,
+    onPlayerInit: (player: Player, selector: string | number) => void,
+    onVideoEnded: () => void,
+    shouldReplayVideo: boolean
+|};
+type VideoPlayerStateType = {|
+    ended: boolean
+|};
+
+class VideoPlayer extends React.Component<PropsType> {
+    constructor(props: PropsType) {
         super(props);
 
         this._selector = props.id;
@@ -33,13 +49,14 @@ class VideoPlayer extends Component {
         this._player.load();
     }
 
-    handleStateChange(state) {
+    handleStateChange(state: VideoPlayerStateType) {
         const { ended } = state;
         const { onVideoEnded, shouldReplayVideo } = this.props;
 
         if (!ended) return;
         if (shouldReplayVideo) {
             this._player.play();
+
             return;
         }
 
@@ -57,7 +74,7 @@ class VideoPlayer extends Component {
         return (
             <Player
                 id={this._selector}
-                ref={(player) => {
+                ref={(player: Player) => {
                     this._player = player;
                 }}
                 fluid={false}
@@ -67,23 +84,5 @@ class VideoPlayer extends Component {
         );
     }
 }
-
-VideoPlayer.propTypes = {
-    id: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.number
-    ]).isRequired,
-    sources: PropTypes.arrayOf(PropTypes.shape({
-        src: PropTypes.string.isRequired,
-        type: PropTypes.string.isRequired
-    })).isRequired,
-    onPlayerInit: PropTypes.func.isRequired,
-    onVideoEnded: PropTypes.func.isRequired,
-    shouldReplayVideo: PropTypes.bool.isRequired
-};
-
-VideoPlayer.defaultProps = {
-
-};
 
 export default VideoPlayer;
