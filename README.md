@@ -16,6 +16,7 @@ This is a library of react components for interactive screens.
  - [adsum-clock](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-clock)
  - [adsum-carousel](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-carousel)
  - [adsum-keyboard](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-keyboard)
+ - [adsum-az-scroller](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-az-scroller)
  - [adsum-modal](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-modal)
  - [adsum-screensaver](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-screensaver)
  - [adsum-utils](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-utils)
