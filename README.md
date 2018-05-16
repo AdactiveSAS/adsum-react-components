@@ -6,9 +6,23 @@
 
 # Adsum-React-Components
 - Mono repositories for Adsum React Components
+
+## Why ? 
+
+This is a library of react components for interactive screens.
   
+## What's inside ? 
+
+ - [adsum-clock](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-clock)
+ - [adsum-carousel](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-carousel)
+ - [adsum-keyboard](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-keyboard)
+ - [adsum-modal](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-modal)
+ - [adsum-screensaver](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-screensaver)
+
   
-## Getting Started
+## Contribute 
+
+### Getting Started
 
 1. Open a terminal in the root folder
 
@@ -32,7 +46,7 @@
     
     **To check for Adactive credentials with Adactive team
     
-## To add a new component
+### To add a new component
 1. Create a new branch from develop
 
     `git checkout -b feature/componentName`
