@@ -1,14 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+// @flow
+
+import * as React from 'react';
 
 import SlideWrapper from '../slideWrapper';
 
 import './imageSlide.css';
 
-const ImageSlide = ({ media }) => <img src={media.file.uri} />;
+import { MediaType } from '../../AdsumCarousel';
 
-ImageSlide.propTypes = {
-    media: PropTypes.object.isRequired
-};
+type PropsType = {|
+    media: MediaType
+|};
 
+const ImageSlide = ({ media }: PropsType): HTMLImageElement => <img src={media.file.uri} alt="" />;
+
+export { ImageSlide as ImageSlideType };
 export default SlideWrapper(ImageSlide);
