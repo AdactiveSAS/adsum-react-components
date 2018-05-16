@@ -77,7 +77,7 @@ class VideoPlayer extends React.Component<PropsType> {
                 ref={(player: Player) => {
                     this._player = player;
                 }}
-                fluid={false}
+                fluid={true}
             >
                 <source src={sources[0].src} />
             </Player>
