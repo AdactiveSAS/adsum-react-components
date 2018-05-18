@@ -4,6 +4,7 @@
 		"node-less-chokidar": "^0.1.2"
 	},
 	"scripts": {
-		"build-css": "node-less-chokidar packages"
+		"build-css": "node-less-chokidar packages",
+		"precommit": "build-css"
 	}
 }
