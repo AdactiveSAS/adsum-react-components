@@ -29,9 +29,9 @@ class AdsumKeyboard extends Component {
         if (key.class.includes('switchMode')) {
             this.changeLayout(key.dataAction);
         } else if (key.value === '<---') {
-            onKeyClicked((currentValue.substring(0, currentValue.length - 1)).toUpperCase());
+            onKeyClicked(currentValue.substring(0, currentValue.length - 1));
         } else {
-            onKeyClicked((currentValue + key.value).toUpperCase());
+            onKeyClicked(currentValue + key.value);
         }
     }
 
