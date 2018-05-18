@@ -1,4 +1,4 @@
-#Keyboard component
+# Keyboard component
 
 ![image](https://user-images.githubusercontent.com/8574893/40049349-257a9756-5867-11e8-92f1-fc8b811ca5ab.png)
 
