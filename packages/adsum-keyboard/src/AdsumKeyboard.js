@@ -24,12 +24,14 @@ class AdsumKeyboard extends Component {
     }
 
     onKeyClick(key) {
-        const { onKeyClicked } = this.props;
+        const { onKeyClicked, currentValue } = this.props;
 
         if (key.class.includes('switchMode')) {
             this.changeLayout(key.dataAction);
+        } else if (key.value === '<---') {
+            onKeyClicked((currentValue.substring(0, currentValue.length - 1)).toUpperCase());
         } else {
-            onKeyClicked(key.value);
+            onKeyClicked((currentValue + key.value).toUpperCase());
         }
     }
 
@@ -85,12 +87,15 @@ class AdsumKeyboard extends Component {
 AdsumKeyboard.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     lang: PropTypes.string.isRequired,
+    currentValue: PropTypes.string.isRequired,
     onKeyClicked: PropTypes.func.isRequired
 };
 
 AdsumKeyboard.defaultProps = {
     isOpen: false,
-    lang: 'en'
+    lang: 'en',
+    currentValue: '',
+    onKeyClicked: null
 };
 
 export default AdsumKeyboard;
