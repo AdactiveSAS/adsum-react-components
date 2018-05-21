@@ -34,7 +34,7 @@ OR
 ```
 
 ### Functions
-- search(searchInput: string): Array<string>
+- search(searchInput: string)
     - expects a string as parameter 
     - returns an array of results
 
