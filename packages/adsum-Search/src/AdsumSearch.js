@@ -72,9 +72,9 @@ class AdsumSearch extends React.Component<PropTypes> {
         return fuse;
     }
 
-    search(value: string): Array<string> {
-        if (value.length > 0) {
-            return this.fuse.search(value);
+    search(searchInput: string): Array<string> {
+        if (searchInput.length > 0) {
+            return this.fuse.search(searchInput);
         } else {
             return [];
         }
