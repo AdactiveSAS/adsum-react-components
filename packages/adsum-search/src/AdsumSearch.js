@@ -51,7 +51,7 @@ class AdsumSearch extends React.Component<PropTypes, StateType> {
         });
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps: PropsType) {
         if (prevProps.data !== this.props.data) {
             this.fuse = this.implementFuse(this.props.data, this.props.fuseOptions);
         }
