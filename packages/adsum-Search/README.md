@@ -1,5 +1,10 @@
 # Search component
 
+![search 1](https://user-images.githubusercontent.com/8574893/40287867-f3ca6440-5ce2-11e8-8237-22165597d769.png)
+
+![search 2](https://user-images.githubusercontent.com/8574893/40287868-f3f527a2-5ce2-11e8-8dc8-8a322017268e.png)
+
+
 ## Getting started
 
 ```javascript
@@ -26,6 +31,11 @@ OR
         ref={this.searchResultRef}
     />
 ```
+
+### Functions
+- search(searchInput: string): Array<string>
+    - expects a string as parameter 
+    - returns an array of results
 
 ### Props
  
