@@ -19,31 +19,36 @@ OR
      ...
     <AdsumKeyboard 
         isOpen=true 
-        lang="en" 
-        onKeyClicked={this.onKeyClicked} 
+        lang="en"
+        currentValue="" 
+        onKeyClicked={this.onKeyClicked}
+         
     />
 ```
 
 ### Props
  
 ```javascript
-AdsumKeyboard.propTypes = {
-    isOpen: PropTypes.bool.isRequired,
-    lang: PropTypes.string.isRequired,
-    onKeyClicked: PropTypes.func.isRequired
-};
+type PropsType = {|
+    +isOpen: boolean,
+    +lang: 'en' | 'fr',
+    +currentValue: string,
+    +onKeyClicked: (string) => void
+|};
 
-AdsumKeyboard.defaultProps = {
+
+static defaultProps = {
     isOpen: false,
-    lang: 'en'
-};
+    lang: 'en',
+    currentValue: '',
+    onKeyClicked: null
+}
 ```
 
-```javascript
-isOpen : true | false
-lang: 'en' | 'fr'
-onKeyClicked: callback function
-```
+**isOpen** -> To show or hide keyboard
+**lang** -> Language of keyboard
+**currentValue** -> To pass current query value from application for keyboard to process result
+**onKeyClicked** -> A callback function to result back to the application
 
 ## Copy component inside your project src folder  
 

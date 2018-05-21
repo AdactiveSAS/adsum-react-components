@@ -1,29 +1,55 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { keysets } from './keysets/keysets.js';
+// @flow
 
+import * as React from 'react';
+import type { Node } from 'react';
+
+import { keysets } from './keysets/keysets.js';
 import './adsumKeyboard.css';
 
-class AdsumKeyboard extends Component {
-    constructor(props) {
+type KeyType = { value: string, test: string, class: string }
+
+type PropsType = {|
+    +isOpen: boolean,
+    +lang: 'en' | 'fr',
+    +currentValue: string,
+    +onKeyClicked: (string) => void
+|};
+
+type StateType = {|
+    layout: 'layout1'
+|};
+
+class AdsumKeyboard extends React.Component<PropsType, StateType> {
+    static defaultProps = {
+        isOpen: false,
+        lang: 'en',
+        currentValue: '',
+        onKeyClicked: null
+    }
+
+    constructor(props: PropsType) {
         super(props);
 
+        this.bindAll();
+    }
+
+    state = {
+        layout: 'layout1'
+    }
+
+    bindAll() {
         this.onKeyClick = this.onKeyClick.bind(this);
         this.changeLayout = this.changeLayout.bind(this);
         this.resetLayout = this.resetLayout.bind(this);
-
-        this.state = {
-            layout: 'layout1'
-        };
     }
 
-    resetLayout() {
+    resetLayout(): void {
         this.setState({
             layout: 'layout1'
         });
     }
 
-    onKeyClick(key) {
+    onKeyClick(key: KeyType): void {
         const { onKeyClicked, currentValue } = this.props;
 
         if (key.class.includes('switchMode')) {
@@ -35,7 +61,7 @@ class AdsumKeyboard extends Component {
         }
     }
 
-    changeLayout(layout) {
+    changeLayout(layout: string): void {
         this.setState({
             layout
         });
@@ -44,7 +70,7 @@ class AdsumKeyboard extends Component {
     /**
      * React render keyboard based on lang
      */
-    render() {
+    render(): Node {
         const { lang, isOpen } = this.props;
         const keyset = keysets[lang] ? keysets[lang] : keysets.en;
 
@@ -83,19 +109,5 @@ class AdsumKeyboard extends Component {
         );
     }
 }
-
-AdsumKeyboard.propTypes = {
-    isOpen: PropTypes.bool.isRequired,
-    lang: PropTypes.string.isRequired,
-    currentValue: PropTypes.string.isRequired,
-    onKeyClicked: PropTypes.func.isRequired
-};
-
-AdsumKeyboard.defaultProps = {
-    isOpen: false,
-    lang: 'en',
-    currentValue: '',
-    onKeyClicked: null
-};
 
 export default AdsumKeyboard;
