@@ -1,23 +1,48 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+// @flow
+
+import * as React from 'react';
+import type { Node } from 'react';
 import Fuse from "fuse.js";
 
 import './adsumSearch.css';
 import translate from './adsumSearch.lang.json';
 
-class AdsumSearch extends Component {
+type PropTypes = {|
+    +isOpen: boolean,
+    +lang: 'en' | 'fr',
+    +data: Array<Object>,
+    +fuseOptions: Object,
+    +queryValue: string
+|};
+
+type StateType = {|
+    searchInput: string
+|};
+
+class AdsumSearch extends React.Component<PropTypes> {
+    static defaultProps = {
+        isOpen: false,
+        lang: 'en',
+        data: [],
+        fuseOptions: {},
+        queryValue: ''
+    };
+
     constructor(props) {
         super(props);
 
+        this.bindAll();
+        this.fuse = this.implementFuse(this.props.data, this.props.fuseOptions);
+    }
+
+    state = {
+        searchInput: ''
+    }
+
+    bindAll() {
         this.implementFuse = this.implementFuse.bind(this);
         this.updateValue = this.updateValue.bind(this);
         this.search = this.search.bind(this);
-
-        this.fuse = this.implementFuse(this.props.data, this.props.fuseOptions);
-
-        this.state = {
-            searchInput: ''
-        }
     }
 
     componentDidMount() {
@@ -36,18 +61,18 @@ class AdsumSearch extends Component {
         }
     }
 
-    updateValue(queryValue) {
+    updateValue(queryValue: string) {
         this.setState({
             searchInput: queryValue
         });
     }
 
-    implementFuse(data, options) {
+    implementFuse(data: Array<Object>, options: Object) {
         let fuse = new Fuse(data, options);
         return fuse;
     }
 
-    search(value) {
+    search(value: string): Array<string> {
         if (value.length > 0) {
             return this.fuse.search(value);
         } else {
@@ -55,7 +80,7 @@ class AdsumSearch extends Component {
         }
     }
 
-    render() {
+    render(): Node {
         const { isOpen, lang } = this.props;
 
         if (!isOpen) return null;
@@ -79,21 +104,5 @@ class AdsumSearch extends Component {
         )
     }
 }
-
-AdsumSearch.propTypes = {
-    isOpen: PropTypes.bool.isRequired,
-    lang: PropTypes.string.isRequired,
-    data: PropTypes.arrayOf(PropTypes.object).isRequired,
-    fuseOptions: PropTypes.object.isRequired,
-    queryValue: PropTypes.string.isRequired
-};
-
-AdsumSearch.defaultProps = {
-    isOpen: false,
-    lang: 'en',
-    data: [],
-    fuseOptions: {},
-    queryValue: ''
-};
 
 export default AdsumSearch;
