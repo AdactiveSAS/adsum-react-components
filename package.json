@@ -6,5 +6,8 @@
 	"scripts": {
 		"build-css": "node-less-chokidar packages",
 		"precommit": "build-css"
+	},
+	"dependencies": {
+		"flow-bin": "^0.72.0"
 	}
 }
