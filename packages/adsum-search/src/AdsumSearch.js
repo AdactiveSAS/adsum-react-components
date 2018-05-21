@@ -19,7 +19,7 @@ type StateType = {|
     searchInput: string
 |};
 
-class AdsumSearch extends React.Component<PropTypes> {
+class AdsumSearch extends React.Component<PropTypes, StateType> {
     static defaultProps = {
         isOpen: false,
         lang: 'en',

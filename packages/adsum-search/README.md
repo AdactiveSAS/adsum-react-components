@@ -4,7 +4,7 @@
 
 ![search 2](https://user-images.githubusercontent.com/8574893/40287868-f3f527a2-5ce2-11e8-8dc8-8a322017268e.png)
 
-[Live examples here](https://adactivesas.github.io/adsum-react-components/packages/adsum-search/examples/index.html)
+[Live examples here](https://adactivesas.github.io/adsum-react-components/packages/adsum-search/examples/)
 
 ## Getting started
 
@@ -34,7 +34,7 @@ OR
 ```
 
 ### Functions
-- search(searchInput: string): Array<string>
+- search(searchInput: string)
     - expects a string as parameter 
     - returns an array of results
 
