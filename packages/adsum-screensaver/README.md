@@ -1,6 +1,6 @@
 # Carousel component
 
-![image](https://user-images.githubusercontent.com/6003532/39986925-bebf3d72-5795-11e8-91bb-ae8235ac5896.png)
+![image](https://user-images.githubusercontent.com/5297278/40351912-38f849c8-5db6-11e8-8690-8198ca33bad4.pnghttps://user-images.githubusercontent.com/5297278/40352018-82424548-5db6-11e8-838b-a0b4e64bc921.png)
 
 [Example with adsum-carousel](https://adactivesas.github.io/adsum-react-components/packages/adsum-screensaver/examples/example-with-carousel)
 
