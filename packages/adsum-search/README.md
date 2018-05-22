@@ -27,7 +27,7 @@ OR
         isOpen={true}
         lang={"en"}
         data={[]}
-        fuseOptions={{}}
+        fuseOptions={fuseOptions}
         queryValue={''}
         ref={this.searchResultRef}
     />
@@ -81,6 +81,10 @@ const fuseOptions = {
   keys: Array<Object>
 };
 ```
+
+## Additional Information
+- AdsumSearch component should be used together with [AdsumKeyboard component](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-keyboard) to perform search.
+
 
 ## Copy component inside your project src folder  
 
