@@ -6,6 +6,13 @@
   "author": "Andrei Pavlov <andrei.pavlov@adactive.com>",
   "license": "UNLISENCED",
   "readmeFilename": "README.md",
+  "dependencies": {
+    "react-redux": "^5.0.7",
+    "redux-saga": "^0.16.0",
+    "react": "^16.3.2",
+    "chalk": "^1.1.3",
+    "commander": "^2.9.0"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/AdactiveSAS/adsum-react-components.git"
