@@ -16,7 +16,7 @@ type PropsType = {|
 |};
 
 type StateType = {|
-    layout: 'layout1'
+    layout: 'layout1' | 'layout2'
 |};
 
 class AdsumKeyboard extends React.Component<PropsType, StateType> {
