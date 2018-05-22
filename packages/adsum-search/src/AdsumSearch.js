@@ -33,6 +33,7 @@ class AdsumSearch extends React.Component<PropTypes, StateType> {
 
         this.bindAll();
         this.fuse = this.implementFuse(this.props.data, this.props.fuseOptions);
+        this.textInput = React.createRef();
     }
 
     state = {
@@ -43,6 +44,7 @@ class AdsumSearch extends React.Component<PropTypes, StateType> {
         this.implementFuse = this.implementFuse.bind(this);
         this.updateValue = this.updateValue.bind(this);
         this.search = this.search.bind(this);
+        this.focusTextInput = this.focusTextInput.bind(this);
     }
 
     componentDidMount() {
@@ -58,7 +60,13 @@ class AdsumSearch extends React.Component<PropTypes, StateType> {
 
         if (prevProps.queryValue !== this.props.queryValue) {
             this.updateValue(this.props.queryValue);
+        } else {
+            this.focusTextInput()
         }
+    }
+
+    focusTextInput() {
+        this.textInput.current.focus();
     }
 
     updateValue(queryValue: string) {
@@ -94,6 +102,7 @@ class AdsumSearch extends React.Component<PropTypes, StateType> {
                         </div>
                         <input
                             type="text"
+                            ref={this.textInput}
                             className="form-control search-input"
                             placeholder={translate[lang].search}
                             value={this.state.searchInput}
