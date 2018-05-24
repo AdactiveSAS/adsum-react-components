@@ -2,7 +2,7 @@
 
 ![image](https://user-images.githubusercontent.com/8574893/40462128-371b5d20-5f41-11e8-8202-575b7ffd6012.png)
 
-![image](https://user-images.githubusercontent.com/8574893/40462162-4ef20dea-5f41-11e8-8f7f-ee13cbec9dd2.png)
+![image](https://user-images.githubusercontent.com/8574893/40467947-58d8f748-5f5e-11e8-9fd3-e070f768cd8b.png)
 
 [Live examples here](https://adactivesas.github.io/adsum-react-components/packages/adsum-itemCarousel/examples/)
 
@@ -65,7 +65,6 @@ type PropTypes = {|
     +titleWrapperCSS?: CSSStyleDeclaration,
     +titleCSS?: CSSStyleDeclaration,
     +dashCSS?: CSSStyleDeclaration,
-    +carouselDecorators?: Array<Object>,
     +carouselOptions?: Object
 |};
 
@@ -95,8 +94,6 @@ static defaultProps = {
 **titleCSS** -> To customise CSS for the title div 
 
 **dashCSS** -> To customise CSS for the dash div
-
-**carouselDecorators** -> To add in customised control for the carousel
 
 **carouselOptions** -> Refer to [nuka-carousel](http://kenwheeler.github.io/nuka-carousel/#/) for more information 
 
