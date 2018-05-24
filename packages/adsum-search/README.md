@@ -9,11 +9,11 @@
 ## Getting started
 
 ```javascript
-    npm i --save-dev @adactive/arc-Search
+    npm i --save-dev @adactive/arc-search
 ```
 OR
 ```javascript
-    yarn add --dev @adactive/arc-Search
+    yarn add --dev @adactive/arc-search
 ```
 
 ```javascript
@@ -89,7 +89,7 @@ const fuseOptions = {
 ## Copy component inside your project src folder  
 
 ### Less only
-    `npx @adactive/arc-Search copy --less-only`
+    `npx @adactive/arc-search copy --less-only`
     
 ### Full copy
-    `npx @adactive/arc-Search copy`
+    `npx @adactive/arc-search copy`
