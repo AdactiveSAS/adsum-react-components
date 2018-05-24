@@ -13,7 +13,7 @@ export type LogoObject = {
 
 export type ItemObject = {
     +name: string,
-    +logo: LogoObject
+    +logo?: LogoObject
 };
 
 type PropTypes = {|
@@ -21,11 +21,14 @@ type PropTypes = {|
     +items: Array<ItemObject>,
     +itemsPerPage: number,
     +onItemClicked: () => null,
-    logoCSS?: Object,
-    titleCSS?: Object,
-    dashCSS?: Object,
-    carouselDecorators?: Array<Object>,
-    carouselOptions?: Object
+    +thumbNailWrapperCSS?: CSSStyleDeclaration,
+    +logoWrapperCSS?: CSSStyleDeclaration,
+    +logoCSS?: CSSStyleDeclaration,
+    +titleWrapperCSS?: CSSStyleDeclaration,
+    +titleCSS?: CSSStyleDeclaration,
+    +dashCSS?: CSSStyleDeclaration,
+    +carouselDecorators?: Array<Object>,
+    +carouselOptions?: Object
 |};
 
 class AdsumItemCarousel extends React.Component<PropTypes> {
@@ -33,12 +36,7 @@ class AdsumItemCarousel extends React.Component<PropTypes> {
         isOpen: false,
         items: [],
         itemsPerPage: 0,
-        onItemClicked: null,
-        logoCSS: {},
-        titleCSS: {},
-        dashCSS: {},
-        carouselDecorators: [],
-        carouselOptions: {}
+        onItemClicked: null
     };
 
     constructor(props: PropTypes) {
@@ -53,11 +51,6 @@ class AdsumItemCarousel extends React.Component<PropTypes> {
         this.createPagination = this.createPagination.bind(this);
         this.displayLogo = this.displayLogo.bind(this);
         this.onItemClicked = this.onItemClicked.bind(this);
-    }
-
-    componentDidMount() {
-        const { items } = this.props;
-        console.log('[COMPONENT DID MOUNT - CHECKING DATA] : ', items);
     }
 
     onItemClicked(item: ItemObject) {
@@ -86,71 +79,65 @@ class AdsumItemCarousel extends React.Component<PropTypes> {
             }
         });
 
-        console.log(pagination);
         return pagination;
     }
 
-    generatePagination(items: Array<Array<ItemObject>>) {
-        const ret = [];
-
+    generatePagination(items: Array<Array<ItemObject>>): Array<Element<'ul'>> | Element<'ul'> {
         if (items.length > 0) {
-            _.each(items, (item: Array<ItemObject>, index: number) => {
-                ret.push(
-                    <ul className="row item" key={index}>
-                        { this.generateThumbNails(item) }
-                    </ul>
-                );
-            });
+            return _.map(items, (item: Array<ItemObject>, index: number) =>
+                <ul className="row item" key={index}>
+                    { this.generateThumbNails(item) }
+                </ul>
+            )
         } else {
-            ret.push(
+            return (
                 <ul className="row item" key="0">
                     <li className="no-result" >No items</li>
-                </ul>);
-        }
-
-        return ret;
-    }
-
-    displayLogo(item: ItemObject) {
-        if (item.logo && item.logo.uri) {
-            return (
-                <img className="thumbnail-panel-logo" src={item.logo.uri} />
+                </ul>
             );
         }
-        return (
-            <span className="thumbnail-panel-logo">{item.name}</span>
-        );
     }
 
-    generateThumbNails(items: Array<ItemObject>) {
-        const { logoCSS, titleCSS, dashCSS } = this.props;
-        const ret = [];
-        _.each(items, (item: ItemObject, index: number) => {
-            ret.push(
-                <li className="col-md-3 thumbnail-wrapper" key={index} onClick={(): void => this.onItemClicked(item)}>
-                    <span className="btn btn-standard width height">
-                        <div className="flex-center">
-                            <div className="thumbnail-panel">
-                                <div className="thumbnail-panel-logo-div" style={logoCSS}>
-                                    {
-                                        this.displayLogo(item)
-                                    }
+    displayLogo(item: ItemObject): Element<'img'> | Element<'span'> {
+        const { logoCSS } = this.props;
+
+        if (item.logo && item.logo.uri) {
+            return (
+                <img className="thumbnail-panel-logo" src={item.logo.uri} style={logoCSS}/>
+            );
+        } else {
+            return (
+                <span className="thumbnail-panel-logo" style={logoCSS}>{item.name}</span>
+            );
+        }
+    }
+
+    generateThumbNails(items: Array<ItemObject>): Element<'li'> {
+        const { thumbNailWrapperCSS, logoWrapperCSS, titleWrapperCSS, dashCSS, titleCSS } = this.props;
+
+        return _.map(items, (item: ItemObject, index: number) =>
+            <li className="col-md-3 thumbnail-wrapper" key={index} onClick={(): void => this.onItemClicked(item)} style={thumbNailWrapperCSS}>
+                <span className="btn btn-standard width height">
+                    <div className="flex-center">
+                        <div className="thumbnail-panel">
+                            <div className="thumbnail-panel-logo-div" style={logoWrapperCSS}>
+                                {
+                                    this.displayLogo(item)
+                                }
+                            </div>
+                            <div className="thumbnail-panel-title-div" style={titleWrapperCSS}>
+                                <div className="thumbnail-panel-dash-div">
+                                    <span className="thumbnail-panel-dash" style={dashCSS} />
                                 </div>
-                                <div className="thumbnail-panel-title-div" style={titleCSS}>
-                                    <div className="thumbnail-panel-dash-div">
-                                        <span className="thumbnail-panel-dash" style={dashCSS} />
-                                    </div>
-                                    <div className="thumbnail-panel-title-wrapper">
-                                        <span className="thumbnail-panel-title" style={titleCSS}>{item.name}</span>
-                                    </div>
+                                <div className="thumbnail-panel-title-wrapper">
+                                    <span className="thumbnail-panel-title" style={titleCSS}>{item.name}</span>
                                 </div>
                             </div>
                         </div>
-                    </span>
-                </li>);
-        });
-
-        return ret;
+                    </div>
+                </span>
+            </li>
+        );
     }
 
     render(): Node {
