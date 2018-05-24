@@ -27,7 +27,6 @@ type PropTypes = {|
     +titleWrapperCSS?: CSSStyleDeclaration,
     +titleCSS?: CSSStyleDeclaration,
     +dashCSS?: CSSStyleDeclaration,
-    +carouselDecorators?: Array<Object>,
     +carouselOptions?: Object
 |};
 
@@ -141,7 +140,7 @@ class AdsumItemCarousel extends React.Component<PropTypes> {
     }
 
     render(): Node {
-        const { isOpen, carouselDecorators, carouselOptions } = this.props;
+        const { isOpen, carouselOptions } = this.props;
 
         if (!isOpen) return null;
 
@@ -150,7 +149,7 @@ class AdsumItemCarousel extends React.Component<PropTypes> {
         return (
             <div className="templateCarousel-container">
                 <div className="templateCarousel">
-                    <Carousel {...carouselOptions} decorators={carouselDecorators}>
+                    <Carousel {...carouselOptions}>
                         {
                             this.generatePagination(pagination)
                         }
