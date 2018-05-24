@@ -58,9 +58,13 @@ static defaultProps = {
 };
 ```
 **isOpen** -> To show or hide search bar
+
 **lang** -> Language for displaying placeholder
+
 **data** -> An array of data to be injected into fusejs to perform the search
+
 **queryValue** -> String to be displayed on the search bar and to be searched
+
 **fuseOptions** -> Refer to [fusejs.io](http://fusejs.io/) for more information
 
 ```javascript
