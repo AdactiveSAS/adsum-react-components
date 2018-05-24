@@ -21,6 +21,7 @@ type PropTypes = {|
     +items: Array<ItemObject>,
     +itemsPerPage: number,
     +onItemClicked: () => null,
+    +listWrapperCSS?: CSSStyleDeclaration,
     +thumbNailWrapperCSS?: CSSStyleDeclaration,
     +logoWrapperCSS?: CSSStyleDeclaration,
     +logoCSS?: CSSStyleDeclaration,
@@ -82,15 +83,17 @@ class AdsumItemCarousel extends React.Component<PropTypes> {
     }
 
     generatePagination(items: Array<Array<ItemObject>>): Array<Element<'ul'>> | Element<'ul'> {
+        const { listWrapperCSS } = this.props;
+
         if (items.length > 0) {
             return _.map(items, (item: Array<ItemObject>, index: number) =>
-                <ul className="row item" key={index}>
+                <ul className="row item" key={index} style={listWrapperCSS}>
                     { this.generateThumbNails(item) }
                 </ul>
             )
         } else {
             return (
-                <ul className="row item" key="0">
+                <ul className="row item" key="0" style={listWrapperCSS}>
                     <li className="no-result" >No items</li>
                 </ul>
             );
@@ -115,7 +118,7 @@ class AdsumItemCarousel extends React.Component<PropTypes> {
         const { thumbNailWrapperCSS, logoWrapperCSS, titleWrapperCSS, dashCSS, titleCSS } = this.props;
 
         return _.map(items, (item: ItemObject, index: number) =>
-            <li className="col-md-3 thumbnail-wrapper" key={index} onClick={(): void => this.onItemClicked(item)} style={thumbNailWrapperCSS}>
+            <li className="thumbnail-wrapper" key={index} onClick={(): void => this.onItemClicked(item)} style={thumbNailWrapperCSS}>
                 <span className="btn btn-standard width height">
                     <div className="flex-center">
                         <div className="thumbnail-panel">
