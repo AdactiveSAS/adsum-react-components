@@ -4,6 +4,8 @@
 
 ![image](https://user-images.githubusercontent.com/8574893/40467947-58d8f748-5f5e-11e8-9fd3-e070f768cd8b.png)
 
+![image](https://user-images.githubusercontent.com/8574893/40474107-b5d27b88-5f70-11e8-9748-fbafb9679ef0.png)
+
 [Live examples here](https://adactivesas.github.io/adsum-react-components/packages/adsum-itemCarousel/examples/)
 
 ## Getting started
@@ -59,6 +61,7 @@ type PropTypes = {|
     +items: Array<ItemObject>,
     +itemsPerPage: number,
     +onItemClicked: () => null,
+    +listWrapperCSS?: CSSStyleDeclaration,
     +thumbNailWrapperCSS?: CSSStyleDeclaration,
     +logoWrapperCSS?: CSSStyleDeclaration,
     +logoCSS?: CSSStyleDeclaration,
@@ -83,6 +86,8 @@ static defaultProps = {
 
 **onItemClicked** -> A callback function to capture clicking of thumbnail
 
+**listWrapperCSS** -> To customise CSS for the overall list
+
 **thumbNailWrapperCSS** -> To customise CSS for the overall thumbnail css
 
 **logoWrapperCSS** -> To customise CSS for the div wrapping around the logo
@@ -97,7 +102,8 @@ static defaultProps = {
 
 **carouselOptions** -> Refer to [nuka-carousel](http://kenwheeler.github.io/nuka-carousel/#/) for more information 
 
-![image](https://user-images.githubusercontent.com/8574893/40462559-089edeac-5f43-11e8-8a6a-05a48ca9f2a3.png)
+![image](https://user-images.githubusercontent.com/8574893/40474237-12f20d92-5f71-11e8-9140-16e7c353d0d6.png)
+
 
 ## Copy component inside your project src folder  
 

@@ -20,7 +20,7 @@
 }
 .templateCarousel-container .templateCarousel ul.row .thumbnail-wrapper {
   display: inline-block;
-  float: none;
+  float: left;
   margin: 0 20px 40px 20px;
 }
 .templateCarousel-container .templateCarousel ul.row.item.active {
@@ -108,7 +108,7 @@
   .templateCarousel-container .templateCarousel .slider .slider-frame .slider-list .slider-slide {
     height: 100%!important;
     width: 100%!important;
-    padding-top: 20px;
+    padding: 40px 45px 50px 45px;
   }
   .templateCarousel-container .templateCarousel .thumbnail-wrapper {
     width: 260px;
