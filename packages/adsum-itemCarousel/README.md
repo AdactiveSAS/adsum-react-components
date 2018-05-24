@@ -77,16 +77,27 @@ static defaultProps = {
 };
 ```
 **isOpen** -> To show or hide itemCarousel
+
 **items** -> Array of itemsObjects to be displayed in the carousel
+
 **itemsPerPage** -> To set the number of thumbnail in each carousel page
+
 **onItemClicked** -> A callback function to capture clicking of thumbnail
+
 **thumbNailWrapperCSS** -> To customise CSS for the overall thumbnail css
+
 **logoWrapperCSS** -> To customise CSS for the div wrapping around the logo
+
 **logoCSS** -> To customise CSS for logo div 
+
 **titleWrapperCSS** -> To customise CSS for the wrapper around title and dash div
+
 **titleCSS** -> To customise CSS for the title div 
+
 **dashCSS** -> To customise CSS for the dash div
+
 **carouselDecorators** -> To add in customised control for the carousel
+
 **carouselOptions** -> Refer to [nuka-carousel](http://kenwheeler.github.io/nuka-carousel/#/) for more information 
 
 ![image](https://user-images.githubusercontent.com/8574893/40462559-089edeac-5f43-11e8-8a6a-05a48ca9f2a3.png)
