@@ -1,0 +1,45 @@
+{
+  "name": "@adactive/arc-itemcarousel",
+  "version": "0.0.2-y.44.5",
+  "description": "Adsum Item Carousel Component",
+  "main": "index.js",
+  "author": "Stanley Ong <stanley.ong@adactive.com>",
+  "license": "UNLISENCED",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/AdactiveSAS/adsum-react-components.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AdactiveSAS/adsum-react-components.git/issues"
+  },
+  "scripts": {},
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "chalk": "^1.1.3",
+    "commander": "^2.9.0",
+    "lodash": "^4.17.10",
+    "nuka-carousel": "^4.2.1"
+  },
+  "devDependencies": {
+    "prop-types": "^15.6.1",
+    "react": "^16.3.1"
+  },
+  "keywords": [
+    "adsum",
+    "react",
+    "redux"
+  ],
+  "files": [
+    "index.js",
+    "src",
+    "CHANGELOG.md",
+    "README.md",
+    "cli.js"
+  ],
+  "bin": {
+    "arc-itemCarousel": "./cli.js"
+  }
+}
