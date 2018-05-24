@@ -9,11 +9,11 @@
 ## Getting started
 
 ```javascript
-    npm i --save-dev @adactive/arc-Search
+    npm i --save-dev @adactive/arc-search
 ```
 OR
 ```javascript
-    yarn add --dev @adactive/arc-Search
+    yarn add --dev @adactive/arc-search
 ```
 
 ```javascript
@@ -58,10 +58,14 @@ static defaultProps = {
 };
 ```
 **isOpen** -> To show or hide search bar
+
 **lang** -> Language for displaying placeholder
+
 **data** -> An array of data to be injected into fusejs to perform the search
+
 **queryValue** -> String to be displayed on the search bar and to be searched
-**fuseOptions** -> Refer to http://fusejs.io/ for more information
+
+**fuseOptions** -> Refer to [fusejs.io](http://fusejs.io/) for more information
 
 ```javascript
 const fuseOptions = {
@@ -89,7 +93,7 @@ const fuseOptions = {
 ## Copy component inside your project src folder  
 
 ### Less only
-    `npx @adactive/arc-Search copy --less-only`
+    `npx @adactive/arc-search copy --less-only`
     
 ### Full copy
-    `npx @adactive/arc-Search copy`
+    `npx @adactive/arc-search copy`
