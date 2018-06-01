@@ -42,7 +42,7 @@ class AdsumCarousel extends React.Component<PropsType> {
         this.goToNextSlide = this.goToNextSlide.bind(this);
         this.playVideo = this.playVideo.bind(this);
 
-        this.state = { autoplay: true };
+        this.state = { autoplay: props.medias && props.medias.length > 1 ? true : false };
     }
 
     componentDidMount() {
