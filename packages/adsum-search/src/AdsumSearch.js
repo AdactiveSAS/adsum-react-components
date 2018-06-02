@@ -12,7 +12,9 @@ type PropTypes = {|
     +lang: 'en' | 'fr',
     +data: Array<Object>,
     +fuseOptions: Object,
-    +queryValue: string
+    +queryValue: string,
+    searchWrapperCSS?: CSSStyleDeclaration,
+    inputCSS?: CSSStyleDeclaration
 |};
 
 type StateType = {|
@@ -89,12 +91,12 @@ class AdsumSearch extends React.Component<PropTypes, StateType> {
     }
 
     render(): Node {
-        const { isOpen, lang } = this.props;
+        const { isOpen, lang, searchWrapperCSS, inputCSS } = this.props;
 
         if (!isOpen) return null;
 
         return(
-            <div className="search-input-wrapper">
+            <div className="search-input-wrapper" style={searchWrapperCSS}>
                 <div className="form-group">
                     <div className="input-group">
                         <div className="input-group-addon">
@@ -106,6 +108,7 @@ class AdsumSearch extends React.Component<PropTypes, StateType> {
                             className="form-control search-input"
                             placeholder={translate[lang].search}
                             value={this.state.searchInput}
+                            style={inputCSS}
                         />
                     </div>
                 </div>
