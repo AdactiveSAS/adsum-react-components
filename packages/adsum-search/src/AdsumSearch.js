@@ -14,7 +14,8 @@ type PropTypes = {|
     +fuseOptions: Object,
     +queryValue: string,
     searchWrapperCSS?: CSSStyleDeclaration,
-    inputCSS?: CSSStyleDeclaration
+    inputCSS?: CSSStyleDeclaration,
+    placeHolder?: string
 |};
 
 type StateType = {|
@@ -27,7 +28,8 @@ class AdsumSearch extends React.Component<PropTypes, StateType> {
         lang: 'en',
         data: [],
         fuseOptions: {},
-        queryValue: ''
+        queryValue: '',
+        placeHolder: null
     };
 
     constructor(props) {
@@ -91,7 +93,7 @@ class AdsumSearch extends React.Component<PropTypes, StateType> {
     }
 
     render(): Node {
-        const { isOpen, lang, searchWrapperCSS, inputCSS } = this.props;
+        const { isOpen, lang, searchWrapperCSS, inputCSS, placeHolder } = this.props;
 
         if (!isOpen) return null;
 
@@ -106,7 +108,7 @@ class AdsumSearch extends React.Component<PropTypes, StateType> {
                             type="text"
                             ref={this.textInput}
                             className="form-control search-input"
-                            placeholder={translate[lang].search}
+                            placeholder={ placeHolder ? placeHolder : translate[lang].search}
                             value={this.state.searchInput}
                             style={inputCSS}
                         />
