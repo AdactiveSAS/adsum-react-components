@@ -31,7 +31,11 @@ type PropTypes = {|
     +carouselOptions?: Object
 |};
 
-class AdsumItemCarousel extends React.Component<PropTypes> {
+type StateType = {|
+    slideIndex: number
+|};
+
+class AdsumItemCarousel extends React.Component<PropTypes, StateType> {
     static defaultProps = {
         isOpen: false,
         items: [],
@@ -45,12 +49,24 @@ class AdsumItemCarousel extends React.Component<PropTypes> {
         this.bindAll();
     }
 
+    state = {
+        slideIndex: 0
+    }
+
     bindAll() {
         this.generateThumbNails = this.generateThumbNails.bind(this);
         this.generatePagination = this.generatePagination.bind(this);
         this.createPagination = this.createPagination.bind(this);
         this.displayLogo = this.displayLogo.bind(this);
         this.onItemClicked = this.onItemClicked.bind(this);
+    }
+
+    componentDidUpdate(prevProps: PropTypes) {
+        if (prevProps.items !== this.props.items) {
+            this.setState({
+                slideIndex: 0
+            });
+        }
     }
 
     onItemClicked(item: ItemObject) {
@@ -152,7 +168,10 @@ class AdsumItemCarousel extends React.Component<PropTypes> {
         return (
             <div className="templateCarousel-container">
                 <div className="templateCarousel">
-                    <Carousel {...carouselOptions}>
+                    <Carousel {...carouselOptions}
+                          slideIndex={this.state.slideIndex}
+                          afterSlide={slideIndex => this.setState({ slideIndex })}
+                    >
                         {
                             this.generatePagination(pagination)
                         }
