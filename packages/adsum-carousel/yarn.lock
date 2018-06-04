@@ -120,9 +120,9 @@ node-fetch@^1.0.1:
     encoding "^0.1.11"
     is-stream "^1.0.1"
 
-"nuka-carousel@git+https://github.com/AdactiveSAS/nuka-carousel.git#fix/prevent-setState":
+"nuka-carousel@git+https://github.com/AdactiveSAS/nuka-carousel.git#build/setStateFix":
   version "4.2.1"
-  resolved "git+https://github.com/AdactiveSAS/nuka-carousel.git#9c93aa54d6dd6c82766fbd05eabd925aa76e7478"
+  resolved "git+https://github.com/AdactiveSAS/nuka-carousel.git#75f3deafbb8521894cc8d838a475a8b358d1db7d"
   dependencies:
     d3-ease "^1.0.3"
     exenv "^1.2.0"

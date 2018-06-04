@@ -20,7 +20,7 @@
   "dependencies": {
     "chalk": "^1.1.3",
     "commander": "^2.9.0",
-    "nuka-carousel": "git+https://github.com/AdactiveSAS/nuka-carousel.git#fix/prevent-setState",
+    "nuka-carousel": "git+https://github.com/AdactiveSAS/nuka-carousel.git#build/setStateFix",
     "prop-types": "^15.6.1",
     "react": "^16.3.1",
     "video-react": "^0.10.4"
