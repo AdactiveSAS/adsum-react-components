@@ -21,7 +21,7 @@
     "chalk": "^1.1.3",
     "commander": "^2.9.0",
     "lodash": "^4.17.10",
-    "nuka-carousel": "^4.2.1"
+    "nuka-carousel": "git+https://github.com/AdactiveSAS/nuka-carousel.git#build/setStateFix"
   },
   "devDependencies": {
     "prop-types": "^15.6.1",
