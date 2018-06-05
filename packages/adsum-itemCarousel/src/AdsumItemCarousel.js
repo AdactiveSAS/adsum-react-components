@@ -82,8 +82,15 @@ class AdsumItemCarousel extends React.Component<PropTypes, StateType> {
 
         _.each(items, (item: ItemObject, key: number) => {
             if (key === items.length - 1) {
-                ret.push(item);
-                pagination.push(ret);
+                if (tempCount < itemsPerPage) {
+                    ret.push(item);
+                    pagination.push(ret);
+                } else {
+                    pagination.push(ret);
+                    ret = [];
+                    ret.push(item);
+                    pagination.push(ret);
+                }
             } else if (tempCount < itemsPerPage) {
                 ret.push(item);
                 tempCount++;
