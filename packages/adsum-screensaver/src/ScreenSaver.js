@@ -17,14 +17,17 @@ export type AppStateType = {
 type MappedStatePropsType = {|
     screensaverIsOpen: boolean,
     modalIsOpen: boolean,
-    contentIsOpen: boolean
+    contentIsOpen: boolean,
+    modalIsEnabled: boolean
 |};
 
 type MappedDispatchPropsType = {|
     onTouchToNavigateClicked: () => void,
     setModalCounter: (counter: number) => void,
     openModal: (payload: boolean) => void,
-    isHere: () => void
+    openContent: () => void,
+    isHere: () => void,
+    disableModal: () => void
 |};
 
 type OwnPropsType = {|
@@ -64,9 +67,13 @@ class ScreenSaver extends React.Component<PropsType> {
      *
      */
     componentDidMount() {
-        const { setModalCounter, initialModalCounter } = this.props;
+        const { setModalCounter, initialModalCounter, modalComponent, disableModal } = this.props;
 
-        setModalCounter(initialModalCounter);
+        if (modalComponent) {
+            setModalCounter(initialModalCounter);
+        } else {
+            disableModal();
+        }
 
         document.addEventListener('touchend', this.clearInactivityTimer.bind(this), false);
 
@@ -82,14 +89,18 @@ class ScreenSaver extends React.Component<PropsType> {
     }
 
     clearInactivityTimer() {
-        const { openModal, inactivityTimer } = this.props;
+        const { openModal, openContent, inactivityTimer } = this.props;
 
         if (this.timer) clearTimeout(this.timer);
 
         this.timer = setTimeout(() => {
             if (!this.props.modalIsOpen && !this.props.contentIsOpen) {
-                this.props.setModalCounter(this.props.initialModalCounter);
-                openModal(true);
+                if (this.props.modalIsEnabled) {
+                    this.props.setModalCounter(this.props.initialModalCounter);
+                    openModal(true);
+                } else {
+                    openContent();
+                }
             }
         }, inactivityTimer);
     }
@@ -147,17 +158,19 @@ class ScreenSaver extends React.Component<PropsType> {
 const mapStateToProps = (state: AppStateType): MappedStatePropsType => ({
     screensaverIsOpen: state.screenSaver.screensaverIsOpen,
     modalIsOpen: state.screenSaver.modalIsOpen,
-    contentIsOpen: state.screenSaver.contentIsOpen
+    contentIsOpen: state.screenSaver.contentIsOpen,
+    modalIsEnabled: state.screenSaver.modalIsEnabled
 });
 
 const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => ({
     isHere: (): void => dispatch(screenSaverActions.isHere()),
     openModal: (payload: boolean): void => dispatch(screenSaverActions.openModal(payload)),
+    openContent: (): void => dispatch(screenSaverActions.openContent()),
     onTouchToNavigateClicked: () => {
-        console.log('CLICKED ON TOUCH TO NAVIGATE!');
         dispatch(screenSaverActions.closeContent(true));
     },
-    setModalCounter: (counter: number): void => dispatch(screenSaverActions.setModalCounter(counter))
+    setModalCounter: (counter: number): void => dispatch(screenSaverActions.setModalCounter(counter)),
+    disableModal: (): void => dispatch(screenSaverActions.disableModal()),
 });
 
 export default connect(
