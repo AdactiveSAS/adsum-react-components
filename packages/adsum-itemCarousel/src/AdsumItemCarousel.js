@@ -28,7 +28,8 @@ type PropTypes = {|
     +titleWrapperCSS?: CSSStyleDeclaration,
     +titleCSS?: CSSStyleDeclaration,
     +dashCSS?: CSSStyleDeclaration,
-    +carouselOptions?: Object
+    +carouselOptions?: Object,
+    +defaultLogo?: string
 |};
 
 type StateType = {|
@@ -124,11 +125,15 @@ class AdsumItemCarousel extends React.Component<PropTypes, StateType> {
     }
 
     displayLogo(item: ItemObject): Element<'img'> | Element<'span'> {
-        const { logoCSS } = this.props;
+        const { logoCSS, defaultLogo } = this.props;
 
         if (item.logo && item.logo.uri) {
             return (
                 <img className="thumbnail-panel-logo" src={item.logo.uri} style={logoCSS}/>
+            );
+        } else if (defaultLogo) {
+            return (
+                <img className="thumbnail-panel-logo" src={defaultLogo} style={logoCSS}/>
             );
         } else {
             return (
