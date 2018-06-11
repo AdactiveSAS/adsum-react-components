@@ -13,9 +13,9 @@ type PropTypes = {|
     +data: Array<Object>,
     +fuseOptions: Object,
     +queryValue: string,
-    searchWrapperCSS?: CSSStyleDeclaration,
-    inputCSS?: CSSStyleDeclaration,
-    placeHolder?: string
+    +searchWrapperCSS?: CSSStyleDeclaration,
+    +inputCSS?: CSSStyleDeclaration,
+    +placeHolder?: string
 |};
 
 type StateType = {|
