@@ -8,7 +8,8 @@ export type ScreenSaverReducersStateType = {|
     +screensaverIsOpen: boolean,
     +modalIsOpen: boolean,
     +contentIsOpen: boolean,
-    +modalTimer: number
+    +modalTimer: number,
+    +modalIsEnabled: boolean
 |};
 
 export type ScreenSaverReducersType = (state: ScreenSaverReducersStateType, action: ScreensaverActionType) => ScreenSaverReducersStateType;
@@ -17,7 +18,8 @@ export const initialState: ScreenSaverReducersStateType = {
     screensaverIsOpen: false,
     modalIsOpen: false,
     contentIsOpen: false,
-    modalTimer: 10
+    modalTimer: 10,
+    modalIsEnabled: true
 };
 
 const screenSaverReducers = (state: ScreenSaverReducersStateType = initialState, action: ScreensaverActionType): ScreenSaverReducersStateType => {
@@ -55,6 +57,11 @@ const screenSaverReducers = (state: ScreenSaverReducersStateType = initialState,
             ...state,
             contentIsOpen: false,
             screensaverIsOpen: false
+        };
+    case screenSaverActionsType.DISABLE_MODAL:
+        return {
+            ...state,
+            modalIsEnabled: false
         };
     default:
         return state;
