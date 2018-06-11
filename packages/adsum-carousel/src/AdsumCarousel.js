@@ -17,11 +17,11 @@ export type MediaType = {|
 |};
 
 type PropsType = {|
-    isOpen: boolean,
-    medias: Array<MediaType>,
-    onMediaTouch: (MediaType) => void,
-    style: CSSStyleDeclaration,
-    carouselOptions?: Object
+    +isOpen: boolean,
+    +medias: Array<MediaType>,
+    +onMediaTouch: (MediaType) => void,
+    +carouselOptions?: Object,
+    +style?: CSSStyleDeclaration
 |};
 
 class AdsumCarousel extends React.Component<PropsType> {
@@ -154,7 +154,7 @@ class AdsumCarousel extends React.Component<PropsType> {
         if (!isOpen) return null;
 
         return (
-            <div style={this.props.style ? this.props.style : null} >
+            <div style={style} >
                 <Carousel
                     {...carouselOptions}
                     autoplay={this.state.autoplay}
