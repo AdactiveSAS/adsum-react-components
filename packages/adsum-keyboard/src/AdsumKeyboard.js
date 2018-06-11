@@ -13,9 +13,9 @@ type PropsType = {|
     +lang: 'en' | 'fr',
     +currentValue: string,
     +onKeyClicked: (string) => void,
-    keyboardCSS?: CSSStyleDeclaration,
-    keyboardLineCSS?: CSSStyleDeclaration,
-    buttonCSS?: CSSStyleDeclaration
+    +keyboardCSS?: CSSStyleDeclaration,
+    +keyboardLineCSS?: CSSStyleDeclaration,
+    +buttonCSS?: CSSStyleDeclaration
 |};
 
 type StateType = {|

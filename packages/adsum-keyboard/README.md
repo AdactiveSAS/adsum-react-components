@@ -33,7 +33,10 @@ type PropsType = {|
     +isOpen: boolean,
     +lang: 'en' | 'fr',
     +currentValue: string,
-    +onKeyClicked: (string) => void
+    +onKeyClicked: (string) => void,
+    +keyboardCSS?: CSSStyleDeclaration,
+    +keyboardLineCSS?: CSSStyleDeclaration,
+    +buttonCSS?: CSSStyleDeclaration
 |};
 
 
@@ -46,9 +49,18 @@ static defaultProps = {
 ```
 
 **isOpen** -> To show or hide keyboard
+
 **lang** -> Language of keyboard
+
 **currentValue** -> To pass current query value from application for keyboard to process result
-**onKeyClicked** -> A callback function to result back to the application
+
+**onKeyClicked** -> A callback function to result back to the 
+
+**keyboardCSS** -> To customise the overall CSS for the entire component
+
+**keyboardLineCSS** -> To customise the CSS for each line of the keyboard component
+
+**buttonCSS** -> To customise each button on the keyboard
 
 ## Copy component inside your project src folder  
 
