@@ -8,7 +8,6 @@ import { mapActions } from '../index';
 
 import './map.css';
 
-import type { AppStateType } from '../../../../src/rootReducer';
 import type { MapStateType } from './initialState';
 
 type MappedStatePropsType = {|
@@ -81,7 +80,7 @@ class Map extends React.Component<PropsType> {
     }
 }
 
-const mapStateToProps = (state: AppStateType): MappedStatePropsType => ({
+const mapStateToProps = (state: MapStateType): MappedStatePropsType => ({
     mapState: state.map.state,
 });
 
