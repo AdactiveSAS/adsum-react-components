@@ -20,6 +20,7 @@ type MappedDispatchPropsType = {|
 |};
 type OwnPropsType = {|
     isOpen: boolean,
+    store: any,
     onClick: () => any,
     device: number,
     display: string,
@@ -39,13 +40,14 @@ class Map extends React.Component<PropsType> {
      */
     componentDidMount() {
         const {
+            store,
             onClick,
             device,
             display,
             backgroundImage,
             PopOver,
         } = this.props;
-        this.props.init(device, display, backgroundImage, onClick, PopOver);
+        this.props.init(store, device, display, backgroundImage, onClick, PopOver);
     }
 
     componentWillUpdate(nextProps: PropsType) {
@@ -85,7 +87,7 @@ const mapStateToProps = (state: MapStateType): MappedStatePropsType => ({
 });
 
 const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => bindActionCreators({
-    init: (device: number, display: string, backgroundImage: string, onClick: () => any, PopOver: any): void => dispatch(mapActions.init(device, display, backgroundImage, onClick, PopOver)),
+    init: (store: any, device: number, display: string, backgroundImage: string, onClick: () => any, PopOver: any): void => dispatch(mapActions.init(store, device, display, backgroundImage, onClick, PopOver)),
     willOpen: (): void => dispatch(mapActions.willOpen()),
     willClose: (): void => dispatch(mapActions.willClose()),
 }, dispatch);

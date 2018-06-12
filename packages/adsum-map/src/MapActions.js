@@ -37,7 +37,7 @@ export const types = {
     DID_RESET: 'map/DID_RESET',
 };
 
-export type WillInitActionType = {| type: 'map/WILL_INIT', device: number, display: string, backgroundImage: string, onClick: any, PopOver: any |};
+export type WillInitActionType = {| type: 'map/WILL_INIT', store: any, device: number, display: string, backgroundImage: string, onClick: any, PopOver: any |};
 export type SwitchModeActionType = {| type: 'map/SWITCH_MODE', mode: MapModeType |};
 export type DidInitActionType = {| type: 'map/DID_INIT' |};
 export type FloorWillChangeActionType = {|
@@ -98,7 +98,7 @@ export type MapActionType =
 
 export type WilResetActionCreatorType = () => WillResetActionType;
 export type DidResetActionCreatorType = () => DidResetActionType;
-export type WillInitActionCreatorType = (device: number, display: string, backgroundImage: string, onClick: any, PopOver: any) => WillInitActionType;
+export type WillInitActionCreatorType = (store: any, device: number, display: string, backgroundImage: string, onClick: any, PopOver: any) => WillInitActionType;
 export type SwitchModeActionCreatorType = () => SwitchModeActionType;
 export type DidInitActionCreatorType = () => DidInitActionType;
 export type FloorWillChangeActionCreatorType = (floorId: number, centerOn: boolean) => FloorWillChangeActionType;
@@ -128,8 +128,9 @@ export type WillDrawToPlaceActionCreatorType = (placeId: number) => WillDrawToPl
  * @memberof! module:Map#
  * @returns {object}
  */
-export const init: WillInitActionCreatorType = (device: number, display: string, backgroundImage: string, onClick: any, PopOver: any): WillInitActionType => ({
+export const init: WillInitActionCreatorType = (store: any ,device: number, display: string, backgroundImage: string, onClick: any, PopOver: any): WillInitActionType => ({
     type: types.WILL_INIT,
+    store,
     device,
     display,
     backgroundImage,

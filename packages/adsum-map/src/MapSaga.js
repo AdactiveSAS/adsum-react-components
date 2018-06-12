@@ -11,9 +11,6 @@ import clickController from './controllers/ClickController';
 import wayfindingController from './controllers/WayfindingController';
 import placesController from './controllers/PlacesController';
 
-// import store from '../../store/index';
-import store from '../../../../src/store/index';
-
 import type {
     FloorWillChangeActionType,
     WillSelectActionType,
@@ -39,6 +36,7 @@ const { getSortedPaths, sortAllPlaces } = placesController;
 const { updateSelection } = selectionController;
 const { goToPath, goToKioskLocation } = wayfindingController;
 
+let store = null;
 let resetPromise = null;
 let resetDrawPromise = null;
 let onClickCallBack = null;
@@ -74,6 +72,7 @@ const initMapEvents = () => {
 /* ------------------------------------ MAP ASYNC METHODS  --------------------------------------------*/
 function* onInit(action: WillInitActionType) {
     yield delay(200);
+    store = action.store;
     yield call([mapController, init], action.device, action.display, action.backgroundImage, action.PopOver);
 
     initMapEvents();
