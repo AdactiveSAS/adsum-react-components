@@ -4,11 +4,11 @@ import * as React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { mapActions } from '../Map';
+import { mapActions } from '../index';
 
 import './map.css';
 
-import type { AppStateType } from '../../rootReducer';
+import type { AppStateType } from '../../../../src/rootReducer';
 import type { MapStateType } from './initialState';
 
 type MappedStatePropsType = {|

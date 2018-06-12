@@ -11,7 +11,9 @@ import clickController from './controllers/ClickController';
 import wayfindingController from './controllers/WayfindingController';
 import placesController from './controllers/PlacesController';
 
-import store from '../../store/index';
+// import store from '../../store/index';
+import store from '../../../../src/store/index';
+
 import type {
     FloorWillChangeActionType,
     WillSelectActionType,

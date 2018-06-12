@@ -1,6 +1,7 @@
 // @flow
 
-import deviceConfig from '../../../services/Config';
+// import deviceConfig from '../../../services/Config';
+import deviceConfig from '../../../../../src/services/Config';
 
 import CustomUserObject from '../kioskIndicator/CustomUserObject';
 
