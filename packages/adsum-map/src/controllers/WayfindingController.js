@@ -1,8 +1,5 @@
 // @flow
 
-// import deviceConfig from '../../../services/Config';
-import deviceConfig from '../../../../../src/services/Config';
-
 import CustomUserObject from '../kioskIndicator/CustomUserObject';
 
 import PathSectionDrawer from '../path/PathSectionDrawer';
@@ -17,10 +14,12 @@ class WayfindingController {
         this.awm = null;
         this.current = null;
         this.locked = false;
+        this.device = -1;
     }
 
-    init(awm) {
+    init(awm, device) {
         this.awm = awm;
+        this.device = device;
         return customDotPathBuilder.initer(awm).then(
             ()=>{
                 return this.loadUserObject();
@@ -34,10 +33,9 @@ class WayfindingController {
         return customUserObject.createDefault(
             this.awm.projector.meterToAdsumDistance(3),
         ).then((customUserObj) => {
-            const { device } = deviceConfig.config;
             this.awm.objectManager.user = customUserObj;
             this.awm.objectManager.user.animate();
-            return this.awm.setDeviceId(device, false);
+            return this.awm.setDeviceId(this.device, false);
         });
     }
 

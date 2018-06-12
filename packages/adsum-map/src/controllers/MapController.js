@@ -30,6 +30,7 @@ class MapController {
         this.objectsLoader = null;
         this._resetLock = false;
         this._maxPolarAngle = null;
+        this.device = -1;
     }
     /**
      * Initializing of map
@@ -39,6 +40,8 @@ class MapController {
             entityManager: ACA.entityManager, // Give it in order to be used to consume REST API
             deviceId: device, // The device Id to use
         });
+        this.device = device;
+
         // Create the Map instance
         this.awm = new AdsumWebMap({
             loader: this.adsumLoader, // The loader to use
@@ -63,7 +66,7 @@ class MapController {
             floorsController.init(this.awm);
             labelController.init(this.awm, PopOver);
             this.objectsLoader = new ObjectsLoader(this.awm);
-            return wayfindingController.init(this.awm);
+            return wayfindingController.init(this.awm, device);
         }).then(() => {
             console.log('AdsumWebMap is ready to start');
 
