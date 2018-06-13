@@ -17,29 +17,57 @@ OR
 ```javascript
     import AdsumClock from "@adactive/arc-clock"
      ...
-    <AdsumClock lang="en" timeFormat="12hrs" />
+    const ClockUi = (props) => (
+        <div role="presentation" className="adsum-clock-wrapper">
+            <div className="adsum-clock">
+                <div className="day-date">{props.dateStr}</div>
+                <div className="time">{props.timeStr}</div>
+            </div>
+        </div>
+    );
+
+    const Clock = AdsumClock(ClockUi);
+
+    <Clock lang="en" timeFormat="12hrs" />
 ```
 
 ### Props
  
 ```javascript
-AdsumClock.propTypes = {
-    lang: PropTypes.string.isRequired,
-    timeFormat: PropTypes.string.isRequired,
-    style: PropTypes.objectOf(PropTypes.string)
-};
-
-AdsumClock.defaultProps = {
+static defaultProps = {
     lang: 'en',
     timeFormat: '24hrs',
-    style: null
+};
+
+type AdsumClockPropsType = {
+    lang: LangType,
+    timeFormat: TimeFormatType
 };
 ```
 
+### Additional props, which will be passed to the provided ClockUi component:
+
 ```javascript
-lang : "en" | "fr" | "zh"
-timeFormat : "24hrs" | "12hrs"
-style : Css react object
+
+{
+    +year: string,
+    +month: string,
+    +day: string,
+    +hours: string,
+    +minutes: string,
+    +dateStr: string,
+    +timeStr: string
+};
+
+```
+
+```javascript
+type LangType = 'en' | 'zh' | 'fr';
+type TimeFormatType = '24hrs' | '12hrs';
+type AdsumClockPropsType = {
+    lang: LangType,
+    timeFormat: TimeFormatType
+};
 ```
 
 
