@@ -1,5 +1,7 @@
 # Clock component
 
+The clock component is, in reality, a wrapper function, which wraps the component, which you supply and provides all the props you need to create your own look and feel for the clock :)
+
 ![image](https://user-images.githubusercontent.com/6003532/39854315-ce02252c-5459-11e8-826a-f59717fbff0f.png)
 
 [Live examples here](https://adactivesas.github.io/adsum-react-components/packages/adsum-clock/examples/index.html)
@@ -17,6 +19,8 @@ OR
 ```javascript
     import AdsumClock from "@adactive/arc-clock"
      ...
+    // Your own stateless UI component for the clock
+    // You will be provided with props, which are described below
     const ClockUi = (props) => (
         <div role="presentation" className="adsum-clock-wrapper">
             <div className="adsum-clock">
@@ -26,8 +30,11 @@ OR
         </div>
     );
 
+
+    // The actual wrapping of your component with AdsumClock wrapper
     const Clock = AdsumClock(ClockUi);
 
+    // Usage of the wrapped component
     <Clock lang="en" timeFormat="12hrs" />
 ```
 
