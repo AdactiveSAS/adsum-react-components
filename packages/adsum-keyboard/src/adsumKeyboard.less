@@ -63,17 +63,19 @@
 
 @media (orientation: landscape) {
   .templateKeyboard {
-    width: 90%;
-    bottom: -55px;
+    width: 100%;
     z-index: 99;
-    margin: auto;
+    position: relative;
+    display: inline-block;
+    padding: 20px 0;
+
     &.active {
       display: block;
     }
 
     .keyboard {
-      align-items: stretch;
       display: flex;
+      align-items: center;
       flex-direction: column;
       justify-content: flex-start;
       resize: both;
@@ -178,16 +180,18 @@
 
 @media (orientation: portrait) {
   .templateKeyboard {
-    width: 90%;
-    bottom: -55px;
+    width: 100%;
     z-index: 99;
-    margin: auto;
+    position: relative;
+    display: inline-block;
+    padding: 20px 0;
+
     &.active {
       display: block;
     }
 
     .keyboard {
-      align-items: stretch;
+      align-items: center;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;

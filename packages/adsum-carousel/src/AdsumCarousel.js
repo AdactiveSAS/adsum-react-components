@@ -17,11 +17,11 @@ export type MediaType = {|
 |};
 
 type PropsType = {|
-    isOpen: boolean,
-    autoplayInterval: number,
-    medias: Array<MediaType>,
-    onMediaTouch: (MediaType) => void,
-    style: CSSStyleDeclaration
+    +isOpen: boolean,
+    +medias: Array<MediaType>,
+    +onMediaTouch: (MediaType) => void,
+    +carouselOptions?: Object,
+    +style?: CSSStyleDeclaration
 |};
 
 class AdsumCarousel extends React.Component<PropsType> {
@@ -29,7 +29,22 @@ class AdsumCarousel extends React.Component<PropsType> {
         isOpen: false,
         medias: [],
         onMediaTouch: null,
-        autoplayInterval: 10000
+        carouselOptions: {
+            dragging: false,
+            swiping: false,
+            autoplayInterval: 10000,
+            speed: 1000,
+            renderCenterLeftControls: null,
+            renderCenterRightControls: null,
+            renderCenterBottomControls: null,
+            renderBottomCenterControls: null,
+            arrows: false,
+            pauseOnHover: false,
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            adaptiveHeight: true,
+            wrapAround: true
+        }
     };
 
     constructor(props: PropsType) {
@@ -42,7 +57,7 @@ class AdsumCarousel extends React.Component<PropsType> {
         this.goToNextSlide = this.goToNextSlide.bind(this);
         this.playVideo = this.playVideo.bind(this);
 
-        this.state = { autoplay: true };
+        this.state = { autoplay: props.medias && props.medias.length > 1 ? true : false };
     }
 
     componentDidMount() {
@@ -133,35 +148,17 @@ class AdsumCarousel extends React.Component<PropsType> {
 
     render(): Node {
         const {
-            isOpen, autoplayInterval
+            isOpen, carouselOptions
         } = this.props;
 
         if (!isOpen) return null;
 
-        const carouselSettings = {
-            dragging: false,
-            swiping: false,
-            autoplay: this.state.autoplay,
-            autoplayInterval,
-            speed: 1000,
-            afterSlide: this.slideDidChange,
-            renderCenterLeftControls: null,
-            renderCenterRightControls: null,
-            renderCenterBottomControls: null,
-            renderBottomCenterControls: null,
-            arrows: false,
-            pauseOnHover: false,
-            slidesToShow: 1,
-            slidesToScroll: 1,
-            adaptiveHeight: true,
-            wrapAround: true,
-            decorators: []
-        };
-
         return (
-            <div style={this.props.style ? this.props.style : null} >
+            <div style={style} >
                 <Carousel
-                    {...carouselSettings}
+                    {...carouselOptions}
+                    autoplay={this.state.autoplay}
+                    afterSlide={this.slideDidChange}
                     className="adsumCarousel"
                     ref={(carousel: Carousel) => {
                         this.carousel = carousel;

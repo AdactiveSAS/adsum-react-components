@@ -28,10 +28,15 @@ type PropTypes = {|
     +titleWrapperCSS?: CSSStyleDeclaration,
     +titleCSS?: CSSStyleDeclaration,
     +dashCSS?: CSSStyleDeclaration,
-    +carouselOptions?: Object
+    +carouselOptions?: Object,
+    +defaultLogo?: string
 |};
 
-class AdsumItemCarousel extends React.Component<PropTypes> {
+type StateType = {|
+    slideIndex: number
+|};
+
+class AdsumItemCarousel extends React.Component<PropTypes, StateType> {
     static defaultProps = {
         isOpen: false,
         items: [],
@@ -45,12 +50,24 @@ class AdsumItemCarousel extends React.Component<PropTypes> {
         this.bindAll();
     }
 
+    state = {
+        slideIndex: 0
+    }
+
     bindAll() {
         this.generateThumbNails = this.generateThumbNails.bind(this);
         this.generatePagination = this.generatePagination.bind(this);
         this.createPagination = this.createPagination.bind(this);
         this.displayLogo = this.displayLogo.bind(this);
         this.onItemClicked = this.onItemClicked.bind(this);
+    }
+
+    componentDidUpdate(prevProps: PropTypes) {
+        if (prevProps.items !== this.props.items) {
+            this.setState({
+                slideIndex: 0
+            });
+        }
     }
 
     onItemClicked(item: ItemObject) {
@@ -66,8 +83,15 @@ class AdsumItemCarousel extends React.Component<PropTypes> {
 
         _.each(items, (item: ItemObject, key: number) => {
             if (key === items.length - 1) {
-                ret.push(item);
-                pagination.push(ret);
+                if (tempCount < itemsPerPage) {
+                    ret.push(item);
+                    pagination.push(ret);
+                } else {
+                    pagination.push(ret);
+                    ret = [];
+                    ret.push(item);
+                    pagination.push(ret);
+                }
             } else if (tempCount < itemsPerPage) {
                 ret.push(item);
                 tempCount++;
@@ -101,11 +125,15 @@ class AdsumItemCarousel extends React.Component<PropTypes> {
     }
 
     displayLogo(item: ItemObject): Element<'img'> | Element<'span'> {
-        const { logoCSS } = this.props;
+        const { logoCSS, defaultLogo } = this.props;
 
         if (item.logo && item.logo.uri) {
             return (
                 <img className="thumbnail-panel-logo" src={item.logo.uri} style={logoCSS}/>
+            );
+        } else if (defaultLogo) {
+            return (
+                <img className="thumbnail-panel-logo" src={defaultLogo} style={logoCSS}/>
             );
         } else {
             return (
@@ -152,7 +180,10 @@ class AdsumItemCarousel extends React.Component<PropTypes> {
         return (
             <div className="templateCarousel-container">
                 <div className="templateCarousel">
-                    <Carousel {...carouselOptions}>
+                    <Carousel {...carouselOptions}
+                          slideIndex={this.state.slideIndex}
+                          afterSlide={slideIndex => this.setState({ slideIndex })}
+                    >
                         {
                             this.generatePagination(pagination)
                         }

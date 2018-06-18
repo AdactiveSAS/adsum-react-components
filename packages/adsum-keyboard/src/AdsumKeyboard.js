@@ -12,7 +12,10 @@ type PropsType = {|
     +isOpen: boolean,
     +lang: 'en' | 'fr',
     +currentValue: string,
-    +onKeyClicked: (string) => void
+    +onKeyClicked: (string) => void,
+    +keyboardCSS?: CSSStyleDeclaration,
+    +keyboardLineCSS?: CSSStyleDeclaration,
+    +buttonCSS?: CSSStyleDeclaration
 |};
 
 type StateType = {|
@@ -71,20 +74,20 @@ class AdsumKeyboard extends React.Component<PropsType, StateType> {
      * React render keyboard based on lang
      */
     render(): Node {
-        const { lang, isOpen } = this.props;
+        const { lang, isOpen, keyboardCSS, keyboardLineCSS, buttonCSS } = this.props;
         const keyset = keysets[lang] ? keysets[lang] : keysets.en;
 
         if (!isOpen) return null;
 
         return (
-            <div className="templateKeyboard keyboardMicrosoftStyle" ref="templateKeyboard">
+            <div className="templateKeyboard keyboardMicrosoftStyle" ref="templateKeyboard" style={keyboardCSS}>
                 <div className="keyboard">
                     {
                         keyset.layouts.map((layout, i) => (
                             <div className={`${layout.class} ${layout.class.includes(this.state.layout) ? 'active' : 'hidden'}`} key={`layout ${i}`}>
                                 {
                                     layout.lines.map((line, j) => (
-                                        <div className={line.class} key={`line ${i + j}`}>
+                                        <div className={line.class} key={`line ${i + j}`} style={keyboardLineCSS}>
                                             {
                                                 line.keys.map((key, k) => (
                                                     <button
@@ -93,6 +96,7 @@ class AdsumKeyboard extends React.Component<PropsType, StateType> {
                                                         data-action={key.dataAction}
                                                         key={`key ${i + j + k}`}
                                                         onClick={() => this.onKeyClick(key)}
+                                                        style={buttonCSS}
                                                     >
                                                         {key.text}
                                                     </button>

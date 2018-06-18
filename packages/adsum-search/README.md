@@ -44,9 +44,12 @@ OR
 type PropTypes = {|
     +isOpen: boolean,
     +lang: 'en' | 'fr',
-    +queryValue: string,
     +data: Array<Object>,
-    +fuseOptions: Object
+    +queryValue: string,
+    +fuseOptions: Object,
+    +searchWrapperCSS?: CSSStyleDeclaration,
+    +inputCSS?: CSSStyleDeclaration,
+    +placeHolder?: string
 |};
 
 static defaultProps = {
@@ -66,6 +69,12 @@ static defaultProps = {
 **queryValue** -> String to be displayed on the search bar and to be searched
 
 **fuseOptions** -> Refer to [fusejs.io](http://fusejs.io/) for more information
+
+**searchWrapperCSS** -> To customise the overall CSS for the entire component
+
+**inputCSS** -> To customise the CSS for the search bar
+
+**placeHolder** -> To customise placeholder message
 
 ```javascript
 const fuseOptions = {

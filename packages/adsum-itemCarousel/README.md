@@ -68,7 +68,8 @@ type PropTypes = {|
     +titleWrapperCSS?: CSSStyleDeclaration,
     +titleCSS?: CSSStyleDeclaration,
     +dashCSS?: CSSStyleDeclaration,
-    +carouselOptions?: Object
+    +carouselOptions?: Object,
+    +defaultLogo?: string
 |};
 
 static defaultProps = {
@@ -101,6 +102,8 @@ static defaultProps = {
 **dashCSS** -> To customise CSS for the dash div
 
 **carouselOptions** -> Refer to [nuka-carousel](http://kenwheeler.github.io/nuka-carousel/#/) for more information 
+
+**defaultLogo** -> To add a default logo for items in the carousel without logo
 
 ![image](https://user-images.githubusercontent.com/8574893/40474237-12f20d92-5f71-11e8-9140-16e7c353d0d6.png)
 

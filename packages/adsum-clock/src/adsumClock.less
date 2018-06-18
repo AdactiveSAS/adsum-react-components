@@ -1,27 +1,40 @@
-@import "../../adsum-utils/less/colors-default";
+.adsum-clock-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .adsum-clock {
+    color: lightgray;
+    text-align: center;
+
+    .day-date {
+      margin: 0;
+      letter-spacing: -2px;
+      color: #ababab;
+    }
+
+    .time {
+      font-weight: bold;
+      color: #404040;
+    }
+
+    .divider {
+      width: 40px;
+      margin: 0 auto;
+      border-width: 3px;
+    }
+  }
+}
 
 @media (orientation: landscape) {
   .adsum-clock-wrapper {
     height: 100%;
-    float: right;
-
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding-right: 50px;
 
     .adsum-clock {
-      font-size: 2em;
-      color: @primary-text-color;
-      text-align: right;
+      font-size: 2.3em;
 
       .day-date {
-        letter-spacing: -2px;
-        text-transform: uppercase;
-      }
-
-      .time {
-        font-weight: bold;
+        font-size: 1.0em;
       }
     }
   }
@@ -29,27 +42,13 @@
 
 @media (orientation: portrait) {
   .adsum-clock-wrapper {
-    width: 40%;
-    height: 100%;
-    float: right;
-
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding-right: 50px;
 
     .adsum-clock {
-      font-size: 2.5em;
+      font-size: 1.8em;
       text-align: right;
 
       .day-date {
-        color: @primary-text-color;
-        letter-spacing: -2px;
-        text-transform: uppercase;
-      }
-
-      .time {
-        font-weight: bold;
+        font-size: 0.7em;
       }
     }
   }

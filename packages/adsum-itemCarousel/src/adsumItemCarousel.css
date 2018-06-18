@@ -158,7 +158,7 @@
   .templateCarousel-container .templateCarousel .slider .slider-frame .slider-list .slider-slide {
     height: 100% !important;
     width: 100% !important;
-    padding-top: 20px;
+    padding: 40px 45px 50px 45px;
   }
   .templateCarousel-container .templateCarousel .thumbnail-wrapper {
     width: 260px;

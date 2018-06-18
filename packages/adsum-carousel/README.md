@@ -27,24 +27,49 @@ OR
 ### Props
  
 ```javascript
-AdsumCarousel.propTypes = {
-    isOpen: PropTypes.bool.isRequired,
-    medias: PropTypes.arrayOf(PropTypes.object).isRequired,
-    onTouchToNavigate: PropTypes.func.isRequired
-};
+type PropsType = {|
+    +isOpen: boolean,
+    +medias: Array<MediaType>,
+    +onMediaTouch: (MediaType) => void,
+    +carouselOptions?: Object,
+    +style?: CSSStyleDeclaration
+|};
 
-AdsumCarousel.defaultProps = {
+static defaultProps = {
     isOpen: false,
     medias: [],
-    onTouchToNavigate: null
+    onMediaTouch: null,
+    carouselOptions: {
+        dragging: false,
+        swiping: false,
+        autoplayInterval: 10000,
+        speed: 1000,
+        renderCenterLeftControls: null,
+        renderCenterRightControls: null,
+        renderCenterBottomControls: null,
+        renderBottomCenterControls: null,
+        arrows: false,
+        pauseOnHover: false,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        adaptiveHeight: true,
+        wrapAround: true
+    }
 };
 ```
 
-```javascript
-isOpen: true | false
-medias: Data (Array of Objects)
-onTouchToNavigate: callback function
-```
+**isOpen** -> To show or hide carousel
+
+**medias** -> Array of medias to be displayed in the carousel
+
+**onMediaTouch** -> A callback function to capture clicking of the media
+
+**carouselOptions** -> Refer to [nuka-carousel](http://kenwheeler.github.io/nuka-carousel/#/) for more information. However, 2 of the following options in nuka carousel have been predefined in Adsum Carousel Component.
+
+- autoPlay: This option will be set to true if there is only 1 media in the carousel and false if there are multiple media.
+- afterSlide: This option will be a predefined callback function that plays a video immediately if the next media in the carousel is a video.
+
+**style** -> To customise the CSS of the overall component
 
 
 ## Copy component inside your project src folder  
