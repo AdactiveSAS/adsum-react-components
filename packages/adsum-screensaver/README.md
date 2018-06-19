@@ -69,7 +69,9 @@ OR
 **onOverlayClicked** - a custom function, which will be called, when user clicks on the screenSaver's overlay
 
 **modalComponent** - any component you like, which can be wrapped with *ModalWrapper*
-and thus, be passed 3 props: *modalTimer*, *closeModal*, *isHere*. *closeModal* and *isHere* are currently duplicates of each other, but this will be changed at some point of time in the future. Call *closeModal* or *isHere*, if you want to close the screensaver.
+and thus, be passed 3 props: *modalTimer*, *closeModal*, *isHere*. *closeModal* and *isHere* are currently duplicates of each other,
+but this will be changed at some point of time in the future. Call *closeModal* or *isHere*, if you want to close the screensaver.
+Not providing the modal prop will result in skipping modal step and the user will be taken to the actual screensaver content
 
 **children** - any content, which you want to display in the middle of the screen. 
 
