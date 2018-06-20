@@ -1,6 +1,10 @@
+![react-badge](https://img.shields.io/badge/react-js-2353c1de.svg?style=flat)
+![touch-badge](https://img.shields.io/badge/for-touch--screen-ff69b4.svg?style=flat)
+![licence-badge](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat)
+
 <p align="center">
   <a href="http://adactive.com">
-    <img alt="babel" src="./logo.jpg" width="546">
+    <img alt="babel" src="https://user-images.githubusercontent.com/6003532/41638658-21e38a0c-748d-11e8-93d2-8a3d1a4ee6a7.png" width="546">
   </a>
 </p>
 
