@@ -1,4 +1,4 @@
-![react-badge](https://img.shields.io/badge/react-js-2353c1de.svg?style=flat)
+![react-badge](https://img.shields.io/badge/react-js-53c1de.svg?style=flat)
 ![touch-badge](https://img.shields.io/badge/for-touch--screen-ff69b4.svg?style=flat)
 ![licence-badge](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat)
 
@@ -8,12 +8,12 @@
   </a>
 </p>
 
-# Adsum-React-Components
-- Mono repositories for Adsum React Components
+# Touch-React-Components
+- React components for touch screens enable application.
 
 ## Why ? 
 
-This is a library of react components for interactive screens.
+This is a mono-repo has been create to share and collaborate on components for interactive screens.
   
 ## What's inside ? 
 
@@ -22,14 +22,15 @@ This is a library of react components for interactive screens.
  - [adsum-clock](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-clock)
  - [adsum-itemCarousel](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-itemCarousel)
  - [adsum-keyboard](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-keyboard)
- - [adsum-modal](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-modal)
  - [adsum-screensaver](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-screensaver)
  - [adsum-search](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-search)
  - [adsum-utils](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-utils)
 
 ## Stack
 
-// TODO
+ - React
+ - Redux
+ - Flow
   
 ## How to contribute ?
 
