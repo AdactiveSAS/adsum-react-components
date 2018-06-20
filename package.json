@@ -16,5 +16,13 @@
 		"build-css": "node-less-chokidar packages",
 		"precommit": "build-css"
 	},
-	"dependencies": {}
+	"dependencies": {},
+	 "keywords": [
+	    	"react",
+	    	"redux",
+		"touchscreen",
+		"touch",
+		"adsum",
+		"adadactive",
+	  ]
 }
