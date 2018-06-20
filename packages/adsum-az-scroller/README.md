@@ -1,4 +1,9 @@
-# Scrolling list with letters for easier navigation
+![react-badge](https://img.shields.io/badge/react-js-53c1de.svg?style=flat)
+![touch-badge](https://img.shields.io/badge/for-touch--screen-ff69b4.svg?style=flat)
+
+# A to Z scrolling list
+
+Made with <3 for easier touch experience.
 
 ![2018-05-11 0 17 34](https://user-images.githubusercontent.com/5297278/39992222-c13dfc3e-577a-11e8-9d6e-d6cbdd8f40e1.png)
 
@@ -13,6 +18,8 @@ OR
 ```javascript
     yarn add --dev @adactive/az-scroller
 ```
+
+## How to use
 
 ```javascript
     import AzScroller from "@adactive/az-scroller";
