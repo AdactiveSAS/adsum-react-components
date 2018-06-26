@@ -9,30 +9,28 @@ import floorsController from './FloorsController';
 import labelController from './LabelController';
 import placesController from './PlacesController';
 
+
+import { CancellationTokenSource, CancellationToken } from 'prex-es5';
+
 class WayfindingController {
     constructor() {
         this.awm = null;
         this.current = null;
-        this.locked = false;
         this.device = -1;
+
+        this._source = new CancellationTokenSource();
     }
 
     init(awm, device) {
         this.awm = awm;
         this.device = device;
-        return customDotPathBuilder.initer(awm).then(
-            ()=>{
-                return this.loadUserObject();
-            }
-        )
+        return customDotPathBuilder.initer(awm).then(() => this.loadUserObject());
     }
 
     loadUserObject() {
         const customUserObject = new CustomUserObject(this.awm, { placeId: Symbol('UserPlace'), id: Symbol('UserPositionId') });
         this.awm.objectManager.user._dispose();
-        return customUserObject.createDefault(
-            this.awm.projector.meterToAdsumDistance(3),
-        ).then((customUserObj) => {
+        return customUserObject.createDefault(this.awm.projector.meterToAdsumDistance(3), ).then((customUserObj) => {
             this.awm.objectManager.user = customUserObj;
             this.awm.objectManager.user.animate();
             return this.awm.setDeviceId(this.device, false);
@@ -40,7 +38,7 @@ class WayfindingController {
     }
 
     getPath(object) {
-        if(object === null) {
+        if (object === null) {
             return null;
         }
 
@@ -53,25 +51,21 @@ class WayfindingController {
             this.reset();
         }
 
-        if(path === null) {
+        if (path === null) {
             return Promise.resolve();
         }
 
-        if(!path.computed) {
-            console.error("WayfindingController.goToPath > Path must be computed before ", path);
+        if (!path.computed) {
+            console.error('WayfindingController.goToPath > Path must be computed before ', path);
             return Promise.resolve();
         }
 
         this.current = path;
 
-        return Promise.resolve()
+        const pathSections = this.current.getPathSections(false);
+        // TODO labelController.reset();
+        return floorsController.computeStack(pathSections, this._source.token)
             .then(() => {
-
-                this.locked = true;
-
-                const pathSections = this.current.getPathSections(true);
-                // TODO labelController.reset();
-                floorsController.computeStack(pathSections);
                 // TODO floorsController.explodeStack();
                 // TODO labelController.hideLabelsInStack(floorsController.getStack());
 
@@ -81,43 +75,51 @@ class WayfindingController {
                 // We will chain our promises
                 let promise = Promise.resolve();
                 for (const pathSection of pathSections) {
-
                     // Do the floor change
                     const floor = pathSection.ground.isFloor ? pathSection.ground : null;
 
-                    promise = promise.then(() => floorsController.setCurrentFloor(floor === null ? null : floor.id));
-                    promise = promise.then( previousResult => this.assertNotLock(previousResult));
+                    promise = promise.then(() => floorsController.setCurrentFloor(floor === null ? null : floor.id, this._source.token));
+
                     // TODO promise = promise.then(() => sceneController.setCurrentFloorCustom(floor === null ? null : floor.id));
                     // promise = promise.then(() => sceneController.setCurrentFloor(floor === null ? null : floor.id));
 
-                    //promise = promise.then(() => this.awm.cameraManager.centerOnFloor(floor));
-                    //promise = promise.then( previousResult => this.assertNotLock(previousResult));
+                    // promise = promise.then(() => this.awm.cameraManager.centerOnFloor(floor));
 
                     // Draw the step
-                    if(! pathSection.isInterGround()) { // TODO
-                        promise = promise.then(() => this.drawPathSection(pathSection));
-                        promise = promise.then( previousResult => this.assertNotLock(previousResult));
+                    if (!pathSection.isInterGround()) { // TODO
+                        promise = promise.then(() => this.drawPathSection(pathSection, this._source.token));
                     }
 
                     // Scale label
-                    promise = promise.then(() => labelController.animateLabel(pathSection));
+                    promise = promise.then(() => labelController.animateLabel(pathSection, this._source.token));
 
                     // Add a delay of 1.5 seconds
-                    promise = promise.then(() => (this.locked) ? new Promise((resolve) => {
-                        setTimeout(resolve, 200);
-                    }) : Promise.resolve() );
+                    let tokenTimeOut = null;
+                    promise = promise.then(() =>
+                        new Promise((resolve, reject) => {
+                            const registration = this._source.token.register(() => {
+                                if (tokenTimeOut) {
+                                    clearTimeout(tokenTimeOut);
+                                    reject(new Error('Path was stopped'));
+                                }
+                            });
+                            tokenTimeOut = setTimeout(
+                                () => {
+                                    registration.unregister();
+                                    resolve(true);
+                                },
+                                200
+                            );
+                        })
+                    );
                 }
 
-                return promise.catch((e)=>{ if(e.message !== "Not Locked") return Promise.reject(e); });
+                return promise.catch((e) => { if (e.message !== 'Not Locked') return Promise.reject(e); });
             });
     }
 
-    drawPathSection(pathSection) {
+    drawPathSection(pathSection, token = CancellationToken.none) {
         this.awm.wayfindingManager.removePathSection(pathSection);
-
-        if(!this.locked) {
-            return Promise.resolve();
-        }
 
         const pathSectionObject = customDotPathBuilder.build(pathSection);
 
@@ -127,11 +129,7 @@ class WayfindingController {
             this.awm.wayfindingManager.projector,
         );
 
-        return drawer.draw().catch((e)=>{ if(e.message !== "Path was stopped") return Promise.reject(e); });
-    }
-
-    assertNotLock(previousResult) {
-        return !this.locked ? Promise.reject(new Error('Not Locked')) : Promise.resolve(previousResult);
+        return drawer.draw(token).catch((e) => { if (e.message !== 'Path was stopped') return Promise.reject(e); });
     }
 
     goToKioskLocation() {
@@ -142,11 +140,12 @@ class WayfindingController {
     }
 
     reset() {
-        if(this.current !== null) {
+        this._source.cancel();
+        if (this.current !== null) {
             this.awm.wayfindingManager.removePath(this.current);
             this.current = null;
         }
-        this.locked = false;
+        this._source = new CancellationTokenSource();
         return Promise.resolve();
     }
 }

@@ -1,7 +1,11 @@
 import { Vector3 } from 'three';
 import { Tween, Easing } from 'es6-tween';
+
+import { CancellationToken } from 'prex-es5';
+
+
 import { DISPLAY_MODE, LabelImageObject, LABEL_ORIENTATION_MODES } from '@adactive/adsum-web-map';
-// import ACA from '../../../services/ClientAPI';
+
 import ACA from '@adactive/adsum-utils/services/ClientAPI';
 
 class LabelController {
@@ -54,13 +58,28 @@ class LabelController {
         }
     }
 
-    animateLabel(pathSection) {
+    animateLabel(pathSection, token = CancellationToken.none) {
         const toPlace = pathSection.to === null ? null : ACA.getPlace(pathSection.to.id);
         if (toPlace !== null) {
             const label = this.getAdsumObject3DFromPlace(toPlace);
             if (label !== null) {
+                const initialScale = label._mesh.scale.clone();
+                const resetScale = ()=> {
+                    label._mesh.geometry.computeBoundingBox();
+                    const { max, min } = label._mesh.geometry.boundingBox;
+                    const height = max.y - min.y;
+                    label._mesh.scale.copy(initialScale);
+                    label._mesh.position.z = initialScale.z * height / 2;
+                    label._mesh.updateMatrix();
+                };
                 const tweenMesh = (mesh, from, to, duration) => new Promise((resolve, reject) => {
-                    new Tween(from)
+                    let tween = null;
+                    const registration = token.register(() => {
+                        if(tween) tween.stop();
+                        resetScale();
+                        reject(new Error('Scale was stopped'));
+                    });
+                    tween = new Tween(from)
                         .to(to, duration)
                         .easing(Easing.Elastic.Out)
                         .on('update', (scaleHandler) => {
@@ -73,15 +92,13 @@ class LabelController {
                             mesh.updateMatrix();
                         })
                         .on('complete', () => {
+                            registration.unregister();
                             resolve(true);
                         })
                         .on('stop', () => {
-                            reject(new Error('Scale was stopped'));
                         })
                         .start();
                 });
-
-                const initialScale = label._mesh.scale.clone();
 
                 let promise = Promise.resolve();
 
@@ -93,9 +110,26 @@ class LabelController {
                 ));
 
                 // Add a delay
-                promise = promise.then(() => new Promise((resolve) => {
-                    setTimeout(resolve, 500);
-                }));
+                let tokenTimeOut = null;
+                promise = promise.then(() =>
+                    new Promise((resolve, reject) => {
+                        const registration = token.register(() => {
+                            if (tokenTimeOut) {
+                                clearTimeout(tokenTimeOut);
+                                resetScale();
+                                reject(new Error('Scale was stopped'));
+                            }
+                        });
+                        tokenTimeOut = setTimeout(
+                            () => {
+                                registration.unregister();
+                                resolve(true);
+                            },
+                            500
+                        );
+                    })
+                );
+
 
                 promise = promise.then(() => tweenMesh(
                     label._mesh,

@@ -1,3 +1,5 @@
+import { CancellationToken } from "prex-es5";
+
 import { DISPLAY_MODE, SCENE_EVENTS } from '@adactive/adsum-web-map';
 
 class FloorsController {
@@ -13,33 +15,46 @@ class FloorsController {
         return this;
     }
 
-    computeStack(pathSections) {
+    computeStack(pathSections, token = CancellationToken.none) {
         this.resetStack();
 
-        const tmpStack = [];
-        for (const pathSection of pathSections) {
-            if (!pathSection.isInterGround()) {
-                const layer = {
-                    floor: pathSection.ground,
-                    zInitial: pathSection.ground.altitude,
-                    isInterFloor: false
-                };
+        return new Promise(
+            (resolve,reject)=> {
 
-                if (tmpStack.indexOf(layer.floor.id) === -1) {
-                    tmpStack.push(layer.floor.id);
-                    this.stack.push(layer);
-                }
-            } else {
-                for (let i = 0; i < pathSection.grounds.length - 1; i++) {
-                    const fromFloor = pathSection.grounds[i];
-                    const toFloor = pathSection.grounds[i + 1];
-                    const floorsInBetween = this.findFloorsInBetween(fromFloor, toFloor);
-                    if (floorsInBetween.length > 0) {
-                        this.stack = [...this.stack, ...floorsInBetween];
+                const registration = token.register(() => {
+                    this.resetStack();
+                    reject(new Error("Operation canceled."));
+                });
+
+                const tmpStack = [];
+                for (const pathSection of pathSections) {
+                    if (!pathSection.isInterGround()) {
+                        const layer = {
+                            floor: pathSection.ground,
+                            zInitial: pathSection.ground.altitude,
+                            isInterFloor: false
+                        };
+
+                        if (tmpStack.indexOf(layer.floor.id) === -1) {
+                            tmpStack.push(layer.floor.id);
+                            this.stack.push(layer);
+                        }
+                    } else {
+                        for (let i = 0; i < pathSection.grounds.length - 1; i++) {
+                            const fromFloor = pathSection.grounds[i];
+                            const toFloor = pathSection.grounds[i + 1];
+                            const floorsInBetween = this.findFloorsInBetween(fromFloor, toFloor);
+                            if (floorsInBetween.length > 0) {
+                                this.stack = [...this.stack, ...floorsInBetween];
+                            }
+                        }
                     }
                 }
+
+                registration.unregister();
+                resolve();
             }
-        }
+        );
     }
 
     getStack() {
@@ -92,33 +107,40 @@ class FloorsController {
         });
     }
 
-    setCurrentFloor(floorID) {
+    setCurrentFloor(floorID, token = CancellationToken.none) {
         const floorObject = floorID === null ? null : this.awm.objectManager.floors.get(floorID);
-        return this.stackFromFloor(floorObject);
+        return new Promise(
+            (resolve,reject)=> {
+
+                const registration = token.register(() => {
+                    this.reset();
+                    reject(new Error("Operation canceled."));
+                });
+
+                this.stackFromFloor(floorObject);
+
+                registration.unregister();
+                resolve();
+            }
+        );
+
     }
 
     stackFromFloor(floor, animated = true) { // Mode 2
+
         if (floor === this.awm.sceneManager.currentFloor) {
-            return Promise.resolve();
+            return;
         }
 
-        return new Promise((resolve, reject) => {
-            try {
-                this.showFloorsUnder(floor);
+        this.showFloorsUnder(floor);
 
-                const previous = this.awm.sceneManager.currentFloor;
-                this.awm.sceneManager.currentFloor = floor;
+        const previous = this.awm.sceneManager.currentFloor;
+        this.awm.sceneManager.currentFloor = floor;
 
-                this.awm.sceneManager.dispatchEvent({
-                    type: SCENE_EVENTS.floor.didChanged,
-                    previous,
-                    current: floor,
-                }, );
-
-                resolve();
-            } catch (e) {
-                reject(e);
-            }
+        this.awm.sceneManager.dispatchEvent({
+            type: SCENE_EVENTS.floor.didChanged,
+            previous,
+            current: floor,
         });
     }
 
