@@ -18,11 +18,11 @@
 	},
 	"dependencies": {},
 	 "keywords": [
-	    	"react",
-	    	"redux",
+		"react",
+		"redux",
 		"touchscreen",
 		"touch",
 		"adsum",
-		"adadactive",
+		"adadactive"
 	  ]
 }
