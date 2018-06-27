@@ -113,7 +113,7 @@ class FloorsController {
             (resolve,reject)=> {
 
                 const registration = token.register(() => {
-                    this.reset();
+                    //this.reset();
                     reject(new Error("Operation canceled."));
                 });
 
