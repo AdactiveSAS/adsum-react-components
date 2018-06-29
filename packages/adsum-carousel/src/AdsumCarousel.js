@@ -21,7 +21,8 @@ type PropsType = {|
     +medias: Array<MediaType>,
     +onMediaTouch: (MediaType) => void,
     +carouselOptions?: Object,
-    +style?: CSSStyleDeclaration
+    +style?: CSSStyleDeclaration,
+	+buttonModalForImage?: HTMLButtonElement
 |};
 
 class AdsumCarousel extends React.Component<PropsType> {
@@ -57,7 +58,7 @@ class AdsumCarousel extends React.Component<PropsType> {
         this.goToNextSlide = this.goToNextSlide.bind(this);
         this.playVideo = this.playVideo.bind(this);
 
-        this.state = { autoplay: props.medias && props.medias.length > 1 ? true : false };
+        this.state = { autoplay: !!(props.medias && props.medias.length > 1) };
     }
 
     componentDidMount() {
@@ -136,6 +137,7 @@ class AdsumCarousel extends React.Component<PropsType> {
                 const component = (
                     <div key={media.file.uri} onClick={() => { onMediaTouch(media); }} onTouchEndCapture={() => { onMediaTouch(media); }} >
                         <ImageSlide media={media} parentStyle={parentStyle} />
+                        {buttonModalForImage ? buttonModalForImage() : null}
                     </div>
                 );
 
