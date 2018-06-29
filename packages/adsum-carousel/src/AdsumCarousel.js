@@ -113,7 +113,7 @@ class AdsumCarousel extends React.Component<PropsType> {
      *
      */
     generateSlides(): Array<Node> {
-        const { medias, onMediaTouch } = this.props;
+        const { medias, onMediaTouch, buttonModalForImage } = this.props;
         const parentStyle = this.props.style || null;
         const ret = [];
 
