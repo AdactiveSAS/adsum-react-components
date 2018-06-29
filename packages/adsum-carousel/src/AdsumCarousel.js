@@ -59,6 +59,7 @@ class AdsumCarousel extends React.Component<PropsType> {
         this.slideDidChange = this.slideDidChange.bind(this);
         this.goToNextSlide = this.goToNextSlide.bind(this);
         this.playVideo = this.playVideo.bind(this);
+	    this.slideBeforeChange = this.slideBeforeChange.bind(this);
 
         this.state = {
             autoplay: !!(props.medias && props.medias.length > 1),
@@ -67,7 +68,9 @@ class AdsumCarousel extends React.Component<PropsType> {
     }
 
     componentDidMount() {
-        const { dynamicAutoPlayInterval, medias, carouselOptions, autoplayInterval } = this.props;
+        const {
+            dynamicAutoPlayInterval, medias, carouselOptions, autoplayInterval
+        } = this.props;
 
         if (this._videoPlayers[0]) {
             this.playVideo(0);
@@ -125,17 +128,28 @@ class AdsumCarousel extends React.Component<PropsType> {
     * @param id
     */
     slideDidChange(id: number | string) {
-        const { dynamicAutoPlayInterval, medias } = this.props;
-
         if (!this.props.isOpen) return;
 
         if (this._videoPlayers[id]) {
             this.playVideo(id);
-        } else if (dynamicAutoPlayInterval) {
-            this.setState({
-                autoplay: this.state.autoplay,
-                autoPlayInterval: medias[id].autoPlayInterval ? medias[id].autoPlayInterval : this.state.autoPlayInterval
-            });
+        }
+    }
+
+    slideBeforeChange(id: number | string) {
+        const { dynamicAutoPlayInterval, medias } = this.props;
+
+        if (dynamicAutoPlayInterval) {
+            if (id + 1 === medias.length) {
+                this.setState({
+                    autoplay: this.state.autoplay,
+                    autoPlayInterval: medias[0].autoPlayInterval ? medias[0].autoPlayInterval : this.state.autoPlayInterval
+                });
+            } else {
+                this.setState({
+                    autoplay: this.state.autoplay,
+                    autoPlayInterval: medias[id + 1].autoPlayInterval ? medias[id + 1].autoPlayInterval : this.state.autoPlayInterval
+                });
+            }
         }
     }
 
@@ -192,6 +206,7 @@ class AdsumCarousel extends React.Component<PropsType> {
                     {...carouselOptions}
                     autoplay={this.state.autoplay}
                     afterSlide={this.slideDidChange}
+                    beforeSlide={this.slideBeforeChange}
                     autoplayInterval={this.state.autoPlayInterval}
                     className="adsumCarousel"
                     ref={(carousel: Carousel) => {
