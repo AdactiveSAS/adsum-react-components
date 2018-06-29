@@ -148,7 +148,7 @@ class AdsumCarousel extends React.Component<PropsType> {
 
     render(): Node {
         const {
-            isOpen, carouselOptions
+            isOpen, carouselOptions, style
         } = this.props;
 
         if (!isOpen) return null;
