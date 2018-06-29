@@ -131,7 +131,10 @@ class WayfindingController {
 
                 return promise.catch((e) => {
                     floorsController.reset();
-                    if (e.message !== 'Not Locked' && e.message !== 'Scale was stopped' && e.message !== 'Path was stopped') return Promise.reject(e);
+                    if (e.message !== 'Not Locked'
+                        && e.message !== 'Scale was stopped'
+                        && e.message !== 'Path was stopped'
+                        && e.message !== 'Operation canceled.')  return Promise.reject(e);
                 });
             });
     }

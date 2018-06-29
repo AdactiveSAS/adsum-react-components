@@ -57,6 +57,20 @@ class FloorsController {
         );
     }
 
+    showAllFloor() {
+        this.resetStack();
+        this.awm.objectManager.buildings.forEach((building) => {
+            building.floors.forEach((f) => {
+                const layer = {
+                    floor: f,
+                    zInitial: f.altitude,
+                    isInterFloor: false
+                };
+                this.stack.push(layer);
+            });
+        });
+    }
+
     getStack() {
         return this.stack;
     }
@@ -144,8 +158,10 @@ class FloorsController {
         });
     }
 
-    showFloorsUnder(floor) {
-        this.awm.objectManager.site.setDisplayMode(DISPLAY_MODE.VISIBLE);
+    showFloorsUnder(floor, showSite = true) {
+        if(showSite) {
+            this.awm.objectManager.site.setDisplayMode(DISPLAY_MODE.VISIBLE);
+        }
         floor.setDisplayMode(DISPLAY_MODE.VISIBLE);
         this.awm.objectManager.buildings.forEach((building) => {
             building.floors.forEach((f) => {
