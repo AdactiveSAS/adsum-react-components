@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import type { Node } from 'react';
-import Fuse from "fuse.js";
+import Fuse from 'fuse.js';
 
 import './adsumSearch.css';
 import translate from './adsumSearch.lang.json';
@@ -15,6 +15,8 @@ type PropTypes = {|
     +queryValue: string,
     +searchWrapperCSS?: CSSStyleDeclaration,
     +inputCSS?: CSSStyleDeclaration,
+	+searchIconCSS?: CSSStyleDeclaration,
+	+searchIcon?: string,
     +placeHolder?: string
 |};
 
@@ -65,7 +67,7 @@ class AdsumSearch extends React.Component<PropTypes, StateType> {
         if (prevProps.queryValue !== this.props.queryValue) {
             this.updateValue(this.props.queryValue);
         } else {
-            this.focusTextInput()
+            this.focusTextInput();
         }
     }
 
@@ -80,42 +82,46 @@ class AdsumSearch extends React.Component<PropTypes, StateType> {
     }
 
     implementFuse(data: Array<Object>, options: Object) {
-        let fuse = new Fuse(data, options);
+        const fuse = new Fuse(data, options);
         return fuse;
     }
 
     search(searchInput: string): Array<string> {
         if (searchInput.length > 0) {
             return this.fuse.search(searchInput);
-        } else {
-            return [];
         }
+        return [];
     }
 
     render(): Node {
-        const { isOpen, lang, searchWrapperCSS, inputCSS, placeHolder } = this.props;
+        const {
+            isOpen, lang, searchWrapperCSS, inputCSS, placeHolder, searchIcon, searchIconCSS
+        } = this.props;
 
         if (!isOpen) return null;
 
-        return(
+        return (
             <div className="search-input-wrapper" style={searchWrapperCSS}>
                 <div className="form-group">
                     <div className="input-group">
-                        <div className="input-group-addon">
-                            <span className="icon-search" />
-                        </div>
+                        {
+		                    searchIcon ?
+                                <img className="icon-search" src={searchIcon} style={searchIconCSS} />
+			                    :
+			                    null
+	                    }
                         <input
                             type="text"
                             ref={this.textInput}
                             className="form-control search-input"
-                            placeholder={ placeHolder ? placeHolder : translate[lang].search}
+                            placeholder={placeHolder || translate[lang].search}
                             value={this.state.searchInput}
                             style={inputCSS}
                         />
                     </div>
                 </div>
             </div>
-        )
+        );
     }
 }
 
