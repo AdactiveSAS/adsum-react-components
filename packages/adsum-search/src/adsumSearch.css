@@ -7,6 +7,10 @@
 .search-input-wrapper .form-group .input-group {
   height: 0px;
 }
+.search-input-wrapper .form-group .input-group .icon-search {
+  z-index: 10;
+  position: absolute;
+}
 .search-input-wrapper .form-group .input-group .search-input {
   font-size: 2em;
   padding: 15px;

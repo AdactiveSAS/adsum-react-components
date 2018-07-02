@@ -1,45 +1,43 @@
+.adsum-clock-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.adsum-clock-wrapper .adsum-clock {
+  color: lightgray;
+  text-align: center;
+}
+.adsum-clock-wrapper .adsum-clock .day-date {
+  margin: 0;
+  letter-spacing: -2px;
+  color: #ababab;
+}
+.adsum-clock-wrapper .adsum-clock .time {
+  font-weight: bold;
+  color: #404040;
+}
+.adsum-clock-wrapper .adsum-clock .divider {
+  width: 40px;
+  margin: 0 auto;
+  border-width: 3px;
+}
 @media (orientation: landscape) {
   .adsum-clock-wrapper {
     height: 100%;
-    float: right;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding-right: 50px;
   }
   .adsum-clock-wrapper .adsum-clock {
-    font-size: 2em;
-    color: #5a5b5a;
-    text-align: right;
+    font-size: 2.3em;
   }
   .adsum-clock-wrapper .adsum-clock .day-date {
-    letter-spacing: -2px;
-    text-transform: uppercase;
-  }
-  .adsum-clock-wrapper .adsum-clock .time {
-    font-weight: bold;
+    font-size: 1.0em;
   }
 }
 @media (orientation: portrait) {
-  .adsum-clock-wrapper {
-    width: 40%;
-    height: 100%;
-    float: right;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding-right: 50px;
-  }
   .adsum-clock-wrapper .adsum-clock {
-    font-size: 2.5em;
+    font-size: 1.8em;
     text-align: right;
   }
   .adsum-clock-wrapper .adsum-clock .day-date {
-    color: #5a5b5a;
-    letter-spacing: -2px;
-    text-transform: uppercase;
-  }
-  .adsum-clock-wrapper .adsum-clock .time {
-    font-weight: bold;
+    font-size: 0.7em;
   }
 }
