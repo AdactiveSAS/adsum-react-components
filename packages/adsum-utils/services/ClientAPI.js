@@ -86,6 +86,10 @@ class ClientAPI {
         return this.entityManager.getRepository('Category').getList(ids);
     }
 
+    getCategoriesBy(filter) {
+        return this.entityManager.getRepository('Category').findBy(filter);
+    }
+
     getPoisByCategoryId(id) {
         const category = this.getCategory(id);
 
