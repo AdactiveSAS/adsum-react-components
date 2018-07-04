@@ -67,14 +67,12 @@ class Map extends React.Component<PropsType> {
     render() {
         const {
             isOpen,
-            children
+            children,
+            className
         } = this.props;
 
-        const classNames = ['map-wrapper'];
-        if (isOpen) classNames.push('open');
-
         return (
-            <div className={classNames.join(' ')}>
+            <div className={`map-wrapper ${isOpen ? 'open' : ''} ${className || ''}`}>
                 {children}
                 <div id="adsum-web-map-container" />
             </div>
