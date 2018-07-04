@@ -25,7 +25,8 @@ type OwnPropsType = {|
     device: number,
     display: string,
     backgroundImage: string,
-    PopOver: any
+    PopOver: any,
+    customisedClassName: string
 |};
 type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
 /**
@@ -67,11 +68,13 @@ class Map extends React.Component<PropsType> {
     render() {
         const {
             isOpen,
-            children
+            children,
+            customisedClassName
         } = this.props;
 
         const classNames = ['map-wrapper'];
         if (isOpen) classNames.push('open');
+        if (customisedClassName) classNames.push(customisedClassName);
 
         return (
             <div className={classNames.join(' ')}>
