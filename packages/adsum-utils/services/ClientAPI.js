@@ -28,15 +28,48 @@ class ClientAPI {
     }
 
     getPoi(id) {
-        return this.entityManager.getRepository('Poi').get(id);
+        let poi = this.entityManager.getRepository('Poi').get(id);
+
+        if (poi.logos && poi.logos.values) {
+            for (const logo in poi.logos.values) {
+                if (poi.logos.values[logo] && poi.logos.values[logo].value && !isNaN(poi.logos.values[logo].value)) {
+                    poi.logos.values[logo] = this.getFile(poi.logos.values[logo].value);
+                }
+            }
+        }
+        return poi;
     }
 
     getPois(ids) {
-        return this.entityManager.getRepository('Poi').getList(ids);
+        let pois = this.entityManager.getRepository('Poi').getList(ids);
+
+        pois = pois.map((poi: Object): Object => {
+            if (poi.logos && poi.logos.values) {
+                for (const logo in poi.logos.values) {
+                    if (poi.logos.values[logo] && poi.logos.values[logo].value && !isNaN(poi.logos.values[logo].value)) {
+                        poi.logos.values[logo] = this.getFile(poi.logos.values[logo].value);
+                    }
+                }
+            }
+            return poi;
+        });
+
+        return pois;
     }
 
     getPoisBy(filter) {
-        return this.entityManager.getRepository('Poi').findBy(filter);
+        let pois = this.entityManager.getRepository('Poi').findBy(filter);
+
+        pois = pois.map((poi: Object): Object => {
+            if (poi.logos && poi.logos.values) {
+                for (const logo in poi.logos.values) {
+                    if (poi.logos.values[logo] && poi.logos.values[logo].value && !isNaN(poi.logos.values[logo].value)) {
+                        poi.logos.values[logo] = this.getFile(poi.logos.values[logo].value);
+                    }
+                }
+            }
+            return poi;
+        });
     }
 
     getPoisFromPlace(id) {
