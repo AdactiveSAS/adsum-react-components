@@ -10,7 +10,7 @@ class ClientAPI {
         this._allPois = null;
     }
 
-    async init(config, fallbackOnlineApi=false) {
+    async init(config, fallbackOnlineApi = false) {
         const {
             endpoint, key, site, username
         } = config;
@@ -28,7 +28,7 @@ class ClientAPI {
     }
 
     getPoi(id) {
-        let poi = this.entityManager.getRepository('Poi').get(id);
+        const poi = this.entityManager.getRepository('Poi').get(id);
 
         if (poi.logos && poi.logos.values) {
             for (const logo in poi.logos.values) {
@@ -126,9 +126,7 @@ class ClientAPI {
     getPoisByCategoryId(id) {
         const category = this.getCategory(id);
 
-        return _.map([...category.pois.values.values()], poiInfo => {
-            return this.getPoi(poiInfo.value);
-        });
+        return _.map([...category.pois.values.values()], poiInfo => this.getPoi(poiInfo.value));
     }
 
     getTagBy(filter) {
@@ -152,8 +150,9 @@ class ClientAPI {
     }
 
     getPlaylistByTag(tagName) {
-        const tag = this.getTagBy({ name: tagName })
-        let playlist = []
+        const tag = this.getTagBy({ name: tagName });
+        let playlist = [];
+
         if (tag.length) {
             playlist = this.getPlaylistBy({
                 tags(tags) {
@@ -161,6 +160,7 @@ class ClientAPI {
                 }
             });
         }
+
         return playlist;
     }
 
