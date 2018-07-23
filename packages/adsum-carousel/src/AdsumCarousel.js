@@ -138,7 +138,7 @@ class AdsumCarousel extends React.Component<PropsType> {
     slideBeforeChange(id: number | string) {
         const { dynamicAutoPlayInterval, medias } = this.props;
 
-        if (dynamicAutoPlayInterval) {
+        if (dynamicAutoPlayInterval && medias.length) {
             if (id + 1 === medias.length) {
                 this.setState({
                     autoplay: this.state.autoplay,
