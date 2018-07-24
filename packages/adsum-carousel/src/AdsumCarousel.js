@@ -22,7 +22,7 @@ type PropsType = {|
     +onMediaTouch: (MediaType) => void,
     +carouselOptions?: Object,
     +style?: CSSStyleDeclaration,
-    +buttonModalForImage?: HTMLButtonElement,
+    +ButtonModalForImage?: HTMLButtonElement,
     +dynamicAutoPlayInterval?: boolean
 |};
 
@@ -59,7 +59,7 @@ class AdsumCarousel extends React.Component<PropsType> {
         this.slideDidChange = this.slideDidChange.bind(this);
         this.goToNextSlide = this.goToNextSlide.bind(this);
         this.playVideo = this.playVideo.bind(this);
-	    this.slideBeforeChange = this.slideBeforeChange.bind(this);
+        this.slideBeforeChange = this.slideBeforeChange.bind(this);
 
         this.state = {
             autoplay: !!(props.medias && props.medias.length > 1),
@@ -88,17 +88,17 @@ class AdsumCarousel extends React.Component<PropsType> {
     }
 
     /**
-    * Bind video players if need it
-    *
-    */
+     * Bind video players if need it
+     *
+     */
     onPlayerInit(videoPlayer: Player, id: number) {
         this._videoPlayers[id] = videoPlayer;
     }
 
     /**
-    * To play the video in the slide
-    * @param id
-    */
+     * To play the video in the slide
+     * @param id
+     */
     playVideo(id: number) {
         this.setState(
             {
@@ -111,8 +111,8 @@ class AdsumCarousel extends React.Component<PropsType> {
 
 
     /**
-    * Wrapper for nuka-carousel to select next slide
-    */
+     * Wrapper for nuka-carousel to select next slide
+     */
     goToNextSlide() {
         this.setState(
             {
@@ -124,9 +124,9 @@ class AdsumCarousel extends React.Component<PropsType> {
     }
 
     /**
-    * To play video immediately if the media is a video on slide change
-    * @param id
-    */
+     * To play video immediately if the media is a video on slide change
+     * @param id
+     */
     slideDidChange(id: number | string) {
         if (!this.props.isOpen) return;
 
@@ -154,11 +154,11 @@ class AdsumCarousel extends React.Component<PropsType> {
     }
 
     /**
-    * Create carousel slides content images or videos
-    *
-    */
+     * Create carousel slides content images or videos
+     *
+     */
     generateSlides(): Array<Node> {
-        const { medias, onMediaTouch, buttonModalForImage } = this.props;
+        const { medias, onMediaTouch, ButtonModalForImage } = this.props;
         const parentStyle = this.props.style || null;
         const ret = [];
 
@@ -182,7 +182,12 @@ class AdsumCarousel extends React.Component<PropsType> {
                 const component = (
                     <div key={media.file.uri} onClick={() => { onMediaTouch(media); }} onTouchEndCapture={() => { onMediaTouch(media); }} >
                         <ImageSlide media={media} parentStyle={parentStyle} />
-                        {buttonModalForImage ? buttonModalForImage() : null}
+                        {
+                            ButtonModalForImage ?
+                                <ButtonModalForImage media={media} />
+                                :
+                                null
+                        }
                     </div>
                 );
 
