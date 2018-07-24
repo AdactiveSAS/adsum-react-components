@@ -123,6 +123,19 @@ class ClientAPI {
         return this.entityManager.getRepository('Category').findBy(filter);
     }
 
+    getCategoriesByTag(tagName) {
+        let categoriesToReturn = [];
+        const tags = this.getTagBy({name: tagName});
+
+        for (let tag of tags) {
+            for (let category of tag.categories.values) {
+                const categoryId = category.value;
+                categoriesToReturn.push(this.getCategory(categoryId));
+            }
+        }
+        return categoriesToReturn;
+    }
+
     getPoisByCategoryId(id) {
         const category = this.getCategory(id);
 
