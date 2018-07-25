@@ -124,16 +124,13 @@ class ClientAPI {
     }
 
     getCategoriesByTag(tagName) {
-        let categoriesToReturn = [];
+        let result = [];
         const tags = this.getTagBy({name: tagName});
 
         for (let tag of tags) {
-            for (let category of tag.categories.values) {
-                const categoryId = category.value;
-                categoriesToReturn.push(this.getCategory(categoryId));
-            }
+            result.push(... this.getCategories(tag.categories));
         }
-        return categoriesToReturn;
+        return result;
     }
 
     getPoisByCategoryId(id) {
