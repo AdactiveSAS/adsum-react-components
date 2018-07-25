@@ -70,6 +70,8 @@ class ClientAPI {
             }
             return poi;
         });
+
+        return pois;
     }
 
     getPoisFromPlace(id) {
