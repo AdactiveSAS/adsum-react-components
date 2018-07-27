@@ -30,9 +30,7 @@ class ClientAPI {
     getPoi(id) {
         let poi = this.entityManager.getRepository('Poi').get(id);
 
-        if (poi === null) return null;
-
-        if (poi.logos && poi.logos.values) {
+        if (poi && poi.logos && poi.logos.values) {
             for (const logo in poi.logos.values) {
                 if (poi.logos.values[logo] && poi.logos.values[logo].value && !isNaN(poi.logos.values[logo].value)) {
                     poi.logos.values[logo] = this.getFile(poi.logos.values[logo].value);
