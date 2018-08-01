@@ -10,21 +10,29 @@ class ClientAPI {
         this._allPois = null;
     }
 
-    async init(config, fallbackOnlineApi=false) {
-        const {
-            endpoint, key, site, username
-        } = config;
+    async init(config) {
+        const { endpoint, key, site, username } = config;
 
-        const entityManagerOptions = {
-            endpoint,
-            site,
-            username,
-            key
-        };
-        if (!fallbackOnlineApi) {
-            entityManagerOptions.cacheManager = new DistCacheManager('//localhost:9001/local');
+        this.entityManager = new EntityManager({
+          endpoint,
+          site,
+          username,
+          key,
+          cacheManager: new DistCacheManager('/local'),
+        });
+    }
+
+    async load(cacheFirst = true, allowOutdatedCache = true) {
+        if (cacheFirst) {
+            return this.entityManager.loadFromCache(allowOutdatedCache)
+                .catch(() => {
+                    console.warn('ClientAPI: no cache, failling back on live API');
+
+                    return this.entityManager.load();
+                });
         }
-        this.entityManager = new EntityManager(entityManagerOptions);
+
+        return this.entityManager.load();
     }
 
     getPoi(id) {
