@@ -7,7 +7,7 @@ import { CancellationToken } from 'prex-es5';
 
 import { CameraCenterOnOptions } from '@adactive/adsum-web-map';
 
-const yAxis = new Vector3(-1, 0, 0);
+const yAxis = new Vector3(0, 1, 0);
 const direction = new Vector3();
 
 class PathSectionDrawer {
@@ -35,7 +35,7 @@ class PathSectionDrawer {
          * @type {number}
          * @default 30
          */
-        this.speed = 10; // m/s
+        this.speed = 6; // m/s
 
         /**
          * @package
@@ -46,11 +46,6 @@ class PathSectionDrawer {
         this.tweens = [];
 
         this._tweenAnimate = null;
-
-        this._cameraCenterOnOptions = new CameraCenterOnOptions({
-            fitRatio: 1.5,
-            zoom: true
-        });
     }
 
     /**
@@ -59,27 +54,85 @@ class PathSectionDrawer {
      *
      * @return {Promise<void, Error>}
      */
-    draw(token = CancellationToken.none) {
-        const tasks = [];
-        const patterns = this.pathSectionObject._mesh.children;
-        for (let i = 0; i < patterns.length; i++) {
-            if (i < patterns.length - 1) this._lookat(patterns[i], patterns[i + 1].position);
-            const delay = this.pathSectionObject.patternSpace / (this.speed * 4) * i * 1000;
-            tasks.push(this._showPattern(i, delay, token));
-        }
+    draw(token = CancellationToken.none, skipStep = false) {
+        return new Promise(
+            (resolve, reject)=> {
+                let promise = Promise.resolve();
 
-        this._prepareAnimation(token);
+                if (!this.pathSectionObject.pathSection.isInterGround() && !skipStep) { // TODO
 
-        this.pathSectionObject._mesh.visible = true;
+                    try {
+                        token.throwIfCancellationRequested();
+                        const _cameraCenterOnOptions = new CameraCenterOnOptions({
+                            fitRatio:  1.3,
+                            zoom: true,
+                            time: 1600,
+                            azimuth: this.pathSectionObject.pathSection.getAzimuthOrientation(),
+                            altitude:  90
+                        });
+                        promise = promise.then(() => this.cameraManager.centerOn(this.pathSectionObject, true, _cameraCenterOnOptions));
+                    } catch (e) {
+                        if(e.message === "Operation was canceled") {
+                            return reject(new Error('Path was stopped'));
+                        } else {
+                            return reject(e);
+                        }
+                    }
 
-        if (this.center) {
-            tasks.push(this.cameraManager.centerOn(this.pathSectionObject, true, this._cameraCenterOnOptions));
-        }
+                }
+                promise.then(() => {
+                    const tasks = [];
+                    const patterns = this.pathSectionObject._mesh.children;
+                    for (let i = 0; i < patterns.length; i++) {
+                        if (i < patterns.length - 1) this._lookat(patterns[i], patterns[i + 1].position);
+                        const delay = this.pathSectionObject.patternSpace / (this.speed * 4) * i * 1000;
+                        if(!skipStep) tasks.push(this._showPattern(i, delay, token));
+                    }
 
-        this.pathSectionObject.animations.push(this);
+                    try {
+                        token.throwIfCancellationRequested();
+                        this._prepareAnimation(token, !skipStep);
+                    } catch (e) {
+                        if(e.message === "Operation was canceled") {
+                            return reject(new Error('Path was stopped'));
+                        } else {
+                            return reject(e);
+                        }
+                    }
 
-        return Promise.all(tasks).then(() => this._animate());
-        //return Promise.all(tasks);
+                    this.pathSectionObject.tweens.push(this);
+
+                    this.pathSectionObject._mesh.visible = true;
+
+                    return Promise.all(tasks);
+                    /*return new Promise((resolve, reject) => {
+                        Promise.all(tasks).then(
+                            ()=> {
+                                resolve();
+                            }
+                        ).catch((e) => {
+                            console.log("HERE")
+                            reject(e);
+                        });
+                    });*/
+                }).then(() => {
+                    try {
+                        token.throwIfCancellationRequested();
+                        this._animate();
+                        resolve();
+                    } catch (e) {
+                        if(e.message === "Operation was canceled") {
+                            return reject(new Error('Path was stopped'));
+                        } else {
+                            return reject(e);
+                        }
+                    }
+                }).catch((e) => {
+                    return reject(e);
+                });
+            }
+        );
+
     }
 
     /**
@@ -96,26 +149,12 @@ class PathSectionDrawer {
      *
      * @param {int} index
      * @param {number} delay
+     * @param {CancellationToken} token
      * @return {Promise<boolean, Error>}
      */
     _showPattern(index, delay, token = CancellationToken.none) {
         if (this.pathSectionObject.pathSection.isInterGround()) {
-            let tokenTimeOut = null;
-            return new Promise((resolve, reject) => {
-                const registration = token.register(() => {
-                    if (tokenTimeOut) {
-                        clearTimeout(tokenTimeOut);
-                        reject(new Error('Path was stopped'));
-                    }
-                });
-                tokenTimeOut = setTimeout(
-                    () => {
-                        registration.unregister();
-                        resolve(true);
-                    },
-                    200
-                );
-            });
+            return Promise.resolve();
         }
 
         /* ------------------------------------ INIT --------------------------------------------*/
@@ -139,7 +178,7 @@ class PathSectionDrawer {
         const promiseOpacity = new Promise((resolve, reject) => {
             let tweenOpacity = null;
             const registration = token.register(() => {
-                tweenOpacity.stop();
+                if (tweenOpacity) tweenOpacity.stop();
                 reject(new Error('Path was stopped'));
             });
             /* ------------------------------------ OPACITY ANIMATION  --------------------------------------------*/
@@ -150,11 +189,20 @@ class PathSectionDrawer {
                 .delay(delay)
                 .easing(Easing.Exponential.In)
                 .on('update', () => {
-                    pattern.traverse((obj) => {
-                        if (obj.material) {
-                            obj.material.opacity = opacityHandler.opacity;
+                    try {
+                        token.throwIfCancellationRequested();
+                        pattern.traverse((obj) => {
+                            if (obj.material) {
+                                obj.material.opacity = opacityHandler.opacity;
+                            }
+                        });
+                    } catch (e) {
+                        if(e.message === "Operation was canceled") {
+                            reject(new Error('Path was stopped'));
+                        } else {
+                            console.log(e);
                         }
-                    });
+                    }
                 })
                 .on('complete', () => {
                     registration.unregister();
@@ -170,7 +218,7 @@ class PathSectionDrawer {
         const promisePosition = new Promise((resolve, reject) => {
             let tweenPosition = null;
             const registration = token.register(() => {
-                tweenPosition.stop();
+                if (tweenPosition) tweenPosition.stop();
                 reject(new Error('Path was stopped'));
             });
             /* ------------------------------------ POSITION ANIMATION  --------------------------------------------*/
@@ -181,8 +229,17 @@ class PathSectionDrawer {
                 .delay(delay)
                 .easing(Easing.Bounce.Out)
                 .on('update', () => {
-                    pattern.position.setZ(positionHandler.z);
-                    pattern.updateMatrixWorld();
+                    try {
+                        token.throwIfCancellationRequested();
+                        pattern.position.setZ(positionHandler.z);
+                        pattern.updateMatrixWorld();
+                    } catch (e) {
+                        if(e.message === "Operation was canceled") {
+                            reject(new Error('Path was stopped'));
+                        } else {
+                            console.log(e);
+                        }
+                    }
                 })
                 .on('complete', () => {
                     registration.unregister();
@@ -199,7 +256,7 @@ class PathSectionDrawer {
         return Promise.all([promiseOpacity, promisePosition]);
     }
 
-    _prepareAnimation(token = CancellationToken.none) {
+    _prepareAnimation(token = CancellationToken.none, animated = true) {
         const pathSectionObject = this.pathSectionObject;
         const realInterval = pathSectionObject.pathSection.getRealInterval(pathSectionObject.patternSpace);
         const distance = pathSectionObject.pathSection.getDistance();
@@ -207,38 +264,50 @@ class PathSectionDrawer {
         const patterns = pathSectionObject._mesh.children;
 
         const registration = token.register(() => {
-            this._tweenAnimate.stop();
+            if (this._tweenAnimate) this._tweenAnimate.stop();
         });
 
         this._tweenAnimate = new Tween({ distance: 0 })
             .to({ distance }, loopDuration)
             .on('update', (distanceTracking) => {
-                let previous = {
-                    pattern: null,
-                    d: 0
-                };
-                for (let i = 0; i < patterns.length; ++i) {
-                    const d = (i * realInterval + distanceTracking.distance) % distance;
-                    pathSectionObject.pathSection.at(d, patterns[i].position);
+                try {
+                    token.throwIfCancellationRequested();
+                    let previous = {
+                        pattern: null,
+                        d: 0
+                    };
+                    for (let i = 0; i < patterns.length; ++i) {
+                        const d = (i * realInterval + distanceTracking.distance) % distance;
+                        pathSectionObject.pathSection.at(d, patterns[i].position);
 
-                    if (!pathSectionObject.pathSection.isInterGround()) {
-                        patterns[i].position.setZ(this.projector.meterToAdsumDistance(0.025));
+                        if (!pathSectionObject.pathSection.isInterGround()) {
+                            patterns[i].position.setZ(this.projector.meterToAdsumDistance(0.025));
+                        }
+
+                        patterns[i].updateMatrix();
+                        patterns[i].updateMatrixWorld();
+                        if (previous.pattern && previous.d < d) {
+                            this._lookat(previous.pattern, patterns[i].position);
+                            previous.pattern.updateMatrix();
+                            previous.pattern.updateMatrixWorld();
+                        }
+                        previous = {
+                            pattern: patterns[i],
+                            d
+                        };
                     }
-
-                    patterns[i].updateMatrixWorld();
+                    const d = (distanceTracking.distance) % distance;
                     if (previous.pattern && previous.d < d) {
-                        this._lookat(previous.pattern, patterns[i].position);
+                        this._lookat(previous.pattern, patterns[0].position);
+                        previous.pattern.updateMatrix();
                         previous.pattern.updateMatrixWorld();
                     }
-                    previous = {
-                        pattern: patterns[i],
-                        d
-                    };
-                }
-                const d = (distanceTracking.distance) % distance;
-                if (previous.pattern && previous.d < d) {
-                    this._lookat(previous.pattern, patterns[0].position);
-                    previous.pattern.updateMatrixWorld();
+                } catch (e) {
+                    if(e.message === "Operation was canceled") {
+                        console.log('Path was stopped, animate stopped');
+                    } else {
+                        console.log(e);
+                    }
                 }
             })
             .on('stop', () => {
@@ -253,11 +322,12 @@ class PathSectionDrawer {
     _lookat(pattern, nextPoint) {
         direction.subVectors(nextPoint, pattern.position).normalize();
         pattern.quaternion.setFromUnitVectors(yAxis, direction);
+        pattern.updateMatrix();
+        pattern.updateMatrixWorld();
     }
 
     _animate() {
         this._tweenAnimate.start();
-        return Promise.resolve();
     }
 }
 

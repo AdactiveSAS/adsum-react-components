@@ -11,7 +11,7 @@ export type MapReducersType = (state: MapReducerStateType, action: MapActionType
 const mapReducers: MapReducersType = (state: MapReducerStateType = initialState, action: MapActionType): MapReducerStateType => {
     switch (action.type) {
     case mapActionsType.DID_INIT: {
-        const { getFloors, getBuildings, currentFloor, reset, getSortedPaths } : { floors: any, buildings: any, currentFloor: number, reset: any, sortedPlaces: any } = action;
+        const { getFloors, getBuildings, currentFloor, reset, getSortedPaths, wayFinder } : { floors: any, buildings: any, currentFloor: number, reset: any, sortedPlaces: any, wayFinder: any  } = action;
 
         return {
             ...state,
@@ -20,10 +20,12 @@ const mapReducers: MapReducersType = (state: MapReducerStateType = initialState,
             getBuildings,
             currentFloor,
             reset,
-            getSortedPaths
+            getSortedPaths,
+            wayFinder
         };
     }
     case mapActionsType.WILL_SELECT:
+    case mapActionsType.WILL_SELECT_MULTI_PLACES:
     case mapActionsType.WILL_DRAW:
     case mapActionsType.WILL_DRAW_TO_POI:
     case mapActionsType.WILL_DRAW_TO_PLACE:

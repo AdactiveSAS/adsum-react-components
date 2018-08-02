@@ -2,6 +2,7 @@
 
 import * as three from 'three';
 import OBJLoader from './OBJLoader';
+import MTLLoader from './MTLLoader';
 
 /**
  * Usage
@@ -20,7 +21,12 @@ import OBJLoader from './OBJLoader';
  * ObjectsLoader
  */
 class ObjectsLoader {
-    constructor(awm) {
+
+    constructor() {
+        this.awm = null;
+    }
+
+    initAwm(awm) {
         this.awm = awm;
     }
 
@@ -61,30 +67,58 @@ class ObjectsLoader {
 
     /**
      *
+     * @param obj
+     * @param mtl
+     * @return {Promise}
+     */
+    createOBJMTL(obj,mtl) {
+        return new Promise((resolve, reject) => {
+            new MTLLoader()
+                .setPath( 'models/obj/male02/' )
+                .load( mtl, ( materials ) => {
+                    materials.preload();
+                    const loader = new OBJLoader();
+                    loader.setMaterials( materials );
+                    loader.load(
+                        obj,
+                        resolve,
+                        () => {},
+                        reject,
+                    );
+                } );
+        });
+    }
+
+    /**
+     *
      * @param floorId
      * @param position
      * @param obj
      * @return {*}
      */
     add3DObjectOnFloor(floorId, position, obj) {
-        let floor = null;
-        if (!floorId) {
-            // Warning : accessing variables beginning _ means they are private and is not recommended
-            // Retrieve the site THREE.Mesh
-            floor = this.awm.objectManager.site._mesh;
-        } else {
-            // Warning : accessing variables beginning _ means they are private and is not recommended
-            // Retrieve the floor THREE.Mesh
-            floor = this.awm.objectManager.floors.get(floorId)._mesh;
-        }
+        if(this.awm) {
+            let floor = null;
+            if (!floorId) {
+                // Warning : accessing variables beginning _ means they are private and is not recommended
+                // Retrieve the site THREE.Mesh
+                floor = this.awm.objectManager.site._mesh;
+            } else {
+                // Warning : accessing variables beginning _ means they are private and is not recommended
+                // Retrieve the floor THREE.Mesh
+                floor = this.awm.objectManager.floors.get(floorId)._mesh;
+            }
 
-        // Get the click position in the floor coordinate system
-        position = floor.worldToLocal(position.clone());
-        if (obj) {
-            obj.visible = true;
-            obj.position.copy(position);
-            floor.add(obj);
-            return obj;
+            // Get the click position in the floor coordinate system
+            position = floor.worldToLocal(position.clone());
+            if (obj) {
+                obj.visible = true;
+                obj.position.copy(position);
+                floor.add(obj);
+                return obj;
+            }
+        } else {
+            console.error("add3DObjectOnFloor you have to init awm");
         }
     }
 }
