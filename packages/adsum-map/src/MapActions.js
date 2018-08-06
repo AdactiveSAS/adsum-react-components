@@ -349,9 +349,10 @@ export const goToPlace: WillDrawToPlaceActionCreatorType = (placeId: any): WillD
  * @memberof! module:Map#
  * @returns {object}
  */
-export const didDraw: DidDrawActionCreatorType = (): DidDrawActionType => {
+export const didDraw: DidDrawActionCreatorType = (placeId: number): DidDrawActionType => {
     return {
         type: types.DID_DRAW,
+        placeId: placeId,
     };
 };
 
