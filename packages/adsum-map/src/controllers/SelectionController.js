@@ -2,28 +2,86 @@
 
 import { CameraCenterOnOptions } from '@adactive/adsum-web-map';
 import labelController from './LabelController';
+import _ from 'lodash';
 // import ACA from '../../../services/ClientAPI';
 import ACA from '@adactive/adsum-utils/services/ClientAPI';
+import placesController from './PlacesController';
+import floorsController from './FloorsController';
 
 class SelectionController {
     constructor() {
         this.awm = null;
-        this.current = null;
+        this.current = [];
         this.locked = false;
+        this.multiPlaceSelection = null;
 
         this._cameraCenterOnOptions = new CameraCenterOnOptions({
             fitRatio: 6,
             zoom: false
         });
+
+        this.labelsPopOver = [];
     }
 
-    init(awm) {
+    init(awm, multiPlaceSelection) {
         this.awm = awm;
+        this.multiPlaceSelection = multiPlaceSelection === 'multipleLevel' ? 'multipleLevel' : 'singleLevel';
         return this;
     }
 
+    selectMultiplePlaces(poi) {
+        const places = ACA.getPlacesFromPoi(poi.id);
+
+        if (!places) return;
+
+        this.reset();
+
+        let promise = Promise.resolve();
+        this.locked = true;
+
+        if (this.multiPlaceSelection === 'multipleLevel') {
+            const centerOnStackOptions = {
+                fitRatio: 1.2,
+                altitude: 30,
+                time: 1300
+            };
+
+            floorsController.explodeAndShiftStack(-300, -300, 150, centerOnStackOptions);
+        }
+
+        _.each(places, (place) => {
+            const path = placesController.getPath(place.id);
+            const to = path.to.adsumObject;
+            this.current.push(to);
+
+            if (this.multiPlaceSelection === 'singleLevel') {
+                if (to && to.parent && to.parent.id === this.awm.defaultFloor.id) {
+                    if (to.isBuilding) {
+                        promise = promise.then(() => this.highlightBuilding(to));
+                    } else if (to.isSpace) {
+                        promise = promise.then(() => this.highlightSpace(to));
+                    } else if (to.isLabel) {
+                        promise = promise.then(() => this.highlightLabel(to));
+                    }
+                }
+            } else if (to.isBuilding) {
+                promise = promise.then(() => this.highlightBuilding(to));
+            } else if (to.isSpace) {
+                promise = promise.then(() => this.highlightSpace(to));
+            } else if (to.isLabel) {
+                promise = promise.then(() => this.highlightLabel(to));
+            }
+        });
+
+        promise = promise.then(() => {
+            this.locked = false;
+        });
+
+        return promise;
+    }
+
     updateSelection(object, centerOn = false) {
-        if (this.locked || object === this.current) {
+        if (this.locked || (this.current.length > 0 && this.current[0] === object)) {
             return Promise.resolve();
         }
         // if no poi link to the place do not select
@@ -34,23 +92,23 @@ class SelectionController {
         // Make sure to unselect previously selected
         this.reset();
 
-        this.current = object;
+        this.current.push(object);
 
-        if (this.current !== null && this.current.isBuilding) {
+        if (this.current.length > 0 && this.current[0] !== null && this.current[0].isBuilding) {
             this.locked = true;
-            return this.highlightBuilding(this.current, centerOn)
+            return this.highlightBuilding(this.current[0], centerOn)
                 .then(() => {
                     this.locked = false;
                 });
-        } else if (this.current !== null && this.current.isSpace) {
+        } else if (this.current.length > 0 && this.current[0] !== null && this.current[0].isSpace) {
             this.locked = true;
-            return this.highlightSpace(this.current, centerOn)
+            return this.highlightSpace(this.current[0], centerOn)
                 .then(() => {
                     this.locked = false;
                 });
-        } else if (this.current !== null && this.current.isLabel) {
+        } else if (this.current.length > 0 && this.current[0] !== null && this.current[0].isLabel) {
             this.locked = true;
-            return this.highlightLabel(this.current)
+            return this.highlightLabel(this.current[0])
                 .then(() => {
                     this.locked = false;
                 });
@@ -81,7 +139,8 @@ class SelectionController {
         if (centerOn) promise = promise.then(() => this.awm.cameraManager.centerOn(space, true, this._cameraCenterOnOptions));
         promise = promise.then(() => labelController.createPopOverOnAdsumObject(space));
         return promise
-            .then(() => {
+            .then((label) => {
+                this.labelsPopOver.push(label);
                 space.setColor(0x78e08f);
                 space.bounceUp(3);
             });
@@ -96,15 +155,27 @@ class SelectionController {
         space.bounceDown();
     }
 
+    removePopOvers() {
+        for (const label of this.labelsPopOver) {
+            labelController.removePopOver(label);
+        }
+        this.labelsPopOver = [];
+    }
+
     reset() {
         // Make sure to unselect previously selected
-        if (this.current !== null && this.current.isBuilding) {
-            this.resetBuilding(this.current);
-        } else if (this.current !== null && this.current.isSpace) {
-            this.resetSpace(this.current);
+        if (this.current.length > 0) {
+            _.each(this.current, (adsumObject: Object) => {
+                if (adsumObject.isBuilding) {
+                    this.resetBuilding(adsumObject);
+                } else if (adsumObject.isSpace) {
+                    this.resetSpace(adsumObject);
+                }
+            });
         }
-        labelController.removePopOver();
-        this.current = null;
+
+        this.removePopOvers();
+        this.current = [];
     }
 }
 

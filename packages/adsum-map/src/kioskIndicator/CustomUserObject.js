@@ -2,12 +2,23 @@
 
 import { Tween } from 'es6-tween';
 import { UserObject } from '@adactive/adsum-web-map';
+import {Group} from 'three';
 import ObjectsLoader from '../objectsLoader/ObjectsLoader';
 
 /**
  * @public
  */
 class CustomUserObject extends UserObject {
+    constructor(options = {}) {
+        super(options);
+
+        this.objectsLoader = new ObjectsLoader();
+    }
+
+    load() {
+        return this.createDefault( 1 );
+    }
+
     _rotateAnimation = null;
     /**
    *
@@ -18,16 +29,23 @@ class CustomUserObject extends UserObject {
    */
     createDefault(size) { // TODO
         return new Promise((resolve, reject) => {
-            this.objectsLoader.createJSON3DObj('assets/3dModels/youarehere.json').then((object) => {
+            this.objectsLoader.createJSON3DObj('/assets/3dModels/youarehere.json').then((object) => {
                 object.visible = true;
 
-                object.scale.set(7, 7, 7);
-                object.rotateX(Math.PI / 2);
+                object.scale.set(0.5, 0.5, 0.5);
 
                 const scaleRatio = 2;// MapConfig.positionIndicatorOptions.scaleRatio;
                 object.scale.multiplyScalar(scaleRatio);
+                object.rotateX(Math.PI/2);
+                object.updateMatrix();
 
-                resolve(this._setMesh(object));
+                const caps = new Group();
+                caps.add(object);
+                this._setMesh(caps);
+
+                this.animate();
+
+                resolve(this._mesh);
             });
         });
     }
@@ -38,7 +56,7 @@ class CustomUserObject extends UserObject {
                 this._rotateAnimation = new Tween(this._mesh.rotation)
                     .to(
                         {
-                            y: Math.PI * 2,
+                            z: Math.PI * 2,
                         },
                         2000
                     )
@@ -57,13 +75,6 @@ class CustomUserObject extends UserObject {
         if (this._rotateAnimation) {
             this._rotateAnimation.stop();
         }
-    }
-
-    constructor(awm, parameters = {}) {
-        super(parameters);
-
-        this.awm = awm;
-        this.objectsLoader = new ObjectsLoader(this.awm);
     }
 }
 

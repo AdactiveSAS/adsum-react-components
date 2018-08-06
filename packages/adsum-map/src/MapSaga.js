@@ -17,8 +17,10 @@ import type {
     WillDrawActionType,
     WillDrawToPoiActionType,
     WillDrawToPlaceActionType,
+    WillDrawPathSectionActionType,
     WillSelectPoiActionType,
     WillSelectPlaceActionType,
+    WillSelectMultiPlacesActionType,
     ResetDrawActionType,
     WillInitActionType
 } from './MapActions';
@@ -33,8 +35,8 @@ const {
 } = mapController;
 const { getSortedPaths, sortAllPlaces } = placesController;
 
-const { updateSelection } = selectionController;
-const { goToPath, goToKioskLocation } = wayfindingController;
+const { updateSelection, selectMultiplePlaces } = selectionController;
+const { drawPath, goToKioskLocation } = wayfindingController;
 
 let store = null;
 let resetPromise = null;
@@ -61,9 +63,10 @@ const initMapEvents = () => {
         (event) => {
             clickController.onClick(event);
             store.dispatch(onClick(clickController.getEvent.bind(clickController)));
-            store.dispatch(willSelect(() => clickController.getFirstIntersectObject()));
+            const firstIntersectObject = clickController.getFirstIntersectObject();
+            store.dispatch(willSelect(() => firstIntersectObject));
             if (onClickCallBack) {
-                onClickCallBack(clickController.getFirstIntersectObject());
+                onClickCallBack(firstIntersectObject);
             }
         }
     );
@@ -73,7 +76,7 @@ const initMapEvents = () => {
 function* onInit(action: WillInitActionType) {
     yield delay(200);
     store = action.store;
-    yield call([mapController, init], action.device, action.display, action.backgroundImage, action.PopOver);
+    yield call([mapController, init], action.device, action.display, action.backgroundImage, action.PopOver, action.wireFraming, action.multiPlaceSelection);
 
     initMapEvents();
 
@@ -88,6 +91,7 @@ function* onInit(action: WillInitActionType) {
         currentFloor: currentFloor === null ? null : currentFloor.id,
         reset: reset.bind(mapController),
         getSortedPaths: getSortedPaths.bind(placesController),
+        wayFinder: wayfindingController
     });
 
     if (action.onClick) {
@@ -135,10 +139,16 @@ function* onSelectPlace(action: WillSelectPlaceActionType) {
     store.dispatch(willSelect(() => to));
 }
 
+function* onSelectMultiPlaces(action: WillSelectMultiPlacesActionType) {
+    yield delay(200);
+    yield call([selectionController, selectMultiplePlaces], action.poi);
+    store.dispatch(didSelect(selectionController.getCurrent.bind(selectionController)));
+}
+
 function* onGoTo(action: WillDrawActionType) {
     const path = wayfindingController.getPath(action.object());
     store.dispatch(setCurrentPath(() => path));
-    yield call([wayfindingController, goToPath], path);
+    yield call([wayfindingController, drawPath], path);
     store.dispatch(didDraw());
 }
 
@@ -165,16 +175,31 @@ function* onGoToPoi(action: WillDrawToPoiActionType) {
         store.dispatch(willSelect(() => to));
     }
 
-    yield call([wayfindingController, goToPath], path);
+    yield call([wayfindingController, drawPath], path);
 
     store.dispatch(didDraw());
 }
 
 function* onGoToPlace(action: WillDrawToPlaceActionType) {
     yield delay(200);
+    if (resetDrawPromise) {
+        yield resetDrawPromise;
+    }
     const path = placesController.getPath(action.placeId);
     store.dispatch(setCurrentPath(() => path));
-    yield call([wayfindingController, goToPath], path);
+    yield call([wayfindingController, drawPath], path);
+    store.dispatch(didDraw());
+}
+
+function* onDrawPathSection(action: WillDrawPathSectionActionType) {
+    yield delay(200);
+    if (resetDrawPromise) {
+        yield resetDrawPromise;
+    }
+    //
+    const path = placesController.getPath(action.placeId);
+    store.dispatch(setCurrentPath(() => path));
+    yield call([wayfindingController, drawPath], path, action.pathSectionIndex);
     store.dispatch(didDraw());
 }
 
@@ -209,9 +234,11 @@ function* mapSaga() {
     yield takeLatest(mapActionTypes.WILL_SELECT, onSelect);
     yield takeLatest(mapActionTypes.WILL_SELECT_A_POI, onSelectPoi);
     yield takeLatest(mapActionTypes.WILL_SELECT_A_PLACE, onSelectPlace);
+    yield takeLatest(mapActionTypes.WILL_SELECT_MULTI_PLACES, onSelectMultiPlaces);
     yield takeLatest(mapActionTypes.WILL_DRAW, onGoTo);
     yield takeLatest(mapActionTypes.WILL_DRAW_TO_POI, onGoToPoi);
     yield takeLatest(mapActionTypes.WILL_DRAW_TO_PLACE, onGoToPlace);
+    yield takeLatest(mapActionTypes.WILL_DRAW_PATH_SECTION, onDrawPathSection);
     yield takeLatest(mapActionTypes.RESET_DRAW, resetDraw);
     yield takeLatest(mapActionTypes.WILL_OPEN, onOpen);
     yield takeLatest(mapActionTypes.WILL_CLOSE, onClose);

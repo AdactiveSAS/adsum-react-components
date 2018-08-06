@@ -22,6 +22,7 @@ export type MapReducerStateType = {|
   +cameraMoved: boolean,
   +getSortedPaths: ?Object,
   +reset: ?Object,
+  +wayFinder: ?Object,
 |};
 
 /**
@@ -46,6 +47,7 @@ export const initialState: MapReducerStateType = {
     currentFloor: null,
     previousFloor: null,
     currentPath: null,
+    wayFinder: null,
     currentClickedEvent: null,
     getCurrentSelectedObject: null,
     cameraMoved: false,

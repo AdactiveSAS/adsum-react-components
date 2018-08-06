@@ -25,7 +25,8 @@ type OwnPropsType = {|
     device: number,
     display: string,
     backgroundImage: string,
-    PopOver: any
+    PopOver: any,
+    multiPlaceSelection: string
 |};
 type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
 /**
@@ -46,8 +47,10 @@ class Map extends React.Component<PropsType> {
             display,
             backgroundImage,
             PopOver,
+            wireFraming,
+            multiPlaceSelection,
         } = this.props;
-        this.props.init(store, device, display, backgroundImage, onClick, PopOver);
+        this.props.init(store, device, display, backgroundImage, onClick, PopOver, wireFraming, multiPlaceSelection);
     }
 
     componentWillUpdate(nextProps: PropsType) {
@@ -85,7 +88,7 @@ const mapStateToProps = (state: MapStateType): MappedStatePropsType => ({
 });
 
 const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => bindActionCreators({
-    init: (store: any, device: number, display: string, backgroundImage: string, onClick: () => any, PopOver: any): void => dispatch(mapActions.init(store, device, display, backgroundImage, onClick, PopOver)),
+    init: (store: any, device: number, display: string, backgroundImage: string, onClick: () => any, PopOver: any, wireFraming: boolean, multiPlaceSelection: string): void => dispatch(mapActions.init(store, device, display, backgroundImage, onClick, PopOver, wireFraming, multiPlaceSelection)),
     willOpen: (): void => dispatch(mapActions.willOpen()),
     willClose: (): void => dispatch(mapActions.willClose()),
 }, dispatch);

@@ -1,7 +1,6 @@
 // @flow
 import _ from 'lodash';
 import { Path } from '@adactive/adsum-web-map';
-// import ACA from '../../../services/ClientAPI';
 import ACA from '@adactive/adsum-utils/services/ClientAPI';
 
 class PlacesController {
