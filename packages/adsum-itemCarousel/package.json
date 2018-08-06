@@ -27,6 +27,10 @@
     "prop-types": "^15.6.1",
     "react": "^16.3.1"
   },
+  "peerDependencies": {
+    "prop-types": "^15.6.1",
+    "react": "^16.3.1"
+  },
   "keywords": [
     "adsum",
     "react",
