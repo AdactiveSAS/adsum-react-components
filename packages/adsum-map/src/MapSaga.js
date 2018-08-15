@@ -33,7 +33,7 @@ const {
     getAllBuildings,
     setCurrentFloor
 } = mapController;
-const { getSortedPaths, sortAllPlaces } = placesController;
+const { getSortedPaths, sortAllAdsumPlaces } = placesController;
 
 const { updateSelection, selectMultiplePlaces } = selectionController;
 const { drawPath, goToKioskLocation } = wayfindingController;
@@ -76,13 +76,13 @@ const initMapEvents = () => {
 function* onInit(action: WillInitActionType) {
     yield delay(200);
     store = action.store;
-    yield call([mapController, init], action.device, action.display, action.backgroundImage, action.PopOver, action.wireFraming, action.multiPlaceSelection);
+    yield call([mapController, init], action.device, action.display, action.backgroundImage, action.PopOver, action.wireFraming, action.multiPlaceSelection, action.pmr);
 
     initMapEvents();
 
     const currentFloor = mapController.getCurrentFloor();
 
-    yield call([placesController, sortAllPlaces]);
+    yield call([placesController, sortAllAdsumPlaces], action.pmr);
 
     yield put({
         type: mapActionTypes.DID_INIT,
@@ -133,7 +133,7 @@ function* onSelectPoi(action: WillSelectPoiActionType) {
 
 function* onSelectPlace(action: WillSelectPlaceActionType) {
     yield delay(200);
-    const path = placesController.getPath(action.placeId);
+    const path = placesController.getPath(action.placeId, action.pmr);
     const to = path.to.adsumObject;
     store.dispatch(changeFloor(to.parent.id)); // TODO to.parent.isFLoor
     store.dispatch(willSelect(() => to));
@@ -146,10 +146,10 @@ function* onSelectMultiPlaces(action: WillSelectMultiPlacesActionType) {
 }
 
 function* onGoTo(action: WillDrawActionType) {
-    const path = wayfindingController.getPath(action.object());
+    const path = wayfindingController.getPath(action.object(), action.pmr);
     store.dispatch(setCurrentPath(() => path));
     yield call([wayfindingController, drawPath], path);
-    store.dispatch(didDraw());
+    store.dispatch(didDraw(path.to.placeId));
 }
 
 function* resetDraw(action: ResetDrawActionType) {
@@ -166,7 +166,7 @@ function* onGoToPoi(action: WillDrawToPoiActionType) {
         yield resetDrawPromise;
     }
 
-    const path = placesController.getClosestPathFromPoiId(action.poiId);
+    const path = placesController.getClosestPathFromPoiId(action.poiId, action.pmr);
 
     store.dispatch(setCurrentPath(() => path));
 
@@ -177,7 +177,7 @@ function* onGoToPoi(action: WillDrawToPoiActionType) {
 
     yield call([wayfindingController, drawPath], path);
 
-    store.dispatch(didDraw());
+    store.dispatch(didDraw(path.to.placeId));
 }
 
 function* onGoToPlace(action: WillDrawToPlaceActionType) {
@@ -185,10 +185,10 @@ function* onGoToPlace(action: WillDrawToPlaceActionType) {
     if (resetDrawPromise) {
         yield resetDrawPromise;
     }
-    const path = placesController.getPath(action.placeId);
+    const path = placesController.getPath(action.placeId, action.pmr);
     store.dispatch(setCurrentPath(() => path));
     yield call([wayfindingController, drawPath], path);
-    store.dispatch(didDraw());
+    store.dispatch(didDraw(path.to.placeId));
 }
 
 function* onDrawPathSection(action: WillDrawPathSectionActionType) {
@@ -197,10 +197,10 @@ function* onDrawPathSection(action: WillDrawPathSectionActionType) {
         yield resetDrawPromise;
     }
     //
-    const path = placesController.getPath(action.placeId);
+    const path = placesController.getPath(action.placeId, action.pmr);
     store.dispatch(setCurrentPath(() => path));
     yield call([wayfindingController, drawPath], path, action.pathSectionIndex);
-    store.dispatch(didDraw());
+    store.dispatch(didDraw(path.to.placeId));
 }
 
 function* onOpen() {
