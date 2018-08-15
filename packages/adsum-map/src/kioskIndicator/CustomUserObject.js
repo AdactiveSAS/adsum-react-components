@@ -2,7 +2,7 @@
 
 import { Tween } from 'es6-tween';
 import { UserObject } from '@adactive/adsum-web-map';
-import {Group} from 'three';
+import { Group } from 'three';
 import ObjectsLoader from '../objectsLoader/ObjectsLoader';
 
 /**
@@ -16,7 +16,7 @@ class CustomUserObject extends UserObject {
     }
 
     load() {
-        return this.createDefault( 1 );
+        return this.createDefault(1);
     }
 
     _rotateAnimation = null;
@@ -36,7 +36,7 @@ class CustomUserObject extends UserObject {
 
                 const scaleRatio = 2;// MapConfig.positionIndicatorOptions.scaleRatio;
                 object.scale.multiplyScalar(scaleRatio);
-                object.rotateX(Math.PI/2);
+                object.rotateX(Math.PI / 2);
                 object.updateMatrix();
 
                 const caps = new Group();
@@ -62,7 +62,7 @@ class CustomUserObject extends UserObject {
                     )
                     .repeat(Infinity)
                     .on('update', () => { this._mesh.updateMatrixWorld(); })
-                    .on('stop', () => console.log("userObject animation stopped"))
+                    .on('stop', () => console.log('userObject animation stopped'))
                     .start();
                 window._rotateAnimation = this._rotateAnimation;
             } else {

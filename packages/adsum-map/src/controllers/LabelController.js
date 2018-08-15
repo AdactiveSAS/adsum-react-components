@@ -51,14 +51,14 @@ class LabelController {
     }
 
     unsetPermanentDisplay(label) {
-        if(label.isPermanentDisplay) {
+        if (label.isPermanentDisplay) {
             label.isPermanentDisplay = false;
             this._labels.push(label);
         }
     }
 
     setPermanentDisplay(label) {
-        if(!label.isPermanentDisplay) {
+        if (!label.isPermanentDisplay) {
             label.isPermanentDisplay = true;
         }
     }
@@ -67,11 +67,11 @@ class LabelController {
         for (const pathSection of pathSections) {
             const toAdsumObject = pathSection.to.adsumObject;
             const fromAdsumObject = pathSection.from.adsumObject;
-            if(toAdsumObject && toAdsumObject.isLabel) {
+            if (toAdsumObject && toAdsumObject.isLabel) {
                 this.setPermanentDisplay(toAdsumObject);
                 toAdsumObject.setDisplayMode(visible ? DISPLAY_MODES.VISIBLE : DISPLAY_MODES.NONE);
             }
-            if(fromAdsumObject && fromAdsumObject.isLabel) {
+            if (fromAdsumObject && fromAdsumObject.isLabel) {
                 this.setPermanentDisplay(fromAdsumObject);
                 fromAdsumObject.setDisplayMode(visible ? DISPLAY_MODES.VISIBLE : DISPLAY_MODES.NONE);
             }
@@ -81,7 +81,7 @@ class LabelController {
     animateLabel(label, token = CancellationToken.none) {
         if (label !== null) {
             const initialScale = label._mesh.scale.clone();
-            const resetScale = ()=> {
+            const resetScale = () => {
                 label._mesh.geometry.computeBoundingBox();
                 const { max, min } = label._mesh.geometry.boundingBox;
                 const height = max.y - min.y;
@@ -92,7 +92,7 @@ class LabelController {
             const tweenMesh = (mesh, from, to, duration) => new Promise((resolve, reject) => {
                 let tween = null;
                 const registration = token.register(() => {
-                    if(tween) {
+                    if (tween) {
                         tween.stop();
                     }
                     resetScale();
@@ -102,7 +102,6 @@ class LabelController {
                     .to(to, duration)
                     .easing(Easing.Elastic.Out)
                     .on('update', (scaleHandler) => {
-
                         try {
                             token.throwIfCancellationRequested();
 
@@ -114,13 +113,12 @@ class LabelController {
 
                             mesh.updateMatrix();
                         } catch (e) {
-                            if(e.message === "Operation was canceled") {
+                            if (e.message === 'Operation was canceled') {
                                 reject(new Error('Scale was stopped'));
                             } else {
                                 console.log(e);
                             }
                         }
-
                     })
                     .on('complete', () => {
                         registration.unregister();
@@ -158,8 +156,7 @@ class LabelController {
                         },
                         500
                     );
-                })
-            );
+                }));
 
 
             promise = promise.then(() => tweenMesh(
@@ -189,8 +186,7 @@ class LabelController {
         }
 
         if ((object.isSite || object.isBuilding || object.isFloor || object.isSpace)) { // && object.labels.size === 0) {
-
-            if(text === '') {
+            if (text === '') {
                 const pois = ACA.getPoisFromPlace(object.placeId);
                 for (const poi of pois) {
                     text += poi.name;
@@ -204,7 +200,7 @@ class LabelController {
         return Promise.resolve(null);
     }
 
-    addPopOver(text, object, direction = null, offset = { x: 0, y: 0, z: 0 }) {  // TODO
+    addPopOver(text, object, direction = null, offset = { x: 0, y: 0, z: 0 }) { // TODO
         const popOver = new this._PopOver(
             text,
             {
@@ -219,26 +215,24 @@ class LabelController {
             }
         );
 
-        return popOver.build().then(
-            ()=> {
-                const label = new LabelImageObject({
-                    image: popOver._canvas,
-                    width: popOver._canvas.width,
-                    height: popOver._canvas.height,
-                    offset
-                });
-                this.awm.objectManager.addLabel(label, object);
+        return popOver.build().then(() => {
+            const label = new LabelImageObject({
+                image: popOver._canvas,
+                width: popOver._canvas.width,
+                height: popOver._canvas.height,
+                offset
+            });
+            this.awm.objectManager.addLabel(label, object);
 
-                label._mesh.geometry.translate(0, label.height / 2, 0);
-                label.moveBy(0, 0, -label.height / 2);
+            label._mesh.geometry.translate(0, label.height / 2, 0);
+            label.moveBy(0, 0, -label.height / 2);
 
-                return Promise.resolve(label);
-            }
-        )
+            return Promise.resolve(label);
+        });
     }
 
     removePopOver(label) {
-        if(label) {
+        if (label) {
             this.awm.objectManager.removeLabel(label);
         }
     }

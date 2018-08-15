@@ -23,7 +23,7 @@ class FloorAnimation {
 
         this.setVisibility(this.awm.objectManager.site, false, 1);
         this.awm.objectManager.floors.forEach((floor) => {
-            if(floor !== this.awm.defaultFloor) {
+            if (floor !== this.awm.defaultFloor) {
                 this.setVisibility(floor, false, 1);
             }
         });
@@ -38,7 +38,7 @@ class FloorAnimation {
      * @return {Promise<void, Error>}
      */
     start(from, to, animated) {
-        if(this.show) {
+        if (this.show) {
             to.setDisplayMode(DISPLAY_MODES.VISIBLE);
         }
 
@@ -63,7 +63,7 @@ class FloorAnimation {
                 ground.labels.forEach(label => label.setDisplayMode(visible ? DISPLAY_MODES.VISIBLE : DISPLAY_MODES.TRANSPARENT));
 
                 ground._mesh.traverse((child) => {
-                    if(!child.adsumObject) {
+                    if (!child.adsumObject) {
                         this.setDisplayMode(child, visible ? DISPLAY_MODES.VISIBLE : DISPLAY_MODES.TRANSPARENT);
                     }
                 });
@@ -76,9 +76,7 @@ class FloorAnimation {
                 const fullyVisibleFloor = visible && fading === 1;
 
                 const visibleBuilding = !fullyVisibleFloor && !this.isSameBuilding;
-                ground.building.setDisplayMode(
-                    visibleBuilding ? DISPLAY_MODES.VISIBLE : DISPLAY_MODES.TRANSPARENT,
-                );
+                ground.building.setDisplayMode(visibleBuilding ? DISPLAY_MODES.VISIBLE : DISPLAY_MODES.TRANSPARENT,);
             }
         }
     }
@@ -100,23 +98,23 @@ class FloorAnimation {
 
     setDisplayMode(mesh, displayMode) {
         switch (displayMode) {
-            case DISPLAY_MODES.NONE:
-                mesh.visible = false;
-                break;
-            case DISPLAY_MODES.VISIBLE:
-                mesh.visible = true;
-                this.forEachMaterial(mesh, (material) => {
-                    material.visible = true;
-                });
-                break;
-            case DISPLAY_MODES.TRANSPARENT:
-                mesh.visible = true;
-                this.forEachMaterial(mesh, (material) => {
-                    material.visible = false;
-                });
-                break;
-            default:
-                throw new Error('Unexpected');
+        case DISPLAY_MODES.NONE:
+            mesh.visible = false;
+            break;
+        case DISPLAY_MODES.VISIBLE:
+            mesh.visible = true;
+            this.forEachMaterial(mesh, (material) => {
+                material.visible = true;
+            });
+            break;
+        case DISPLAY_MODES.TRANSPARENT:
+            mesh.visible = true;
+            this.forEachMaterial(mesh, (material) => {
+                material.visible = false;
+            });
+            break;
+        default:
+            throw new Error('Unexpected');
         }
     }
 }

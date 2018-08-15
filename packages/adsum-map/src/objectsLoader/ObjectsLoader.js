@@ -21,7 +21,6 @@ import MTLLoader from './MTLLoader';
  * ObjectsLoader
  */
 class ObjectsLoader {
-
     constructor() {
         this.awm = null;
     }
@@ -71,21 +70,21 @@ class ObjectsLoader {
      * @param mtl
      * @return {Promise}
      */
-    createOBJMTL(obj,mtl) {
+    createOBJMTL(obj, mtl) {
         return new Promise((resolve, reject) => {
             new MTLLoader()
-                .setPath( 'models/obj/male02/' )
-                .load( mtl, ( materials ) => {
+                .setPath('models/obj/male02/')
+                .load(mtl, (materials) => {
                     materials.preload();
                     const loader = new OBJLoader();
-                    loader.setMaterials( materials );
+                    loader.setMaterials(materials);
                     loader.load(
                         obj,
                         resolve,
                         () => {},
                         reject,
                     );
-                } );
+                });
         });
     }
 
@@ -97,7 +96,7 @@ class ObjectsLoader {
      * @return {*}
      */
     add3DObjectOnFloor(floorId, position, obj) {
-        if(this.awm) {
+        if (this.awm) {
             let floor = null;
             if (!floorId) {
                 // Warning : accessing variables beginning _ means they are private and is not recommended
@@ -118,7 +117,7 @@ class ObjectsLoader {
                 return obj;
             }
         } else {
-            console.error("add3DObjectOnFloor you have to init awm");
+            console.error('add3DObjectOnFloor you have to init awm');
         }
     }
 }

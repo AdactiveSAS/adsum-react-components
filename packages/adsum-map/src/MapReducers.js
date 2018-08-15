@@ -11,7 +11,9 @@ export type MapReducersType = (state: MapReducerStateType, action: MapActionType
 const mapReducers: MapReducersType = (state: MapReducerStateType = initialState, action: MapActionType): MapReducerStateType => {
     switch (action.type) {
     case mapActionsType.DID_INIT: {
-        const { getFloors, getBuildings, currentFloor, reset, getSortedPaths, wayFinder } : { floors: any, buildings: any, currentFloor: number, reset: any, sortedPlaces: any, wayFinder: any  } = action;
+        const {
+            getFloors, getBuildings, currentFloor, reset, getSortedPaths, wayFinder
+        } : { floors: any, buildings: any, currentFloor: number, reset: any, sortedPlaces: any, wayFinder: any } = action;
 
         return {
             ...state,
@@ -74,7 +76,7 @@ const mapReducers: MapReducersType = (state: MapReducerStateType = initialState,
         };
     }
     case mapActionsType.SET_CURRENT_PATH: {
-        const { object } : { object: any }  = action;
+        const { object } : { object: any } = action;
 
         return {
             ...state,

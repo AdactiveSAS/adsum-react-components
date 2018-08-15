@@ -55,13 +55,13 @@ export type FloorDidChangeActionType = {|
 export type OnClickActionType = {| type: 'map/ON_CLICK', currentClickedEvent: any |};
 export type WillSelectActionType = {| type: 'map/WILL_SELECT', object: any |};
 export type WillSelectPoiActionType = {| type: 'map/WILL_SELECT_A_POI', poiId: number |};
-export type WillSelectPlaceActionType = {| type: 'map/WILL_SELECT_A_PLACE', placeId: number |};
+export type WillSelectPlaceActionType = {| type: 'map/WILL_SELECT_A_PLACE', placeId: number, pmr: boolean |};
 export type WillSelectMultiPlacesActionType = {| type: 'map/WILL_SELECT_MULTI_PLACES', poi: Object |};
 export type DidSelectActionType = {| type: 'map/DID_SELECT', currentSelectedObject: any |};
-export type WillDrawActionType = {| type: 'map/WILL_DRAW', object: any |};
-export type WillDrawPathSectionActionType = {| type: 'map/WILL_DRAW_PATH_SECTION', placeId: number, pathSectionIndex: number |};
-export type WillDrawToPoiActionType = {| type: 'map/WILL_DRAW_TO_POI', poiId: number |};
-export type WillDrawToPlaceActionType = {| type: 'map/WILL_DRAW_TO_PLACE', placeId: number |};
+export type WillDrawActionType = {| type: 'map/WILL_DRAW', object: any, pmr: boolean |};
+export type WillDrawPathSectionActionType = {| type: 'map/WILL_DRAW_PATH_SECTION', placeId: number, pathSectionIndex: number, pmr: boolean |};
+export type WillDrawToPoiActionType = {| type: 'map/WILL_DRAW_TO_POI', poiId: number, pmr: boolean |};
+export type WillDrawToPlaceActionType = {| type: 'map/WILL_DRAW_TO_PLACE', placeId: number, pmr: boolean |};
 export type DidDrawActionType = {| type: 'map/DID_DRAW' |};
 export type ResetDrawActionType = {| type: 'map/RESET_DRAW' |};
 export type SetCurrentPathActionType = {| type: 'map/SET_CURRENT_PATH', object: any |};
@@ -75,36 +75,36 @@ export type WillResetActionType = {| type: 'map/WILL_RESET' |};
 export type DidResetActionType = {| type: 'map/DID_RESET' |};
 
 export type MapActionType =
-  | WillInitActionType
-  | DidInitActionType
-  | SwitchModeActionType
-  | FloorWillChangeActionType
-  | FloorDidChangeActionType
-  | OnClickActionType
-  | WillSelectActionType
-  | WillSelectPoiActionType
-  | WillSelectPlaceActionType
-  | WillSelectMultiPlacesActionType
-  | DidSelectActionType
-  | WillDrawActionType
-  | WillDrawPathSectionActionType
-  | WillDrawToPoiActionType
-  | WillDrawToPlaceActionType
-  | SetCurrentPathActionType
-  | DidDrawActionType
-  | ResetDrawActionType
-  | WillOpenActionType
-  | DidOpenActionType
-  | WillCloseActionType
-  | DidCloseActionType
-  | WillGoToMyLocationType
-  | DidGoToMyLocationType
-  | WillResetActionType
-  | DidResetActionType;
+    | WillInitActionType
+    | DidInitActionType
+    | SwitchModeActionType
+    | FloorWillChangeActionType
+    | FloorDidChangeActionType
+    | OnClickActionType
+    | WillSelectActionType
+    | WillSelectPoiActionType
+    | WillSelectPlaceActionType
+    | WillSelectMultiPlacesActionType
+    | DidSelectActionType
+    | WillDrawActionType
+    | WillDrawPathSectionActionType
+    | WillDrawToPoiActionType
+    | WillDrawToPlaceActionType
+    | SetCurrentPathActionType
+    | DidDrawActionType
+    | ResetDrawActionType
+    | WillOpenActionType
+    | DidOpenActionType
+    | WillCloseActionType
+    | DidCloseActionType
+    | WillGoToMyLocationType
+    | DidGoToMyLocationType
+    | WillResetActionType
+    | DidResetActionType;
 
 export type WilResetActionCreatorType = () => WillResetActionType;
 export type DidResetActionCreatorType = () => DidResetActionType;
-export type WillInitActionCreatorType = (store: any, device: number, display: string, backgroundImage: string, onClick: any, PopOver: any, wireFraming: boolean) => WillInitActionType;
+export type WillInitActionCreatorType = (store: any, device: number, display: string, backgroundImage: string, onClick: any, PopOver: any, wireFraming: boolean, multiPlaceSelection: string, pmr: boolean) => WillInitActionType;
 export type SwitchModeActionCreatorType = () => SwitchModeActionType;
 export type DidInitActionCreatorType = () => DidInitActionType;
 export type FloorWillChangeActionCreatorType = (floorId: number, centerOn: boolean) => FloorWillChangeActionType;
@@ -112,11 +112,11 @@ export type FloorDidChangeActionCreatorType = (currentFloor: ?number, previousFl
 export type OnClickActionCreatorType = (currentClickedEvent: any) => OnClickActionType;
 export type WillSelectActionCreatorType = (object: any) => WillSelectActionType;
 export type WillSelectPoiActionCreatorType = (poiId: number) => WillSelectPoiActionType;
-export type WillSelectPlaceActionCreatorType = (placeId: number) => WillSelectPlaceActionType;
+export type WillSelectPlaceActionCreatorType = (placeId: number, pmr: boolean) => WillSelectPlaceActionType;
 export type WillSelectMultiPlacesActionCreatorType = (poi: Object) => WillSelectMultiPlacesActionType;
 export type DidSelectActionCreatorType = (getCurrentSelectedObject: any) => DidSelectActionType;
-export type WillDrawActionCreatorType = (object: any) => WillDrawActionType;
-export type WillDrawPathSectionActionCreatorType = (pathSectionIndex: number) => WillDrawPathSectionActionType;
+export type WillDrawActionCreatorType = (object: any, pmr: boolean) => WillDrawActionType;
+export type WillDrawPathSectionActionCreatorType = (placeId: number, pathSectionIndex: number, pmr: boolean) => WillDrawPathSectionActionType;
 export type DidDrawActionCreatorType = () => DidDrawActionType;
 export type ResetDrawActionCreatorType = () => ResetDrawActionType;
 export type WillOpenActionCreatorType = () => WillOpenActionType;
@@ -126,8 +126,8 @@ export type DidCloseActionCreatorType = () => DidCloseActionType;
 export type WillGoToMyLocationActionCreatorType = () => WillGoToMyLocationType;
 export type DidGoToMyLocationActionCreatorType = () => DidGoToMyLocationType;
 export type SetCurrentPathActionCreatorType = (object: any) => SetCurrentPathActionType;
-export type WillDrawToPoiActionCreatorType = (poiId: number) => WillDrawToPoiActionType;
-export type WillDrawToPlaceActionCreatorType = (placeId: number) => WillDrawToPlaceActionType;
+export type WillDrawToPoiActionCreatorType = (poiId: number, pmr: boolean) => WillDrawToPoiActionType;
+export type WillDrawToPlaceActionCreatorType = (placeId: number, pmr: boolean) => WillDrawToPlaceActionType;
 
 
 /**
@@ -136,7 +136,7 @@ export type WillDrawToPlaceActionCreatorType = (placeId: number) => WillDrawToPl
  * @memberof! module:Map#
  * @returns {object}
  */
-export const init: WillInitActionCreatorType = (store: any, device: number, display: string, backgroundImage: string, onClick: any, PopOver: any, wireFraming: boolean, multiPlaceSelection: string): WillInitActionType => ({
+export const init: WillInitActionCreatorType = (store: any, device: number, display: string, backgroundImage: string, onClick: any, PopOver: any, wireFraming: boolean, multiPlaceSelection: string, pmr: boolean): WillInitActionType => ({
     type: types.WILL_INIT,
     store,
     device,
@@ -145,7 +145,8 @@ export const init: WillInitActionCreatorType = (store: any, device: number, disp
     onClick,
     PopOver,
     wireFraming,
-    multiPlaceSelection
+    multiPlaceSelection,
+    pmr
 });
 
 /**
@@ -214,12 +215,10 @@ export const floorDidChanged: FloorDidChangeActionCreatorType = (currentFloor: ?
  * @memberof! module:Map#
  * @returns {object}
  */
-export const onClick: OnClickActionCreatorType = (getEventMethod: any): OnClickActionType => {
-    return {
-        type: types.ON_CLICK,
-        currentClickedEvent: getEventMethod
-    };
-};
+export const onClick: OnClickActionCreatorType = (getEventMethod: any): OnClickActionType => ({
+    type: types.ON_CLICK,
+    currentClickedEvent: getEventMethod
+});
 
 
 /**
@@ -228,12 +227,10 @@ export const onClick: OnClickActionCreatorType = (getEventMethod: any): OnClickA
  * @memberof! module:Map#
  * @returns {object}
  */
-export const willSelect: WillSelectActionCreatorType = (object: any): WillSelectActionType => {
-    return {
-        type: types.WILL_SELECT,
-        object
-    };
-};
+export const willSelect: WillSelectActionCreatorType = (object: any): WillSelectActionType => ({
+    type: types.WILL_SELECT,
+    object
+});
 
 /**
  * Will highlight the closest poi
@@ -241,12 +238,10 @@ export const willSelect: WillSelectActionCreatorType = (object: any): WillSelect
  * @memberof! module:Map#
  * @returns {object}
  */
-export const highlightPoi: WillSelectPoiActionCreatorType = (poiId: any): WillSelectPoiActionType => {
-    return {
-        type: types.WILL_SELECT_A_POI,
-        poiId
-    };
-};
+export const highlightPoi: WillSelectPoiActionCreatorType = (poiId: any): WillSelectPoiActionType => ({
+    type: types.WILL_SELECT_A_POI,
+    poiId
+});
 
 /**
  * Will highlight a place
@@ -254,12 +249,11 @@ export const highlightPoi: WillSelectPoiActionCreatorType = (poiId: any): WillSe
  * @memberof! module:Map#
  * @returns {object}
  */
-export const highlightPlace: WillSelectPlaceActionCreatorType = (placeId: any): WillSelectPlaceActionType => {
-    return {
-        type: types.WILL_SELECT_A_PLACE,
-        placeId
-    };
-};
+export const highlightPlace: WillSelectPlaceActionCreatorType = (placeId: any, pmr: boolean): WillSelectPlaceActionType => ({
+    type: types.WILL_SELECT_A_PLACE,
+    placeId,
+    pmr
+});
 
 /**
  * Will highlight Multiple places
@@ -267,12 +261,10 @@ export const highlightPlace: WillSelectPlaceActionCreatorType = (placeId: any): 
  * @memberof! module:Map#
  * @returns {object}
  */
-export const highlightMultiPlacesFromPoi: WillSelectMultiPlacesActionCreatorType = (poi: Object): WillSelectMultiPlacesActionType => {
-    return {
-        type: types.WILL_SELECT_MULTI_PLACES,
-        poi
-    };
-};
+export const highlightMultiPlacesFromPoi: WillSelectMultiPlacesActionCreatorType = (poi: Object): WillSelectMultiPlacesActionType => ({
+    type: types.WILL_SELECT_MULTI_PLACES,
+    poi
+});
 
 
 /**
@@ -281,12 +273,10 @@ export const highlightMultiPlacesFromPoi: WillSelectMultiPlacesActionCreatorType
  * @memberof! module:Map#
  * @returns {object}
  */
-export const didSelect: DidSelectActionCreatorType = (getCurrentSelectedObject: any): DidSelectActionType => {
-    return {
-        type: types.DID_SELECT,
-        getCurrentSelectedObject
-    };
-};
+export const didSelect: DidSelectActionCreatorType = (getCurrentSelectedObject: any): DidSelectActionType => ({
+    type: types.DID_SELECT,
+    getCurrentSelectedObject
+});
 
 
 /**
@@ -295,12 +285,11 @@ export const didSelect: DidSelectActionCreatorType = (getCurrentSelectedObject: 
  * @memberof! module:Map#
  * @returns {object}
  */
-export const goTo: WillDrawActionCreatorType = (object: any): WillDrawActionType => {
-    return {
-        type: types.WILL_DRAW,
-        object
-    };
-};
+export const goTo: WillDrawActionCreatorType = (object: any, pmr: boolean): WillDrawActionType => ({
+    type: types.WILL_DRAW,
+    object,
+    pmr
+});
 
 /**
  * Will draw a pathSection of the current path
@@ -308,13 +297,12 @@ export const goTo: WillDrawActionCreatorType = (object: any): WillDrawActionType
  * @memberof! module:Map#
  * @returns {object}
  */
-export const drawPathSection: WillDrawPathSectionActionCreatorType = (placeId: number, pathSectionIndex: number): WillDrawPathSectionActionType => {
-    return {
-        type: types.WILL_DRAW_PATH_SECTION,
-        placeId,
-        pathSectionIndex
-    };
-};
+export const drawPathSection: WillDrawPathSectionActionCreatorType = (placeId: number, pathSectionIndex: number, pmr: boolean): WillDrawPathSectionActionType => ({
+    type: types.WILL_DRAW_PATH_SECTION,
+    placeId,
+    pathSectionIndex,
+    pmr
+});
 
 /**
  * Will draw a path to the closest poi
@@ -322,12 +310,11 @@ export const drawPathSection: WillDrawPathSectionActionCreatorType = (placeId: n
  * @memberof! module:Map#
  * @returns {object}
  */
-export const goToPoi: WillDrawToPoiActionCreatorType = (poiId: any): WillDrawToPoiActionType => {
-    return {
-        type: types.WILL_DRAW_TO_POI,
-        poiId
-    };
-};
+export const goToPoi: WillDrawToPoiActionCreatorType = (poiId: any, pmr: boolean): WillDrawToPoiActionType => ({
+    type: types.WILL_DRAW_TO_POI,
+    poiId,
+    pmr
+});
 
 /**
  * Will draw a path to a place
@@ -335,12 +322,11 @@ export const goToPoi: WillDrawToPoiActionCreatorType = (poiId: any): WillDrawToP
  * @memberof! module:Map#
  * @returns {object}
  */
-export const goToPlace: WillDrawToPlaceActionCreatorType = (placeId: any): WillDrawToPlaceActionType => {
-    return {
-        type: types.WILL_DRAW_TO_PLACE,
-        placeId
-    };
-};
+export const goToPlace: WillDrawToPlaceActionCreatorType = (placeId: any, pmr: boolean): WillDrawToPlaceActionType => ({
+    type: types.WILL_DRAW_TO_PLACE,
+    placeId,
+    pmr
+});
 
 
 /**
@@ -349,12 +335,10 @@ export const goToPlace: WillDrawToPlaceActionCreatorType = (placeId: any): WillD
  * @memberof! module:Map#
  * @returns {object}
  */
-export const didDraw: DidDrawActionCreatorType = (placeId: number): DidDrawActionType => {
-    return {
-        type: types.DID_DRAW,
-        placeId: placeId,
-    };
-};
+export const didDraw: DidDrawActionCreatorType = (placeId: number): DidDrawActionType => ({
+    type: types.DID_DRAW,
+    placeId,
+});
 
 
 /**
@@ -363,11 +347,9 @@ export const didDraw: DidDrawActionCreatorType = (placeId: number): DidDrawActio
  * @memberof! module:Map#
  * @returns {object}
  */
-export const resetDrawnPath: ResetDrawActionCreatorType = (): ResetDrawActionType => {
-    return {
-        type: types.RESET_DRAW,
-    };
-};
+export const resetDrawnPath: ResetDrawActionCreatorType = (): ResetDrawActionType => ({
+    type: types.RESET_DRAW,
+});
 
 /**
  * Set current path
@@ -375,12 +357,10 @@ export const resetDrawnPath: ResetDrawActionCreatorType = (): ResetDrawActionTyp
  * @memberof! module:Map#
  * @returns {object}
  */
-export const setCurrentPath: SetCurrentPathActionCreatorType = (object: any): SetCurrentPathActionType => {
-    return {
-        type: types.SET_CURRENT_PATH,
-        object
-    };
-};
+export const setCurrentPath: SetCurrentPathActionCreatorType = (object: any): SetCurrentPathActionType => ({
+    type: types.SET_CURRENT_PATH,
+    object
+});
 
 /**
  * Map will open
@@ -388,11 +368,9 @@ export const setCurrentPath: SetCurrentPathActionCreatorType = (object: any): Se
  * @memberof! module:Map#
  * @returns {object}
  */
-export const willOpen: WillOpenActionCreatorType = (): WillOpenActionType => {
-    return {
-        type: types.WILL_OPEN,
-    };
-};
+export const willOpen: WillOpenActionCreatorType = (): WillOpenActionType => ({
+    type: types.WILL_OPEN,
+});
 
 /**
  * Map did open
@@ -400,11 +378,9 @@ export const willOpen: WillOpenActionCreatorType = (): WillOpenActionType => {
  * @memberof! module:Map#
  * @returns {object}
  */
-export const didOpen: DidOpenActionCreatorType = (): DidOpenActionType => {
-    return {
-        type: types.DID_OPEN,
-    };
-};
+export const didOpen: DidOpenActionCreatorType = (): DidOpenActionType => ({
+    type: types.DID_OPEN,
+});
 
 /**
  * Map will close
@@ -412,11 +388,9 @@ export const didOpen: DidOpenActionCreatorType = (): DidOpenActionType => {
  * @memberof! module:Map#
  * @returns {object}
  */
-export const willClose: WillCloseActionCreatorType = (): WillCloseActionType => {
-    return {
-        type: types.WILL_CLOSE,
-    };
-};
+export const willClose: WillCloseActionCreatorType = (): WillCloseActionType => ({
+    type: types.WILL_CLOSE,
+});
 
 /**
  * Map did close
@@ -424,11 +398,9 @@ export const willClose: WillCloseActionCreatorType = (): WillCloseActionType => 
  * @memberof! module:Map#
  * @returns {object}
  */
-export const didClose: DidCloseActionCreatorType = (): DidCloseActionType => {
-    return {
-        type: types.DID_CLOSE,
-    };
-};
+export const didClose: DidCloseActionCreatorType = (): DidCloseActionType => ({
+    type: types.DID_CLOSE,
+});
 
 /**
  * Map will go to my location
@@ -436,8 +408,6 @@ export const didClose: DidCloseActionCreatorType = (): DidCloseActionType => {
  * @memberof! module:Map#
  * @returns {object}
  */
-export const myPosition: WillGoToMyLocationActionCreatorType = (): WillGoToMyLocationType => {
-    return {
-        type: types.WILL_GO_MY_LOCATION,
-    };
-};
+export const myPosition: WillGoToMyLocationActionCreatorType = (): WillGoToMyLocationType => ({
+    type: types.WILL_GO_MY_LOCATION,
+});
