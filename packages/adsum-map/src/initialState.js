@@ -22,7 +22,7 @@ export type MapReducerStateType = {|
   +cameraMoved: boolean,
   +getSortedPaths: ?Object,
   +reset: ?Object,
-  +wayFinder: ?Object,
+  +wayFinder: ?Object
 |};
 
 /**
