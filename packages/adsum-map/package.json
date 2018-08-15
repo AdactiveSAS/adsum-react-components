@@ -1,6 +1,6 @@
 {
   "name": "@adactive/arc-map",
-  "version": "0.0.2-y.44.45",
+  "version": "0.0.2-y.44.47",
   "description": "Adsum Map Component",
   "main": "index.js",
   "author": "Antoine Bigard <antoine.bigard@adactive.com>",
@@ -15,12 +15,17 @@
   },
   "scripts": {},
   "dependencies": {
-    "@adactive/adsum-utils": "^0.0.2-y.44.45",
     "chalk": "^1.1.3",
     "commander": "^2.9.0",
     "prex-es5": "^0.4.2"
   },
   "devDependencies": {
+    "@adactive/adsum-utils": "^0.0.2-y.44.47",
+    "prop-types": "^15.6.1",
+    "react": "^16.3.1"
+  },
+  "peerDependencies": {
+    "@adactive/adsum-utils": "^0.0.2-y.44.45",
     "prop-types": "^15.6.1",
     "react": "^16.3.1"
   },

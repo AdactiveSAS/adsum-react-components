@@ -149,7 +149,7 @@ function* onGoTo(action: WillDrawActionType) {
     const path = wayfindingController.getPath(action.object());
     store.dispatch(setCurrentPath(() => path));
     yield call([wayfindingController, drawPath], path);
-    store.dispatch(didDraw());
+    store.dispatch(didDraw(path.to.placeId));
 }
 
 function* resetDraw(action: ResetDrawActionType) {
@@ -177,7 +177,7 @@ function* onGoToPoi(action: WillDrawToPoiActionType) {
 
     yield call([wayfindingController, drawPath], path);
 
-    store.dispatch(didDraw());
+    store.dispatch(didDraw(path.to.placeId));
 }
 
 function* onGoToPlace(action: WillDrawToPlaceActionType) {
@@ -188,7 +188,7 @@ function* onGoToPlace(action: WillDrawToPlaceActionType) {
     const path = placesController.getPath(action.placeId);
     store.dispatch(setCurrentPath(() => path));
     yield call([wayfindingController, drawPath], path);
-    store.dispatch(didDraw());
+    store.dispatch(didDraw(path.to.placeId));
 }
 
 function* onDrawPathSection(action: WillDrawPathSectionActionType) {
@@ -209,7 +209,7 @@ function* onOpen() {
         yield resetPromise;
     }
     yield call([mapController, start]);
-    store.dispatch(didOpen());
+    store.dispatch(didOpen(path.to.placeId));
 }
 
 function* onClose() {
