@@ -1,6 +1,6 @@
 // @flow
 
-import { AdsumWebMap, AdsumLoader, ArrowPathPatternOptions, DotPathBuilder, DotPathBuilderOptions } from '@adactive/adsum-web-map';
+import { AdsumWebMap, AdsumLoader, ArrowPathPatternOptions, DotPathBuilder, DotPathBuilderOptions, DecorObject } from '@adactive/adsum-web-map';
 import * as three from 'three';
 import { Tween, Easing } from 'es6-tween';
 import ACA from '@adactive/adsum-utils/services/ClientAPI';
@@ -14,7 +14,7 @@ import FloorAnimation from '../floor/FloorAnimation';
 import labelController from './LabelController';
 
 import CustomUserObject from '../kioskIndicator/CustomUserObject';
-// import customDotPathBuilder from '../path/CustomDotPathBuilder';
+//import customDotPathBuilder from '../path/CustomDotPathBuilder';
 
 /**
  * @memberof module:Map
@@ -37,7 +37,7 @@ class MapController {
     /**
      * Initializing of map
      */
-    init(device: number, display: string, backgroundImage: string, PopOver: any, wireFraming: boolean, multiPlaceSelection: string) {
+    init(device: number, display: string, backgroundImage: string, PopOver: any, wireFraming: boolean, multiPlaceSelection: string, pmr: boolean, zoom: any) {
         this.adsumLoader = new AdsumLoader({
             entityManager: ACA.entityManager, // Give it in order to be used to consume REST API
             deviceId: device, // The device Id to use
@@ -49,46 +49,48 @@ class MapController {
         // Create the Map instance
         this._userObject = new CustomUserObject({ placeId: Symbol('UserPlace'), id: Symbol('UserPositionId') });
         return this._userObject.load().then(() => {
-            this.awm = new AdsumWebMap({
-                loader: this.adsumLoader, // The loader to use
-                engine: {
-                    container: document.getElementById('adsum-web-map-container'), // The div DOMElement to insert the canvas into
-                },
-                wayfinding: {
+                this.awm = new AdsumWebMap({
+                    loader: this.adsumLoader, // The loader to use
+                    engine: {
+                        container: document.getElementById('adsum-web-map-container'), // The div DOMElement to insert the canvas into
+                    },
+                    wayfinding: {
                     pathBuilder: new DotPathBuilder(new DotPathBuilderOptions({
-                        patternSpace: 2.5, // 4,
-                        patternSize: 1, // 2
+                                patternSpace: 2.5,//4,
+                                patternSize: 1,//2
                         pattern: new ArrowPathPatternOptions({
                             color: '#be272f'
                         })
                     })),
-                    userObject: this._userObject
-                },
-                scene: {
-                    animation: new FloorAnimation()
-                }
-            });
+                        userObject: this._userObject
+                    },
+                    scene: {
+                        animation: new FloorAnimation()
+                    }
+                });
 
 
-            window.awm = this.awm;
-            window.three = three;
-            window.THREE = three;
-            window.mapController = this;
+                window.awm = this.awm;
+                window.three = three;
+                window.THREE = three;
+                window.mapController = this;
 
-            // Init the Map
-            return this.awm.init();
+                // Init the Map
+                return this.awm.init();
+
         }).then(() => {
-            selectionController.init(this.awm, multiPlaceSelection);
-            placesController.init(this.awm);
-            floorsController.init(this.awm);
-            labelController.init(this.awm, PopOver);
-            wayfindingController.init(this.awm);
-            return Promise.resolve();
+                selectionController.init(this.awm, multiPlaceSelection);
+                placesController.init(this.awm, pmr);
+                floorsController.init(this.awm);
+                labelController.init(this.awm, PopOver);
+                wayfindingController.init(this.awm);
+                return Promise.resolve();
         }).then(() => {
             console.log('AdsumWebMap is ready to start');
 
             // TODO SET MIN ZOOM
-            this.awm.cameraManager.control.minDistance = this.awm.getProjector().meterToAdsumDistance(70);
+            this.awm.cameraManager.control.minDistance = this.awm.getProjector().meterToAdsumDistance(zoom.min);
+            this.awm.cameraManager.control.maxDistance = this.awm.getProjector().meterToAdsumDistance(zoom.max);
             this._maxPolarAngle = this.awm.cameraManager.control.maxPolarAngle;
             this._minPolarAngle = this.awm.cameraManager.control.minPolarAngle;
 
@@ -104,16 +106,15 @@ class MapController {
             backgroundTexture.repeat.set(1, 1);
             this.awm.sceneManager.scene.background = backgroundTexture;
 
-            // TODO Mode1
-            // const currentFloor = this.awm.sceneManager.getCurrentFloor();
-            // floorsController.showFloorsUnder(currentFloor);
-            // TODO Mode2
-            // floorsController.showAllFloor();
+            //TODO Mode1
+            //const currentFloor = this.awm.sceneManager.getCurrentFloor();
+            //floorsController.showFloorsUnder(currentFloor);
+            //TODO Mode2
+            //floorsController.showAllFloor();
 
             floorsController.bounceDownAllFloors(); // TODO
 
-
-            if (wireFraming) {
+            if(wireFraming) {
                 this.awm.objectManager.spaces.forEach((space) => {
                     if (space.isSpace) {
                         this._wireFrameAShape(space, 0, 0x5a5b5a);
@@ -124,7 +125,11 @@ class MapController {
             /* ------------------------------------ PROJECT SPECIFIC  --------------------------------------------*/
 
             // Start the rendering
-            return Promise.resolve().then(() => this.awm.start()).then(() => floorsController._bounceUpSpaces(this.awm.defaultFloor));
+            return Promise.resolve().then( () => this.awm.start() ).then(
+                ()=> {
+                    return floorsController._bounceUpSpaces(this.awm.defaultFloor);
+                }
+            );
         });
     }
 
@@ -134,8 +139,16 @@ class MapController {
         const geo = new three.EdgesGeometry(space._mesh.geometry); // or WireframeGeometry
         const mat = new three.LineBasicMaterial({ color: matColor, linewidth: 1 });
         const wireFrame = new three.LineSegments(geo, mat);
-        space._mesh.add(wireFrame);
-        wireFrame.updateMatrixWorld();
+
+        const currentWireframe = new DecorObject({
+            name: `${space.name}_wireFrame`,
+            placeId: space.id
+        });
+        currentWireframe._setMesh(wireFrame);
+
+        space.addDecor(currentWireframe);
+        space.updateMatrix();
+        currentWireframe.updateMatrix();
     }
 
     /**
@@ -144,7 +157,7 @@ class MapController {
      * @param animated {boolean} animated
      */
     switchMode(mode, animated = true) { // Add cancel token
-        if (this._mode !== mode) {
+        if(this._mode !== mode) {
             this._mode = mode;
             let to = 0.001;
             if (mode === '2D') {
@@ -160,49 +173,49 @@ class MapController {
             } else if (mode === '3D') {
                 this.awm.cameraManager.control.maxPolarAngle = this._maxPolarAngle;
             }
-            if (animated) {
+            if(animated) {
                 const holder = {
                     val: (mode === '2D') ? this.awm.cameraManager.control.maxPolarAngle : this.awm.cameraManager.control.minPolarAngle
                 };
                 return new Promise((resolve, reject) => {
-                    this._tween = new Tween(holder)
-                        .to(
-                            {
-                                val: to
-                            },
-                            1400,
-                        )
-                        .on('update', () => {
+                        this._tween = new Tween(holder)
+                            .to(
+                                {
+                                    val:to
+                                },
+                                1400,
+                            )
+                            .on('update', () => {
                             if (mode === '2D') {
-                                this.awm.cameraManager.control.maxPolarAngle = holder.val;
+                                    this.awm.cameraManager.control.maxPolarAngle = holder.val;
                             } else if (mode === '3D') {
-                                this.awm.cameraManager.control.minPolarAngle = holder.val;
-                            }
-                        })
-                        .on('stop', () => {
-                            reject();
-                        })
-                        .on('complete', () => {
+                                    this.awm.cameraManager.control.minPolarAngle = holder.val;
+                                }
+                            })
+                            .on('stop', () => {
+                                reject();
+                            })
+                            .on('complete', () => {
                             if (mode === '3D') {
-                                this.awm.cameraManager.control.minPolarAngle = 0.001;
-                            }
-                            resolve();
-                        })
-                        .easing(Easing.Quadratic.InOut)
-                        .start();
+                                    this.awm.cameraManager.control.minPolarAngle = 0.001;
+                                }
+                                resolve();
+                            })
+                            .easing(Easing.Quadratic.InOut)
+                            .start();
                 });
-            }
+                    }
             if (mode === '2D') {
-                this.awm.cameraManager.control.maxPolarAngle = to;
+                    this.awm.cameraManager.control.maxPolarAngle = to;
             } else if (mode === '3D') {
-                this.awm.cameraManager.control.minPolarAngle = to;
+                    this.awm.cameraManager.control.minPolarAngle = to;
                 return new Promise((resolve, reject) => {
-                    setTimeout(
-                        () => {
-                            this.awm.cameraManager.control.minPolarAngle = 0.001;
-                            resolve();
-                        },
-                        200
+                            setTimeout(
+                                ()=> {
+                                    this.awm.cameraManager.control.minPolarAngle = 0.001;
+                                    resolve();
+                                },
+                                200
                     );
                 });
             }
@@ -231,7 +244,6 @@ class MapController {
         selectionController.reset();
         let promise = Promise.resolve();
         promise = promise.then(() => wayfindingController.reset());
-        promise = promise.then(() => floorsController.reset());
         promise = promise.then(() => this.awm.cameraManager.centerOnFloor(this.awm.defaultFloor));
         if (stopMap) promise = promise.then(() => this.stop());
         promise = promise.then(() => { this._resetLock = false; });

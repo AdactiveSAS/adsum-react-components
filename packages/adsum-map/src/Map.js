@@ -12,12 +12,12 @@ import type { MapStateType } from './initialState';
 
 type MappedStatePropsType = {|
     mapState: MapStateType
-|};
+    |};
 type MappedDispatchPropsType = {|
     init: (onClickFunc: () => any) => void,
     willOpen: () => void,
     willClose: () => void
-|};
+    |};
 type OwnPropsType = {|
     isOpen: boolean,
     store: any,
@@ -27,7 +27,7 @@ type OwnPropsType = {|
     backgroundImage: string,
     PopOver: any,
     multiPlaceSelection: string
-|};
+    |};
 type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
 /**
  * Map widget: display map
@@ -49,8 +49,10 @@ class Map extends React.Component<PropsType> {
             PopOver,
             wireFraming,
             multiPlaceSelection,
+            pmr,
+            zoom
         } = this.props;
-        this.props.init(store, device, display, backgroundImage, onClick, PopOver, wireFraming, multiPlaceSelection);
+        this.props.init(store, device, display, backgroundImage, onClick, PopOver, wireFraming, multiPlaceSelection, pmr, zoom);
     }
 
     componentWillUpdate(nextProps: PropsType) {
@@ -88,7 +90,7 @@ const mapStateToProps = (state: MapStateType): MappedStatePropsType => ({
 });
 
 const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => bindActionCreators({
-    init: (store: any, device: number, display: string, backgroundImage: string, onClick: () => any, PopOver: any, wireFraming: boolean, multiPlaceSelection: string): void => dispatch(mapActions.init(store, device, display, backgroundImage, onClick, PopOver, wireFraming, multiPlaceSelection)),
+    init: (store: any, device: number, display: string, backgroundImage: string, onClick: () => any, PopOver: any, wireFraming: boolean, multiPlaceSelection: string, pmr: boolean, zoom: any): void => dispatch(mapActions.init(store, device, display, backgroundImage, onClick, PopOver, wireFraming, multiPlaceSelection, pmr, zoom)),
     willOpen: (): void => dispatch(mapActions.willOpen()),
     willClose: (): void => dispatch(mapActions.willClose()),
 }, dispatch);

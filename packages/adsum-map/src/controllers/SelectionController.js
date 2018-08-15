@@ -49,13 +49,16 @@ class SelectionController {
             floorsController.explodeAndShiftStack(-300, -300, 150, centerOnStackOptions);
         }
 
+        let havePoiOnTheFloor = false;
         _.each(places, (place) => {
             const path = placesController.getPath(place.id);
             const to = path.to.adsumObject;
             this.current.push(to);
-
             if (this.multiPlaceSelection === 'singleLevel') {
-                if (to && to.parent && to.parent.id === this.awm.defaultFloor.id) {
+                if (to && to.parent) {
+                    if(!havePoiOnTheFloor && to.parent.id === this.awm.defaultFloor.id) {
+                        havePoiOnTheFloor = true;
+                    }
                     if (to.isBuilding) {
                         promise = promise.then(() => this.highlightBuilding(to));
                     } else if (to.isSpace) {
@@ -75,6 +78,27 @@ class SelectionController {
 
         promise = promise.then(() => {
             this.locked = false;
+        });
+
+        if(!havePoiOnTheFloor) {
+            return new Promise((resolve,reject) => {
+                if(this.current.length > 0) {
+                    const to = this.current[0];
+                    if (to && to.parent) {
+                        return floorsController.stackFromFloor(to.parent.id).then(
+                            ()=>{
+                                resolve();
+                            }
+                        );
+                    }
+                }
+                return promise.then(()=>resolve());
+            });
+        }
+
+
+        promise = promise.then(() => {
+            return floorsController.stackFromFloor(this.awm.defaultFloor.id)
         });
 
         return promise;

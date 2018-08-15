@@ -15,15 +15,15 @@ class ClickController {
         this.firstIntersect = null;
         /**
          * Do stuff
-         * * */
+         * **/
     }
 
     getFirstIntersectObject() {
         const { intersects } = this.onClickEvent;
 
-        if (this.firstIntersect === null && intersects.length > 0) {
+        if(this.firstIntersect === null && intersects.length > 0) {
             const firstIntersect = intersects[0];
-            if (firstIntersect) {
+            if(firstIntersect && firstIntersect.object) {
                 if (firstIntersect.object.isBuilding || firstIntersect.object.isSpace) {
                     this.firstIntersect = firstIntersect.object;
                 } else if (firstIntersect.object.isLabel) {
@@ -42,6 +42,7 @@ class ClickController {
         }
 
         return this.firstIntersect;
+
     }
 }
 

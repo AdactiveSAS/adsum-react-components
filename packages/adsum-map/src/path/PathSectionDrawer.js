@@ -99,18 +99,25 @@ class PathSectionDrawer {
 
                 this.pathSectionObject._mesh.visible = true;
 
-                return Promise.all(tasks);
-                /* return new Promise((resolve, reject) => {
-                        Promise.all(tasks).then(
-                            ()=> {
-                                resolve();
+                return Promise.all(tasks.map(this.fastFail));
+
+                }).then((values) => {
+
+                    let oneFailed = false;
+
+                    if(values) {
+                        for (let i = 0; i < values.length; ++i) {
+                            if (!values[i].success) {
+                                console.log("ERR: " + values[i].error);
+                                oneFailed = true;
                             }
-                        ).catch((e) => {
-                            console.log("HERE")
-                            reject(e);
-                        });
-                    }); */
-            }).then(() => {
+                        }
+                    }
+
+                    if(oneFailed || !values) {
+                        return reject(new Error('Path was stopped'));
+                    }
+
                 try {
                     token.throwIfCancellationRequested();
                     this._animate();
@@ -121,9 +128,10 @@ class PathSectionDrawer {
                     }
                     return reject(e);
                 }
-            }).catch(e => reject(e));
+            });
         });
     }
+
 
     /**
      * @public
@@ -243,7 +251,13 @@ class PathSectionDrawer {
             this.tweens.push(tweenPosition);
         });
 
-        return Promise.all([promiseOpacity, promisePosition]);
+        return Promise.all([promiseOpacity, promisePosition].map(this.fastFail));
+    }
+
+    fastFail(promise) {
+        return promise
+        .then(result => ({ success: true, result }))
+        .catch(error => ({ success: false, error }));
     }
 
     _prepareAnimation(token = CancellationToken.none, animated = true) {

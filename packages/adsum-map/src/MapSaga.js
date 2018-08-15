@@ -76,7 +76,7 @@ const initMapEvents = () => {
 function* onInit(action: WillInitActionType) {
     yield delay(200);
     store = action.store;
-    yield call([mapController, init], action.device, action.display, action.backgroundImage, action.PopOver, action.wireFraming, action.multiPlaceSelection, action.pmr);
+    yield call([mapController, init], action.device, action.display, action.backgroundImage, action.PopOver, action.wireFraming, action.multiPlaceSelection, action.pmr, action.zoom);
 
     initMapEvents();
 
@@ -200,7 +200,7 @@ function* onDrawPathSection(action: WillDrawPathSectionActionType) {
     const path = placesController.getPath(action.placeId, action.pmr);
     store.dispatch(setCurrentPath(() => path));
     yield call([wayfindingController, drawPath], path, action.pathSectionIndex);
-    store.dispatch(didDraw());
+    store.dispatch(didDraw(path.to.placeId));
 }
 
 function* onOpen() {
@@ -209,7 +209,7 @@ function* onOpen() {
         yield resetPromise;
     }
     yield call([mapController, start]);
-    store.dispatch(didOpen(path.to.placeId));
+    store.dispatch(didOpen());
 }
 
 function* onClose() {

@@ -104,7 +104,7 @@ export type MapActionType =
 
 export type WilResetActionCreatorType = () => WillResetActionType;
 export type DidResetActionCreatorType = () => DidResetActionType;
-export type WillInitActionCreatorType = (store: any, device: number, display: string, backgroundImage: string, onClick: any, PopOver: any, wireFraming: boolean, multiPlaceSelection: string, pmr: boolean) => WillInitActionType;
+export type WillInitActionCreatorType = (store: any, device: number, display: string, backgroundImage: string, onClick: any, PopOver: any, wireFraming: boolean, multiPlaceSelection: string, pmr: boolean, zoom: any) => WillInitActionType;
 export type SwitchModeActionCreatorType = () => SwitchModeActionType;
 export type DidInitActionCreatorType = () => DidInitActionType;
 export type FloorWillChangeActionCreatorType = (floorId: number, centerOn: boolean) => FloorWillChangeActionType;
@@ -136,7 +136,7 @@ export type WillDrawToPlaceActionCreatorType = (placeId: number, pmr: boolean) =
  * @memberof! module:Map#
  * @returns {object}
  */
-export const init: WillInitActionCreatorType = (store: any, device: number, display: string, backgroundImage: string, onClick: any, PopOver: any, wireFraming: boolean, multiPlaceSelection: string, pmr: boolean): WillInitActionType => ({
+export const init: WillInitActionCreatorType = (store: any, device: number, display: string, backgroundImage: string, onClick: any, PopOver: any, wireFraming: boolean, multiPlaceSelection: string, pmr: boolean, zoom: any): WillInitActionType => ({
     type: types.WILL_INIT,
     store,
     device,
@@ -146,7 +146,8 @@ export const init: WillInitActionCreatorType = (store: any, device: number, disp
     PopOver,
     wireFraming,
     multiPlaceSelection,
-    pmr
+    pmr,
+    zoom
 });
 
 /**
