@@ -31,7 +31,7 @@ class MapController {
         this._maxPolarAngle = null;
         this._minPolarAngle = null;
         this.device = -1;
-        this._mode = "3D";
+        this._mode = '3D';
         this._userObject = null;
     }
     /**
@@ -48,26 +48,20 @@ class MapController {
 
         // Create the Map instance
         this._userObject = new CustomUserObject({ placeId: Symbol('UserPlace'), id: Symbol('UserPositionId') });
-        return this._userObject.load().then(
-            ()=> {
-
+        return this._userObject.load().then(() => {
                 this.awm = new AdsumWebMap({
                     loader: this.adsumLoader, // The loader to use
                     engine: {
                         container: document.getElementById('adsum-web-map-container'), // The div DOMElement to insert the canvas into
                     },
                     wayfinding: {
-                        pathBuilder: new DotPathBuilder(new DotPathBuilderOptions(
-                            {
+                    pathBuilder: new DotPathBuilder(new DotPathBuilderOptions({
                                 patternSpace: 2.5,//4,
                                 patternSize: 1,//2
-                                pattern: new ArrowPathPatternOptions(
-                                    {
-                                        color: "#be272f"
-                                    }
-                                )
-                            }
-                        )),
+                        pattern: new ArrowPathPatternOptions({
+                            color: '#be272f'
+                        })
+                    })),
                         userObject: this._userObject
                     },
                     scene: {
@@ -165,25 +159,24 @@ class MapController {
         if(this._mode !== mode) {
             this._mode = mode;
             let to = 0.001;
-            if (mode === "2D") {
+            if (mode === '2D') {
                 to = 0.001;
                 this.awm.cameraManager.control.enableRotate = false;
-            } else if (mode === "3D") {
+            } else if (mode === '3D') {
                 to = this._maxPolarAngle;
                 this.awm.cameraManager.control.enableRotate = true;
             }
 
-            if (mode === "2D") {
+            if (mode === '2D') {
                 this.awm.cameraManager.control.minPolarAngle = 0.001;
-            } else if (mode === "3D") {
+            } else if (mode === '3D') {
                 this.awm.cameraManager.control.maxPolarAngle = this._maxPolarAngle;
             }
             if(animated) {
                 const holder = {
-                    val: (mode === "2D")? this.awm.cameraManager.control.maxPolarAngle : this.awm.cameraManager.control.minPolarAngle
+                    val: (mode === '2D') ? this.awm.cameraManager.control.maxPolarAngle : this.awm.cameraManager.control.minPolarAngle
                 };
-                return new Promise(
-                    (resolve, reject)=> {
+                return new Promise((resolve, reject) => {
                         this._tween = new Tween(holder)
                             .to(
                                 {
@@ -192,9 +185,9 @@ class MapController {
                                 1400,
                             )
                             .on('update', () => {
-                                if (mode === "2D") {
+                            if (mode === '2D') {
                                     this.awm.cameraManager.control.maxPolarAngle = holder.val;
-                                } else if (mode === "3D") {
+                            } else if (mode === '3D') {
                                     this.awm.cameraManager.control.minPolarAngle = holder.val;
                                 }
                             })
@@ -202,34 +195,28 @@ class MapController {
                                 reject();
                             })
                             .on('complete', () => {
-                                if (mode === "3D") {
+                            if (mode === '3D') {
                                     this.awm.cameraManager.control.minPolarAngle = 0.001;
                                 }
                                 resolve();
                             })
                             .easing(Easing.Quadratic.InOut)
                             .start();
+                });
                     }
-                );
-
-            } else {
-                if (mode === "2D") {
+            if (mode === '2D') {
                     this.awm.cameraManager.control.maxPolarAngle = to;
-                } else if (mode === "3D") {
+            } else if (mode === '3D') {
                     this.awm.cameraManager.control.minPolarAngle = to;
-                    return new Promise(
-                        (resolve, reject)=> {
+                return new Promise((resolve, reject) => {
                             setTimeout(
                                 ()=> {
                                     this.awm.cameraManager.control.minPolarAngle = 0.001;
                                     resolve();
                                 },
                                 200
-                            )
-                        }
-                    )
-
-                }
+                    );
+                });
             }
         }
         return Promise.resolve();
