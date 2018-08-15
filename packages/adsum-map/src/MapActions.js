@@ -35,6 +35,8 @@ export const types = {
     DID_CLOSE: 'map/DID_CLOSE',
     WILL_GO_MY_LOCATION: 'map/WILL_GO_MY_LOCATION',
     DID_GO_MY_LOCATION: 'map/DID_GO_MY_LOCATION',
+    WILL_SET_ZOOM: 'map/WILL_SET_ZOOM',
+    DID_SET_ZOOM: 'map/DID_SET_ZOOM',
     WILL_RESET: 'map/WILL_RESET',
     DID_RESET: 'map/DID_RESET',
 };
@@ -73,6 +75,8 @@ export type WillGoToMyLocationType = {| type: 'map/WILL_GO_MY_LOCATION' |};
 export type DidGoToMyLocationType = {| type: 'map/DID_GO_MY_LOCATION' |};
 export type WillResetActionType = {| type: 'map/WILL_RESET' |};
 export type DidResetActionType = {| type: 'map/DID_RESET' |};
+export type WillSetZoomActionType = {| type: 'map/WILL_SET_ZOOM', direction: string, value: number |};
+export type DidSetZoomActionType = {| type: 'map/DID_SET_ZOOM' |};
 
 export type MapActionType =
     | WillInitActionType
@@ -100,6 +104,8 @@ export type MapActionType =
     | WillGoToMyLocationType
     | DidGoToMyLocationType
     | WillResetActionType
+    | WillSetZoomActionType
+    | DidSetZoomActionType
     | DidResetActionType;
 
 export type WilResetActionCreatorType = () => WillResetActionType;
@@ -128,6 +134,8 @@ export type DidGoToMyLocationActionCreatorType = () => DidGoToMyLocationType;
 export type SetCurrentPathActionCreatorType = (object: any) => SetCurrentPathActionType;
 export type WillDrawToPoiActionCreatorType = (poiId: number, pmr: boolean) => WillDrawToPoiActionType;
 export type WillDrawToPlaceActionCreatorType = (placeId: number, pmr: boolean) => WillDrawToPlaceActionType;
+export type WillSetZoomActionCreatorType = (direction: string, value: number) => WillSetZoomActionType;
+export type DidSetZoomActionCreatorType = () => DidSetZoomActionType;
 
 
 /**
@@ -184,6 +192,18 @@ export const switchMode: SwitchModeActionCreatorType = (): SwitchModeActionType 
  */
 export const didInit: DidInitActionCreatorType = (): DidInitActionType => ({
     type: types.DID_INIT
+});
+
+/**
+ * Zoom In/Out
+ * @function <i>mapActions</i> <strong>zoom</strong>
+ * @memberof! module:Map#
+ * @returns {object}
+ */
+export const zoom: WillSetZoomActionCreatorType = (direction: string, value: number): WillSetZoomActionType => ({
+    type: types.WILL_SET_ZOOM,
+    direction,
+    value
 });
 
 /**

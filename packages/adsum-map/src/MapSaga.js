@@ -22,7 +22,8 @@ import type {
     WillSelectPlaceActionType,
     WillSelectMultiPlacesActionType,
     ResetDrawActionType,
-    WillInitActionType
+    WillInitActionType,
+    WillSetZoomActionType,
 } from './MapActions';
 
 const {
@@ -31,7 +32,8 @@ const {
     start,
     getAllFloors,
     getAllBuildings,
-    setCurrentFloor
+    setCurrentFloor,
+    zoom
 } = mapController;
 const { getSortedPaths, sortAllAdsumPlaces } = placesController;
 
@@ -227,6 +229,13 @@ function* onGoMyLocation() {
     });
 }
 
+function* onZoom(action: WillSetZoomActionType) {
+    yield call([mapController, zoom], action.direction , action.value);
+    yield put({
+        type: mapActionTypes.DID_SET_ZOOM,
+    });
+}
+
 function* mapSaga() {
     yield takeLatest(mapActionTypes.WILL_INIT, onInit);
     yield takeLatest(mapActionTypes.WILL_RESET, onReset);
@@ -243,6 +252,7 @@ function* mapSaga() {
     yield takeLatest(mapActionTypes.WILL_OPEN, onOpen);
     yield takeLatest(mapActionTypes.WILL_CLOSE, onClose);
     yield takeLatest(mapActionTypes.WILL_GO_MY_LOCATION, onGoMyLocation);
+    yield takeLatest(mapActionTypes.WILL_SET_ZOOM, onZoom);
 }
 
 export default mapSaga;

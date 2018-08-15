@@ -271,6 +271,17 @@ class MapController {
         }
         return promise;
     }
+
+    zoom(direction: string, value: number) {
+        const currentState = this.awm.cameraManager.getState();
+        const convertValue = this.awm.getProjector().meterToAdsumDistance(value);
+        const newState = {
+            ...currentState,
+            distance: direction === "in" ? currentState.distance - convertValue : currentState.distance + convertValue
+        };
+        this.awm.cameraManager.move(newState);
+        return Promise.resolve();
+    }
 }
 const mapController = new MapController();
 export default mapController;
