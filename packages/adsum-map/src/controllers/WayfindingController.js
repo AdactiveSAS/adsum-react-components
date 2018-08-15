@@ -31,12 +31,12 @@ class WayfindingController extends EventDispatcher {
         this.awm = awm;
     }
 
-    getPath(object) {
+    getPath(object, pmr = false) {
         if (object === null) {
             return null;
         }
 
-        return placesController.getPath(object.placeId);
+        return placesController.getPath(object.placeId, pmr);
     }
 
     isStackMode() { // TODO ADD MODE

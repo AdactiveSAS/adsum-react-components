@@ -64,11 +64,11 @@ class SelectionController {
                         promise = promise.then(() => this.highlightLabel(to));
                     }
                 }
-            } else if (to.isBuilding) {
+            } else if (to && to.isBuilding) {
                 promise = promise.then(() => this.highlightBuilding(to));
-            } else if (to.isSpace) {
+            } else if (to && to.isSpace) {
                 promise = promise.then(() => this.highlightSpace(to));
-            } else if (to.isLabel) {
+            } else if (to && to.isLabel) {
                 promise = promise.then(() => this.highlightLabel(to));
             }
         });
@@ -166,9 +166,9 @@ class SelectionController {
         // Make sure to unselect previously selected
         if (this.current.length > 0) {
             _.each(this.current, (adsumObject: Object) => {
-                if (adsumObject.isBuilding) {
+                if (adsumObject && adsumObject.isBuilding) {
                     this.resetBuilding(adsumObject);
-                } else if (adsumObject.isSpace) {
+                } else if (adsumObject && adsumObject.isSpace) {
                     this.resetSpace(adsumObject);
                 }
             });
