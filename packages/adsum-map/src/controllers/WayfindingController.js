@@ -31,12 +31,12 @@ class WayfindingController extends EventDispatcher {
         this.awm = awm;
     }
 
-    getPath(object) {
+    getPath(object, pmr = false) {
         if (object === null) {
             return null;
         }
 
-        return placesController.getPath(object.placeId);
+        return placesController.getPath(object.placeId, pmr);
     }
 
     isStackMode() { // TODO ADD MODE
@@ -49,20 +49,18 @@ class WayfindingController extends EventDispatcher {
 
     setPath(path) {
         if (path === null) {
-            return Promise.reject(new Error("Path not valid to be draw"));
+            return Promise.reject(new Error('Path not valid to be draw'));
         }
 
         if (!path.computed) {
             console.error('WayfindingController.goToPath > Path must be computed before ', path);
-            return Promise.reject(new Error("Path not computed"));
+            return Promise.reject(new Error('Path not computed'));
         }
 
         let promise = Promise.resolve();
         let source = null;
         if (this.current !== null) {
-            promise = promise.then(() => {
-                return this.reset();
-            }).then(() => {
+            promise = promise.then(() => this.reset()).then(() => {
                 source = new CancellationTokenSource();
                 this._sources.push(source);
                 this.current = path;
@@ -144,22 +142,18 @@ class WayfindingController extends EventDispatcher {
                         time: 1300
                     },
                     token
-                ).then(
-                    ()=>{
+            ).then(() => {
                         if(pathSectionIndex === null) {
                             floorsController.bounceDownAllFloors(path.to.adsumObject);
                         }
                         resolve();
-                    }
-                ).catch((e) => {
+            }).catch((e) => {
                     reject(e);
                 });
-            }
-        );
+        });
     }
 
     _handlePathSection(currentPathSectionIndex, source, pathSectionIndex = null) {
-
         let skipStep = false;
         let stepBefore = false;
         if(pathSectionIndex !== null) {
@@ -252,16 +246,14 @@ class WayfindingController extends EventDispatcher {
 
         // Draw the step
         if (!(this.isDefaultMode() && pathSection.isInterGround())) { // TODO
-            promise = promise.then(() => {
-                return this._drawPathSection(pathSection, source.token, skipStep);
-            });
+            promise = promise.then(() => this._drawPathSection(pathSection, source.token, skipStep));
         }
 
         // Scale label
-        if(this.isStackMode() && !pathSection.isInterGround() && (!skipStep || stepBefore)) {
+        if (this.isStackMode() && !pathSection.isInterGround() && (!skipStep || stepBefore)) {
 
-            if(nextPathSection) {
-                promise = promise.then(()=> this.createWayfindingLabel(pathSection,nextPathSection));
+            if (nextPathSection) {
+                promise = promise.then(() => this.createWayfindingLabel(pathSection, nextPathSection));
                 promise = promise.then((textLabel) => {
                     if(!textLabel) return Promise.resolve(); // TODO
                     const toPlace = pathSection.to === null ? null : ACA.getPlace(pathSection.to.id);
@@ -313,7 +305,7 @@ class WayfindingController extends EventDispatcher {
             try {
                 source.token.throwIfCancellationRequested();
             } catch (e) {
-                if(e.message === "Operation was canceled") {
+                if (e.message === 'Operation was canceled') {
                     reject(new Error('delay was stopped'));
                 } else {
                     reject(e);
