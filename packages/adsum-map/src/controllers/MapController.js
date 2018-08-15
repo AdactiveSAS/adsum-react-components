@@ -37,7 +37,7 @@ class MapController {
     /**
      * Initializing of map
      */
-    init(device: number, display: string, backgroundImage: string, PopOver: any, wireFraming: boolean, multiPlaceSelection: string) {
+    init(device: number, display: string, backgroundImage: string, PopOver: any, wireFraming: boolean, multiPlaceSelection: string, pmr: boolean, zoom: any) {
         this.adsumLoader = new AdsumLoader({
             entityManager: ACA.entityManager, // Give it in order to be used to consume REST API
             deviceId: device, // The device Id to use
@@ -80,7 +80,7 @@ class MapController {
 
         }).then(() => {
                 selectionController.init(this.awm, multiPlaceSelection);
-                placesController.init(this.awm);
+                placesController.init(this.awm, pmr);
                 floorsController.init(this.awm);
                 labelController.init(this.awm, PopOver);
                 wayfindingController.init(this.awm);
@@ -89,7 +89,8 @@ class MapController {
             console.log('AdsumWebMap is ready to start');
 
             // TODO SET MIN ZOOM
-            this.awm.cameraManager.control.minDistance = this.awm.getProjector().meterToAdsumDistance(70);
+            this.awm.cameraManager.control.minDistance = this.awm.getProjector().meterToAdsumDistance(zoom.min);
+            this.awm.cameraManager.control.maxDistance = this.awm.getProjector().meterToAdsumDistance(zoom.max);
             this._maxPolarAngle = this.awm.cameraManager.control.maxPolarAngle;
             this._minPolarAngle = this.awm.cameraManager.control.minPolarAngle;
 

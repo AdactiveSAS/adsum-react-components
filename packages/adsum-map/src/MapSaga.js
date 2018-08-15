@@ -76,7 +76,7 @@ const initMapEvents = () => {
 function* onInit(action: WillInitActionType) {
     yield delay(200);
     store = action.store;
-    yield call([mapController, init], action.device, action.display, action.backgroundImage, action.PopOver, action.wireFraming, action.multiPlaceSelection, action.pmr);
+    yield call([mapController, init], action.device, action.display, action.backgroundImage, action.PopOver, action.wireFraming, action.multiPlaceSelection, action.pmr, action.zoom);
 
     initMapEvents();
 

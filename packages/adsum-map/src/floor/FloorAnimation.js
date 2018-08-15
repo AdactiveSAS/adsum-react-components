@@ -85,7 +85,7 @@ class FloorAnimation {
         }
 
         site.setDisplayMode(visible ? DISPLAY_MODES.VISIBLE : DISPLAY_MODES.TRANSPARENT);
-        site.decors.forEach(decor => decor.setDisplayMode(visible ? DISPLAY_MODES.VISIBLE : DISPLAY_MODES.TRANSPARENT));
+        site.decors.forEach(decor => decor.setDisplayMode(visible ? DISPLAY_MODES.VISIBLE : DISPLAY_MODES.NONE));
         let promises = [];
         site.buildings.forEach(building => {
             if(visible) {
