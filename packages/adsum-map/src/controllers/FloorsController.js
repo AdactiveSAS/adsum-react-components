@@ -1,8 +1,8 @@
-import { CancellationToken } from 'prex-es5';
+import { CancellationToken } from "prex-es5";
 import _ from 'lodash';
 import { Tween, Easing } from 'es6-tween';
 
-import { DISPLAY_MODE, DISPLAY_MODES, CameraCenterOnOptions } from '@adactive/adsum-web-map';
+import { DISPLAY_MODES, CameraCenterOnOptions } from '@adactive/adsum-web-map';
 
 import labelController from './LabelController';
 
@@ -11,6 +11,7 @@ class FloorsController {
         this.awm = null;
         this.locked = false;
         this.currentFloor = null;
+        this._floorAnimation = null;
         this.stack = [];
         this.labelsOnFloor = [];
         window.floorsController = this;
@@ -18,6 +19,7 @@ class FloorsController {
 
     init(awm) {
         this.awm = awm;
+        this._floorAnimation = this.awm.sceneManager.options.animation;
         _.each(Array.from(this.awm.objectManager.floors.values()), (floor) => {
             floor.xInitial = floor._mesh.position.x;
             floor.yInitial = floor._mesh.position.y;
@@ -27,54 +29,51 @@ class FloorsController {
     }
 
     computeStack(pathSections, token = CancellationToken.none) {
-        this.resetStack();
+        return this.resetStack().then(
+            ()=>{
+                return new Promise(
+                    (resolve,reject)=> {
 
-        return new Promise((resolve, reject) => {
-            const registration = token.register(() => {
-                this.resetStack();
-                reject(new Error('Operation canceled.'));
-            });
+                        const registration = token.register(() => {
+                            this.resetStack();
+                            reject(new Error("Operation canceled."));
+                        });
 
-            const tmpStack = [];
-            for (const pathSection of pathSections) {
-                if (!pathSection.isInterGround()) {
-                    const layer = {
-                        floor: pathSection.ground,
-                        zInitial: pathSection.ground.altitude,
-                        isInterFloor: false
-                    };
+                        const tmpStack = [];
+                        for (const pathSection of pathSections) {
+                            if (!pathSection.isInterGround()) {
+                                const layer = {
+                                    floor: pathSection.ground,
+                                    zInitial: pathSection.ground.altitude,
+                                    isInterFloor: false
+                                };
 
-                    if (tmpStack.indexOf(layer.floor.id) === -1) {
-                        tmpStack.push(layer.floor.id);
-                        this.stack.push(layer);
-                    }
-                } else {
-                    for (let i = 1; i < pathSection.grounds.length - 1; i++) {
-                        const f = pathSection.grounds[i];
-                        const layer = {
-                            floor: f,
-                            zInitial: f.altitude,
-                            isInterFloor: true
-                        };
-                        if (tmpStack.indexOf(layer.floor.id) === -1) {
-                            tmpStack.push(layer.floor.id);
-                            this.stack.push(layer);
-                        }
-                    }
-                    /* for (let i = 0; i < pathSection.grounds.length - 1; i++) {
-                            const fromFloor = pathSection.grounds[i];
-                            const toFloor = pathSection.grounds[i + 1];
-                            const floorsInBetween = this.findFloorsInBetween(fromFloor, toFloor);
-                            if (floorsInBetween.length > 0) {
-                                this.stack = [...this.stack, ...floorsInBetween];
+                                if (tmpStack.indexOf(layer.floor.id) === -1) {
+                                    tmpStack.push(layer.floor.id);
+                                    this.stack.push(layer);
+                                }
+                            } else {
+                                for (let i = 1; i < pathSection.grounds.length - 1; i++) {
+                                    const f = pathSection.grounds[i];
+                                    const layer = {
+                                        floor: f,
+                                        zInitial: f.altitude,
+                                        isInterFloor: true
+                                    };
+                                    if (tmpStack.indexOf(layer.floor.id) === -1) {
+                                        tmpStack.push(layer.floor.id);
+                                        this.stack.push(layer);
+                                    }
+                                }
                             }
-                        } */
-                }
+                        }
+                        _.sortBy(this.stack, ['zInitial']);
+                        registration.unregister();
+                        resolve();
+                    }
+                );
             }
-            _.sortBy(this.stack, ['zInitial']);
-            registration.unregister();
-            resolve();
-        });
+        );
     }
 
     findFloorsInBetween(fromFloor, toFloor) {
@@ -103,7 +102,7 @@ class FloorsController {
                     isInterFloor: false
                 };
                 this.stack.push(layer);
-                f.setDisplayMode(DISPLAY_MODE.VISIBLE);
+                this._floorAnimation.setVisibility(f, true, 1, true);
             });
         });
         _.sortBy(this.stack, ['zInitial']);
@@ -153,93 +152,74 @@ class FloorsController {
     }
 
     showInterFloor() {
-        if (this.stack.length > 1) {
-            for (let i = 1; i < this.stack.length; i++) {
-                const layer = this.stack[i];
-                layer.floor.setDisplayMode(DISPLAY_MODE.VISIBLE);
-                this._bounceDownSpaces(layer.floor);
-                if (layer.isInterFloor) {
-                    labelController.displayFloorLabels(layer.floor, DISPLAY_MODE.NONE);
-                    layer.floor.spaces.forEach((space) => {
-                        if (space.isSpace) {
-                            space.setDisplayMode(DISPLAY_MODES.VISIBLE);
+        return new Promise(
+            (resolve,reject)=> {
+                if (this.stack.length <= 1) {
+                    resolve();
+                }
+
+                let promise = Promise.resolve();
+                for (let i = 1; i < this.stack.length; i++) {
+                    const layer = this.stack[i];
+                    promise = promise.then(() =>  this._floorAnimation.setVisibility(
+                        layer.floor,
+                        true,
+                        layer.isInterFloor? 0.8 : 1,
+                        false
+                    ));
+                    promise = promise.then(() => {
+                        this._bounceDownSpaces(layer.floor);
+                        if (layer.isInterFloor) {
+                            labelController.displayFloorLabels(layer.floor, DISPLAY_MODES.NONE);
                         }
                     });
-                    this.changeOpacity(layer.floor, 0.8);
                 }
+                return promise.then(()=>resolve());
             }
-        }
+        );
+
     }
 
-    changeOpacity(floor, opacity) {
-        floor._mesh.traverse((child) => {
-            if (child.material) {
-                this.forEachMaterial(child, (mat) => {
-                    mat.transparent = true;
-                    mat.opacity = opacity;
-                });
-            }
-        });
-    }
-
-    hideFloor(floor) {
-        floor.setDisplayMode(DISPLAY_MODES.TRANSPARENT);
-        floor.spaces.forEach((space) => {
-            if (space.isSpace) {
-                space.setDisplayMode(DISPLAY_MODES.TRANSPARENT);
-            }
-        });
-        labelController.displayFloorLabels(floor, DISPLAY_MODE.NONE);
-        this.changeOpacity(floor, 0);
-    }
-
-    forEachMaterial(mesh, fn) {
-        if (!mesh.material) {
-            return;
-        }
-
-        if (mesh.material.isMaterial) {
-            fn(mesh.material, null);
-        } else {
-            const l = mesh.material.length;
-            for (let i = 0; i < l; i++) {
-                fn(mesh.material[i], i);
-            }
-        }
+    setFading(floor, opacity) {
+        floor.setFading(opacity);
     }
 
     centerOn(object, options, token = CancellationToken.none) {
-        return new Promise((resolve, reject) => {
-            try {
-                token.throwIfCancellationRequested();
-                const _cameraCenterOnOptions = new CameraCenterOnOptions(options);
-                this.awm.cameraManager.centerOn(object, true, _cameraCenterOnOptions).then(() => resolve());
-            } catch (e) {
-                if (e.message === 'Operation was canceled') {
-                    reject(new Error('centerOn canceled'));
-                } else {
-                    console.log(e);
+        return new Promise(
+            (resolve,reject)=> {
+                try {
+                    token.throwIfCancellationRequested();
+                    const _cameraCenterOnOptions = new CameraCenterOnOptions(options);
+                    this.awm.cameraManager.centerOn(object, true, _cameraCenterOnOptions).then(()=>resolve());
+                } catch (e) {
+                    if(e.message === "Operation was canceled") {
+                        reject(new Error("centerOn canceled"));
+                    } else {
+                        console.log(e);
+                    }
+                    resolve();
                 }
-                resolve();
             }
-        });
+        );
     }
 
     centerOnObjects(objects, options, token = CancellationToken.none) {
-        return new Promise((resolve, reject) => {
-            try {
-                token.throwIfCancellationRequested();
-                const _cameraCenterOnOptions = new CameraCenterOnOptions(options);
-                this.awm.cameraManager.centerOnObjects(objects, true, _cameraCenterOnOptions).then(() => resolve());
-            } catch (e) {
-                if (e.message === 'Operation was canceled') {
-                    reject(new Error('centerOn canceled'));
-                } else {
-                    console.log(e);
+        return new Promise(
+            (resolve,reject)=> {
+                try {
+                    token.throwIfCancellationRequested();
+                    const _cameraCenterOnOptions = new CameraCenterOnOptions(options);
+                    this.awm.cameraManager.centerOnObjects(objects, true, _cameraCenterOnOptions).then(()=>resolve());
+                } catch (e) {
+                    if(e.message === "Operation was canceled") {
+                        reject(new Error("centerOn canceled"));
+                    } else {
+                        console.log(e);
+                    }
+                    resolve();
                 }
-                resolve();
             }
-        });
+        );
     }
 
     centerOnStack(options, token = CancellationToken.none) {
@@ -255,76 +235,87 @@ class FloorsController {
     }
 
     setCurrentFloor(floorID, token = CancellationToken.none, show = true, bounceUp = true, animated = true) {
-        const floorObject = floorID === null ? null : this.awm.objectManager.floors.get(floorID);
-        return new Promise((resolve, reject) => {
-            const registration = token.register(() => {
-                // this.reset();
-                reject(new Error('Operation canceled.'));
-            });
+        const floorObject = floorID === -1 ? this.awm.objectManager.site : this.awm.objectManager.floors.get(floorID);
+        return new Promise(
+            (resolve,reject)=> {
 
-            if (this.isDefaultMode()) {
-                this.stackFromFloor(floorObject);
-                registration.unregister();
-                resolve();
-            } else {
-                this.setFloor(floorObject, show, bounceUp, animated).then(() => {
+                const registration = token.register(() => {
+                    //this.reset();
+                    reject(new Error("Operation canceled."));
+                });
+
+                if (this.isDefaultMode()) {
+                    this.stackFromFloor(floorObject.id);
                     registration.unregister();
                     resolve();
-                });
+                } else {
+                    this.setFloor(floorObject, show, bounceUp, animated).then(
+                        ()=> {
+                            registration.unregister();
+                            resolve();
+                        }
+                    );
+                }
             }
-        });
+        );
+
     }
 
     setFloor(floor, show = true, bounceUp = true, animated = true) { // Mode 2   // TODO CANCEL TOKEN
         this.awm.sceneManager.options.animation.show = show;
-        if (!show) {
-            this.hideFloor(floor);
-        }
-        return this.awm.sceneManager.setCurrentFloor(floor).then(() => (bounceUp ? this._bounceUpSpaces(floor, animated) : Promise.resolve()));
+        const currentFloorAnimated = !!floor.isSite || animated;
+        return this.awm.sceneManager.setCurrentFloor(floor, currentFloorAnimated).then(()=> bounceUp? this._bounceUpSpaces(floor, animated): Promise.resolve());
     }
 
-    stackFromFloor(floor, animated = true) { // Mode 2
+    stackFromFloor(floorID, animated = true) { // Mode 2
+        const floor = floorID === -1 ? this.awm.objectManager.site : this.awm.objectManager.floors.get(floorID);
         if (floor === this.awm.sceneManager.getCurrentFloor()) {
-            floor.setDisplayMode(DISPLAY_MODE.VISIBLE);
-            return;
+            return this.setFloor(floor, true, true, animated);
+        }
+        let promise = Promise.resolve();
+        if(!floor.isSite) {
+            promise = promise.then(() => this.showFloorsUnder(floor, false));
         }
 
-        this.showFloorsUnder(floor, false);
-
-        this.awm.sceneManager.options.animation.show = false;
-        this.awm.sceneManager.setCurrentFloor(floor); // Might have some issue here, RETURN a Promise
+        this.awm.sceneManager.options.animation.show = true;
+        return promise.then(() => this.setFloor(floor, true, true, animated)); // Might have some issue here, RETURN a Promise
     }
 
-    showFloorsUnder(floor, showSite = true) {
-        if (showSite) {
-            this.awm.objectManager.site.setDisplayMode(DISPLAY_MODE.VISIBLE);
-        }
-        floor.setDisplayMode(DISPLAY_MODE.VISIBLE);
+    showFloorsUnder(floor, animated) {
+        let promises = [];
         this.awm.objectManager.buildings.forEach((building) => {
             building.floors.forEach((f) => {
                 if (f.altitude < floor.altitude) {
-                    f.setDisplayMode(DISPLAY_MODE.VISIBLE);
+                    promises.push(this._floorAnimation.setVisibility(f, true, 1, animated));
                 } else if (f.altitude > floor.altitude) {
-                    f.setDisplayMode(DISPLAY_MODE.NONE);
+                    promises.push(this._floorAnimation.setVisibility(f, false, 0, animated));
                 }
             });
         });
+        return Promise.all(promises);
     }
 
-    createFloorsLabels(baseObject, offset = { x: 0, y: 0 }) { // createFloorsLabels(this.awm.objectManager.floors.get(1),{ x: 500, y: 600 })
+    createFloorsLabels(baseObject,offset = { x: 0, y: 0 }) { // createFloorsLabels(this.awm.objectManager.floors.get(1),{ x: 500, y: 600 })
         let promise = Promise.resolve();
         this.stack.forEach((layer) => {
-            promise = promise.then(() => new Promise((resolve) => {
-                labelController.createPopOverOnAdsumObject(
-                    baseObject,
-                    layer.floor.name,
-                    null,
-                    { x: offset.x, y: offset.y, z: layer.floor._mesh.position.z }
-                ).then((label) => {
-                    this.labelsOnFloor.push(label);
-                    resolve();
-                });
-            }));
+            promise = promise.then(() => {
+                return new Promise(
+                    (resolve)=> {
+                        if(layer.floor.isSite) {
+                            return resolve();
+                        }
+                        labelController.createPopOverOnAdsumObject(
+                            baseObject,
+                            layer.floor.name ? layer.floor.name : 'Unknown',
+                            null,
+                            {x: offset.x, y: offset.y, z: layer.floor._mesh.position.z}
+                        ).then((label)=>{
+                            this.labelsOnFloor.push(label);
+                            resolve();
+                        });
+                    }
+                );
+            });
         });
         return promise;
     }
@@ -336,72 +327,82 @@ class FloorsController {
         this.labelsOnFloor = [];
     }
 
-    resetStack() {
+    resetStack(except = null) {
         if (this.stack.length > 1) {
+            let promises = [];
             for (let i = 0; i < this.stack.length; i++) {
                 const layer = this.stack[i];
                 layer.floor.moveTo(layer.floor.xInitial, layer.floor.yInitial, layer.zInitial);
-                // layer.floor.updateMatrix();
-                if (layer.isInterFloor) {
-                    this.changeOpacity(layer.floor, 1);
+
+                if(except && except === layer.floor) {
+                    promises.push(this._floorAnimation.setVisibility(layer.floor, true, 1, false));
+                } else {
+                    promises.push(this._floorAnimation.setVisibility(layer.floor, false, 0, false));
                 }
-                layer.floor.setDisplayMode(DISPLAY_MODE.NONE);
             }
+
+            return Promise.all(promises).then(()=> { this.stack = []; } );
         }
         this.stack = [];
+        return Promise.resolve();
     }
 
     reset() {
-        this.resetStack();
-        this._bounceUpSpaces(this.awm.defaultFloor, false);
-        return this.stackFromFloor(this.awm.defaultFloor);
+        return this.resetStack(this.awm.defaultFloor).then(
+            () =>{
+                return this.stackFromFloor(this.awm.defaultFloor.id, false);
+            }
+        );
     }
 
     bounceDownAllFloors(except = null) {
         this.awm.objectManager.buildings.forEach((building) => {
             building.floors.forEach((f) => {
-                this._bounceDownSpaces(f, except);
+               this._bounceDownSpaces(f, except);
             });
         });
     }
 
     _bounceUpSpaces(floor, animated = true) { // TODO CANCEL TOKEN
-        return new Promise((resolve, reject) => {
-            if (animated) {
-                const holder = {
-                    val: 0.001
-                };
-                this._tween = new Tween(holder)
-                    .to(
-                        {
-                            val: 1
-                        },
-                        900,
-                    )
-                    .on('update', () => {
-                        floor.spaces.forEach((space) => {
-                            if (space.isSpace) {
-                                space.bounceUp(holder.val);
-                            }
-                        });
-                    })
-                    .on('stop', () => {
-                        reject();
-                    })
-                    .on('complete', () => {
-                        resolve();
-                    })
-                    .easing(Easing.Quadratic.InOut)
-                    .start();
-            } else {
-                floor.spaces.forEach((space) => {
-                    if (space.isSpace) {
-                        space.bounceUp(1);
-                    }
-                });
-                resolve();
+        return new Promise(
+            (resolve,reject)=> {
+                if(animated) {
+                    const holder = {
+                        val: 0.001
+                    };
+                    this._tween = new Tween(holder)
+                        .to(
+                            {
+                                val: 1
+                            },
+                            900,
+                        )
+                        .on('update', () => {
+                            floor.spaces.forEach((space) => {
+                                if (space.isSpace) {
+                                    space.bounceUp(holder.val)
+                                }
+                            });
+                        })
+                        .on('stop', () => {
+                            reject();
+                        })
+                        .on('complete', () => {
+                            resolve();
+                        })
+                        .easing(Easing.Quadratic.InOut)
+                        .start();
+                } else {
+                    floor.spaces.forEach((space) => {
+                        if (space.isSpace) {
+                            space.bounceUp(1)
+                        }
+                    });
+                    resolve();
+                }
             }
-        });
+        );
+
     }
 
     _bounceDownSpaces(floor, except = null) {
@@ -410,7 +411,7 @@ class FloorsController {
         };
         floor.spaces.forEach((space) => {
             if (space.isSpace && space !== except) {
-                space.bounceUp(holder.val);
+                space.bounceUp(holder.val)
             }
         });
     }

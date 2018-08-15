@@ -1,5 +1,7 @@
 import { DISPLAY_MODES } from '@adactive/adsum-web-map';
+import { Tween, Easing } from 'es6-tween';
 
+import labelController from '../controllers/LabelController';
 /**
  * @package
  */
@@ -11,7 +13,8 @@ class FloorAnimation {
          * @type {AdsumWebMap}
          */
         this.awm = null;
-        this._keepSiteVisible = false;
+
+        //this._siteLabelsPermanent = [];
     }
 
     /**
@@ -21,11 +24,9 @@ class FloorAnimation {
     init(awm) {
         this.awm = awm;
 
-        this.setVisibility(this.awm.objectManager.site, false, 1);
+        this.setSiteVisibility(true, 1, false);
         this.awm.objectManager.floors.forEach((floor) => {
-            if (floor !== this.awm.defaultFloor) {
-                this.setVisibility(floor, false, 1);
-            }
+            this.setVisibility(floor, false, 0, false);
         });
     }
 
@@ -38,11 +39,16 @@ class FloorAnimation {
      * @return {Promise<void, Error>}
      */
     start(from, to, animated) {
-        if (this.show) {
-            to.setDisplayMode(DISPLAY_MODES.VISIBLE);
+        let visible = true, fading = 1;
+        if(this.show) {
+            visible = true;
+            fading = 1;
+        } else {
+            labelController.displayFloorLabels(to, DISPLAY_MODES.NONE);
+            visible = false;
+            fading = 0;
         }
-
-        return Promise.resolve();
+        return this.setVisibility(to, visible, fading, animated);
     }
 
     /**
@@ -51,35 +57,110 @@ class FloorAnimation {
     stop() {
     }
 
-    setVisibility(ground, visible, fading) {
+    setVisibility(ground, visible, fading, animated = true) {
         if (ground.isSite) {
-            if (!this._keepSiteVisible) {
-                ground.setFading(fading);
-                ground.setDisplayMode(visible ? DISPLAY_MODES.VISIBLE : DISPLAY_MODES.TRANSPARENT);
-
-                ground.decors.forEach(decor => decor.setDisplayMode(visible ? DISPLAY_MODES.VISIBLE : DISPLAY_MODES.TRANSPARENT));
-                ground.buildings.forEach(building => building.setDisplayMode(visible ? DISPLAY_MODES.VISIBLE : DISPLAY_MODES.TRANSPARENT));
-                ground.spaces.forEach(space => space.setDisplayMode(visible ? DISPLAY_MODES.VISIBLE : DISPLAY_MODES.TRANSPARENT));
-                ground.labels.forEach(label => label.setDisplayMode(visible ? DISPLAY_MODES.VISIBLE : DISPLAY_MODES.TRANSPARENT));
-
-                ground._mesh.traverse((child) => {
-                    if (!child.adsumObject) {
-                        this.setDisplayMode(child, visible ? DISPLAY_MODES.VISIBLE : DISPLAY_MODES.TRANSPARENT);
-                    }
-                });
-            }
+            return this.setSiteVisibility(visible, fading, animated);
         } else {
-            ground.setFading(fading);
-            ground.setDisplayMode(visible ? DISPLAY_MODES.VISIBLE : DISPLAY_MODES.NONE);
-
-            if (this._keepSiteVisible) {
-                const fullyVisibleFloor = visible && fading === 1;
-
-                const visibleBuilding = !fullyVisibleFloor && !this.isSameBuilding;
-                ground.building.setDisplayMode(visibleBuilding ? DISPLAY_MODES.VISIBLE : DISPLAY_MODES.TRANSPARENT,);
+            let promise = Promise.resolve();
+            if(visible) {
+                promise = promise.then(() => this.setSiteVisibility(false, 0, false));
             }
+            return promise.then(()=>{
+                ground.setDisplayMode(visible ? DISPLAY_MODES.VISIBLE : DISPLAY_MODES.NONE);
+                if(animated) {
+                    return this._animatedFading(ground,visible? 0 : 1, fading);
+                }
+                this.setFading(ground, fading);
+                return Promise.resolve();
+            });
         }
     }
+
+    setSiteVisibility(visible, fading, animated = true) {
+        const site = this.awm.objectManager.site;
+
+        if((site.getDisplayMode() === DISPLAY_MODES.VISIBLE && visible) ||
+            (site.getDisplayMode() === DISPLAY_MODES.TRANSPARENT && !visible)) {
+            return Promise.resolve();
+        }
+
+        site.setDisplayMode(visible ? DISPLAY_MODES.VISIBLE : DISPLAY_MODES.TRANSPARENT);
+        site.decors.forEach(decor => decor.setDisplayMode(visible ? DISPLAY_MODES.VISIBLE : DISPLAY_MODES.TRANSPARENT));
+        let promises = [];
+        site.buildings.forEach(building => {
+            if(visible) {
+                 building.floors.forEach(floor => {
+                    floor.setDisplayMode(DISPLAY_MODES.TRANSPARENT);
+                     if(animated) {
+                         promises.push(
+                              new Promise((resolve)=>{
+                                return this._animatedFading(floor, 1, 0)
+                                .then(()=>{
+                                    floor.setDisplayMode(DISPLAY_MODES.NONE);
+                                    resolve();
+                                });
+                              })
+                          );
+                     } else {
+                         this.setFading(floor, 0);
+                     }
+                 });
+             }
+            building.setDisplayMode(visible ? DISPLAY_MODES.VISIBLE : DISPLAY_MODES.TRANSPARENT);
+        });
+        site.spaces.forEach(space => space.setDisplayMode(visible ? DISPLAY_MODES.VISIBLE : DISPLAY_MODES.TRANSPARENT));
+        site.labels.forEach(label => {
+            this.setPermanentDisplay(label, visible);
+            label.setDisplayMode(visible ? DISPLAY_MODES.VISIBLE : DISPLAY_MODES.TRANSPARENT);
+        });
+
+        if(animated) {
+            //return Promise.all(promises).then(()=> this._animatedFading(site, site.getFading(), fading));
+            return Promise.all([this._animatedFading(site, site.getFading(), fading), ...promises]);
+        } else {
+            this.setFading(site, fading);
+            return Promise.resolve();
+        }
+    }
+
+    setPermanentDisplay(label, visible) {
+        label.isPermanentDisplay = visible;
+        //this._siteLabelsPermanent.push(label);
+    }
+
+    setFading(object, fading) {
+        object.setFading(fading);
+    }
+
+    _animatedFading(object, from, to) { // TODO CANCEL TOKEN
+        return new Promise(
+            (resolve,reject)=> {
+                const holder = {
+                    val: from
+                };
+                const tween = new Tween(holder)
+                .to(
+                    {
+                        val: to
+                    },
+                    900,
+                )
+                .on('update', () => {
+                    this.setFading(object,holder.val);
+                })
+                .on('stop', () => {
+                    reject();
+                })
+                .on('complete', () => {
+                    resolve();
+                })
+                .easing(Easing.Quadratic.InOut)
+                .start();
+            }
+        );
+
+    }
+
 
     forEachMaterial(mesh, fn) {
         if (!mesh.material) {
@@ -98,23 +179,23 @@ class FloorAnimation {
 
     setDisplayMode(mesh, displayMode) {
         switch (displayMode) {
-        case DISPLAY_MODES.NONE:
-            mesh.visible = false;
-            break;
-        case DISPLAY_MODES.VISIBLE:
-            mesh.visible = true;
-            this.forEachMaterial(mesh, (material) => {
-                material.visible = true;
-            });
-            break;
-        case DISPLAY_MODES.TRANSPARENT:
-            mesh.visible = true;
-            this.forEachMaterial(mesh, (material) => {
-                material.visible = false;
-            });
-            break;
-        default:
-            throw new Error('Unexpected');
+            case DISPLAY_MODES.NONE:
+                mesh.visible = false;
+                break;
+            case DISPLAY_MODES.VISIBLE:
+                mesh.visible = true;
+                this.forEachMaterial(mesh, (material) => {
+                    material.visible = true;
+                });
+                break;
+            case DISPLAY_MODES.TRANSPARENT:
+                mesh.visible = true;
+                this.forEachMaterial(mesh, (material) => {
+                    material.visible = false;
+                });
+                break;
+            default:
+                throw new Error('Unexpected');
         }
     }
 }

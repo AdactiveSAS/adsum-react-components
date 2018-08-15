@@ -49,13 +49,16 @@ class SelectionController {
             floorsController.explodeAndShiftStack(-300, -300, 150, centerOnStackOptions);
         }
 
+        let havePoiOnTheFloor = false;
         _.each(places, (place) => {
             const path = placesController.getPath(place.id);
             const to = path.to.adsumObject;
             this.current.push(to);
-
             if (this.multiPlaceSelection === 'singleLevel') {
-                if (to && to.parent && to.parent.id === this.awm.defaultFloor.id) {
+                if (to && to.parent) {
+                    if(!havePoiOnTheFloor && to.parent.id === this.awm.defaultFloor.id) {
+                        havePoiOnTheFloor = true;
+                    }
                     if (to.isBuilding) {
                         promise = promise.then(() => this.highlightBuilding(to));
                     } else if (to.isSpace) {
@@ -64,17 +67,38 @@ class SelectionController {
                         promise = promise.then(() => this.highlightLabel(to));
                     }
                 }
-            } else if (to && to.isBuilding) {
+            } else if (to.isBuilding) {
                 promise = promise.then(() => this.highlightBuilding(to));
-            } else if (to && to.isSpace) {
+            } else if (to.isSpace) {
                 promise = promise.then(() => this.highlightSpace(to));
-            } else if (to && to.isLabel) {
+            } else if (to.isLabel) {
                 promise = promise.then(() => this.highlightLabel(to));
             }
         });
 
         promise = promise.then(() => {
             this.locked = false;
+        });
+
+        if(!havePoiOnTheFloor) {
+            return new Promise((resolve,reject) => {
+                if(this.current.length > 0) {
+                    const to = this.current[0];
+                    if (to && to.parent) {
+                        return floorsController.stackFromFloor(to.parent.id).then(
+                            ()=>{
+                                resolve();
+                            }
+                        );
+                    }
+                }
+                return promise.then(()=>resolve());
+            });
+        }
+
+
+        promise = promise.then(() => {
+            return floorsController.stackFromFloor(this.awm.defaultFloor.id)
         });
 
         return promise;
@@ -166,10 +190,12 @@ class SelectionController {
         // Make sure to unselect previously selected
         if (this.current.length > 0) {
             _.each(this.current, (adsumObject: Object) => {
-                if (adsumObject && adsumObject.isBuilding) {
-                    this.resetBuilding(adsumObject);
-                } else if (adsumObject && adsumObject.isSpace) {
-                    this.resetSpace(adsumObject);
+                if(adsumObject) {
+                    if (adsumObject.isBuilding) {
+                        this.resetBuilding(adsumObject);
+                    } else if (adsumObject.isSpace) {
+                        this.resetSpace(adsumObject);
+                    }
                 }
             });
         }

@@ -55,74 +55,88 @@ class PathSectionDrawer {
      * @return {Promise<void, Error>}
      */
     draw(token = CancellationToken.none, skipStep = false) {
-        return new Promise((resolve, reject) => {
-            let promise = Promise.resolve();
+        return new Promise(
+            (resolve, reject)=> {
+                let promise = Promise.resolve();
 
-            if (!this.pathSectionObject.pathSection.isInterGround() && !skipStep) { // TODO
-                try {
-                    token.throwIfCancellationRequested();
-                    const _cameraCenterOnOptions = new CameraCenterOnOptions({
-                        fitRatio: 1.3,
-                        zoom: true,
-                        time: 1600,
-                        azimuth: this.pathSectionObject.pathSection.getAzimuthOrientation(),
-                        altitude: 90
-                    });
-                    promise = promise.then(() => this.cameraManager.centerOn(this.pathSectionObject, true, _cameraCenterOnOptions));
-                } catch (e) {
-                    if (e.message === 'Operation was canceled') {
-                        return reject(new Error('Path was stopped'));
-                    }
-                    return reject(e);
-                }
-            }
-            promise.then(() => {
-                const tasks = [];
-                const patterns = this.pathSectionObject._mesh.children;
-                for (let i = 0; i < patterns.length; i++) {
-                    if (i < patterns.length - 1) this._lookat(patterns[i], patterns[i + 1].position);
-                    const delay = this.pathSectionObject.patternSpace / (this.speed * 4) * i * 1000;
-                    if (!skipStep) tasks.push(this._showPattern(i, delay, token));
-                }
+                if (!this.pathSectionObject.pathSection.isInterGround() && !skipStep) { // TODO
 
-                try {
-                    token.throwIfCancellationRequested();
-                    this._prepareAnimation(token, !skipStep);
-                } catch (e) {
-                    if (e.message === 'Operation was canceled') {
-                        return reject(new Error('Path was stopped'));
-                    }
-                    return reject(e);
-                }
-
-                this.pathSectionObject.tweens.push(this);
-
-                this.pathSectionObject._mesh.visible = true;
-
-                return Promise.all(tasks);
-                /* return new Promise((resolve, reject) => {
-                        Promise.all(tasks).then(
-                            ()=> {
-                                resolve();
-                            }
-                        ).catch((e) => {
-                            console.log("HERE")
-                            reject(e);
+                    try {
+                        token.throwIfCancellationRequested();
+                        const _cameraCenterOnOptions = new CameraCenterOnOptions({
+                            fitRatio:  1.3,
+                            zoom: true,
+                            time: 1600,
+                            azimuth: this.pathSectionObject.pathSection.getAzimuthOrientation(),
+                            altitude:  90
                         });
-                    }); */
-            }).then(() => {
-                try {
-                    token.throwIfCancellationRequested();
-                    this._animate();
-                    resolve();
-                } catch (e) {
-                    if (e.message === 'Operation was canceled') {
+                        promise = promise.then(() => this.cameraManager.centerOn(this.pathSectionObject, true, _cameraCenterOnOptions));
+                    } catch (e) {
+                        if(e.message === "Operation was canceled") {
+                            return reject(new Error('Path was stopped'));
+                        } else {
+                            return reject(e);
+                        }
+                    }
+
+                }
+                promise.then(() => {
+                    const tasks = [];
+                    const patterns = this.pathSectionObject._mesh.children;
+                    for (let i = 0; i < patterns.length; i++) {
+                        if (i < patterns.length - 1) this._lookat(patterns[i], patterns[i + 1].position);
+                        const delay = this.pathSectionObject.patternSpace / (this.speed * 4) * i * 1000;
+                        if(!skipStep) tasks.push(this._showPattern(i, delay, token));
+                    }
+
+                    try {
+                        token.throwIfCancellationRequested();
+                        this._prepareAnimation(token, !skipStep);
+                    } catch (e) {
+                        if(e.message === "Operation was canceled") {
+                            return reject(new Error('Path was stopped'));
+                        } else {
+                            return reject(e);
+                        }
+                    }
+
+                    this.pathSectionObject.tweens.push(this);
+
+                    this.pathSectionObject._mesh.visible = true;
+
+                    return Promise.all(tasks.map(this.fastFail));
+                }).then((values) => {
+
+                    let oneFailed = false;
+
+                    if(values) {
+                        for (let i = 0; i < values.length; ++i) {
+                            if (!values[i].success) {
+                                console.log("ERR: " + values[i].error);
+                                oneFailed = true;
+                            }
+                        }
+                    }
+
+                    if(oneFailed || !values) {
                         return reject(new Error('Path was stopped'));
                     }
-                    return reject(e);
-                }
-            }).catch(e => reject(e));
-        });
+
+                    try {
+                        token.throwIfCancellationRequested();
+                        this._animate();
+                        resolve();
+                    } catch (e) {
+                        if(e.message === "Operation was canceled") {
+                            return reject(new Error('Path was stopped'));
+                        } else {
+                            return reject(e);
+                        }
+                    }
+                });
+            }
+        );
+
     }
 
     /**
@@ -187,7 +201,7 @@ class PathSectionDrawer {
                             }
                         });
                     } catch (e) {
-                        if (e.message === 'Operation was canceled') {
+                        if(e.message === "Operation was canceled") {
                             reject(new Error('Path was stopped'));
                         } else {
                             console.log(e);
@@ -224,7 +238,7 @@ class PathSectionDrawer {
                         pattern.position.setZ(positionHandler.z);
                         pattern.updateMatrixWorld();
                     } catch (e) {
-                        if (e.message === 'Operation was canceled') {
+                        if(e.message === "Operation was canceled") {
                             reject(new Error('Path was stopped'));
                         } else {
                             console.log(e);
@@ -243,7 +257,13 @@ class PathSectionDrawer {
             this.tweens.push(tweenPosition);
         });
 
-        return Promise.all([promiseOpacity, promisePosition]);
+        return Promise.all([promiseOpacity, promisePosition].map(this.fastFail));
+    }
+
+    fastFail(promise) {
+        return promise
+        .then(result => ({ success: true, result }))
+        .catch(error => ({ success: false, error }));
     }
 
     _prepareAnimation(token = CancellationToken.none, animated = true) {
@@ -293,7 +313,7 @@ class PathSectionDrawer {
                         previous.pattern.updateMatrixWorld();
                     }
                 } catch (e) {
-                    if (e.message === 'Operation was canceled') {
+                    if(e.message === "Operation was canceled") {
                         console.log('Path was stopped, animate stopped');
                     } else {
                         console.log(e);
