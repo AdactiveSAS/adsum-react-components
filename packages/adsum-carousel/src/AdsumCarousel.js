@@ -163,7 +163,7 @@ class AdsumCarousel extends React.Component<PropsType> {
         const ret = [];
 
         medias.forEach((media: MediaType, index: number) => {
-            if (media.file.file_type === 'video/mp4') {
+            if (media.file.file_type === 'video/mp4' || media.file.file_type === 'video/x-m4v') {
                 const component = (
                     <div key={media.file.uri} onClick={() => { onMediaTouch(media); }} onTouchEndCapture={() => { onMediaTouch(media); }} >
                         <VideoSlide
@@ -171,7 +171,7 @@ class AdsumCarousel extends React.Component<PropsType> {
                             media={media}
                             onPlayerInit={this.onPlayerInit}
                             onVideoEnded={this.goToNextSlide}
-                            shouldReplayVideo={medias.length === 1 && medias[0].file.file_type === 'video/mp4'}
+                            shouldReplayVideo={medias.length === 1 && (medias[0].file.file_type === 'video/mp4' || medias[0].file.file_type === 'video/x-m4v')}
                             parentStyle={parentStyle}
                         />
                     </div>
