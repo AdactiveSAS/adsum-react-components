@@ -1,47 +1,46 @@
 // @flow
 
-import { types as mapActionsType } from './MapActions';
+import { types as mainActionsTypes } from './actions/MainActions';
+import { types as wayfindingActionsTypes } from './actions/WayfindingActions';
+import { types as selectionActionsTypes } from './actions/SelectionActions';
 import { initialState } from './initialState';
 
 import type { MapReducerStateType } from './initialState';
-import type { MapActionType } from './MapActions';
+import type { MainActionsType } from './actions/MainActions';
+import type { SelectionActionsType } from './actions/SelectionActions';
+import type { WayfindingActionsType } from './actions/WayfindingActions';
 
-export type MapReducersType = (state: MapReducerStateType, action: MapActionType) => MapReducerStateType;
+export type MapReducersType = (state: MapReducerStateType, action: WayfindingActionsType | SelectionActionsType | MainActionsType) => MapReducerStateType;
 
-const mapReducers: MapReducersType = (state: MapReducerStateType = initialState, action: MapActionType): MapReducerStateType => {
+const mapReducers: MapReducersType = (
+    state: MapReducerStateType = initialState,
+    action: WayfindingActionsType | SelectionActionsType | MainActionsType
+): MapReducerStateType => {
     switch (action.type) {
-    case mapActionsType.DID_INIT: {
-        
-        const { 
-            getFloors, getBuildings, currentFloor, reset, getSortedPaths, wayFinder 
-        } : { floors: any, buildings: any, currentFloor: number, reset: any, sortedPlaces: any, wayFinder: any } = action; 
+    case mainActionsTypes.DID_INIT: {
+        const { currentFloor, getPath } = action;
 
         return {
             ...state,
             state: 'idle',
-            getFloors,
-            getBuildings,
             currentFloor,
-            reset,
-            getSortedPaths,
-            wayFinder
+            getPath,
         };
     }
-    case mapActionsType.WILL_SELECT:
-    case mapActionsType.WILL_SELECT_MULTI_PLACES:
-    case mapActionsType.WILL_DRAW:
-    case mapActionsType.WILL_DRAW_TO_POI:
-    case mapActionsType.WILL_DRAW_TO_PLACE:
-    case mapActionsType.FLOOR_WILL_CHANGE:
-    case mapActionsType.WILL_OPEN:
-    case mapActionsType.WILL_CLOSE:
-    case mapActionsType.WILL_GO_MY_LOCATION:
-    case mapActionsType.WILL_RESET:
+    case selectionActionsTypes.WILL_SELECT:
+    case selectionActionsTypes.WILL_SELECT_A_POI:
+    case selectionActionsTypes.WILL_SELECT_A_PLACE:
+    case wayfindingActionsTypes.WILL_DRAW_TO_POI:
+    case wayfindingActionsTypes.WILL_DRAW_TO_PLACE:
+    case mainActionsTypes.FLOOR_WILL_CHANGE:
+    case mainActionsTypes.WILL_OPEN:
+    case mainActionsTypes.WILL_CLOSE:
+    case mainActionsTypes.WILL_RESET:
         return {
             ...state,
             state: 'transition',
         };
-    case mapActionsType.FLOOR_DID_CHANGE: {
+    case mainActionsTypes.FLOOR_DID_CHANGE: {
         const { currentFloor, previousFloor } = action;
 
         return {
@@ -51,7 +50,38 @@ const mapReducers: MapReducersType = (state: MapReducerStateType = initialState,
             previousFloor,
         };
     }
-    case mapActionsType.DID_SELECT: {
+    case wayfindingActionsTypes.EVENT_WILL_DRAW_PATH_SECTION: {
+        const { currentIndex } = action;
+
+        return {
+            ...state,
+            wayfindingState: {
+                drawing: true,
+                currentSectionIndex: currentIndex
+            }
+        };
+    }
+    case wayfindingActionsTypes.EVENT_DID_DRAW_PATH_SECTION: {
+        const { currentIndex } = action;
+
+        return {
+            ...state,
+            wayfindingState: {
+                drawing: false,
+                currentSectionIndex: currentIndex
+            }
+        };
+    }
+    case wayfindingActionsTypes.EVENT_RESET_PATH: {
+        return {
+            ...state,
+            wayfindingState: {
+                drawing: false,
+                currentSectionIndex: null
+            }
+        };
+    }
+    case selectionActionsTypes.DID_SELECT: {
         const { getCurrentSelectedObject } = action;
 
         return {
@@ -60,50 +90,36 @@ const mapReducers: MapReducersType = (state: MapReducerStateType = initialState,
             getCurrentSelectedObject
         };
     }
-    case mapActionsType.DID_GO_MY_LOCATION:
-    case mapActionsType.DID_RESET:
-    case mapActionsType.DID_DRAW: {
+    case mainActionsTypes.DID_RESET:
+    case mainActionsTypes.DID_DRAW: {
         return {
             ...state,
             state: 'idle',
         };
     }
-    case mapActionsType.ON_CLICK: {
-        const { currentClickedEvent } = action;
-
-        return {
-            ...state,
-            currentClickedEvent
-        };
-    }
-    case mapActionsType.SET_CURRENT_PATH: {
-        const { object } : { object: any }  = action;
+    case wayfindingActionsTypes.SET_CURRENT_PATH: {
+        const { object } : { object: any } = action;
 
         return {
             ...state,
             currentPath: object
         };
     }
-    case mapActionsType.DID_OPEN: {
+    case mainActionsTypes.DID_OPEN: {
         return {
             ...state,
             state: 'idle',
             isOpen: true,
         };
     }
-    case mapActionsType.DID_CLOSE: {
+    case mainActionsTypes.DID_CLOSE: {
         return {
             ...state,
             state: 'idle',
             isOpen: false,
         };
     }
-    case mapActionsType.SWITCH_MODE:
-        return {
-            ...state,
-            mode: action.mode
-        };
-    case mapActionsType.WILL_INIT:
+    case mainActionsTypes.WILL_INIT:
     default:
         return state;
     }

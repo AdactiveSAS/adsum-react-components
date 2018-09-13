@@ -1,402 +1,206 @@
 // @flow
 
-import { EventDispatcher } from 'three';
-import { CancellationTokenSource, CancellationToken } from 'prex-es5';
-import ACA from '@adactive/adsum-utils/services/ClientAPI';
-
-import PathSectionDrawer from '../path/PathSectionDrawer';
-import floorsController from './FloorsController';
-import labelController from './LabelController';
-import placesController from './PlacesController';
+import { CancellationTokenSource, CancelError } from 'prex-es5';
+import { Path, PathSection } from '@adactive/adsum-web-map';
 import selectionController from './SelectionController';
+import {
+    didDrawPathSectionEvent,
+    resetPathEvent,
+    setCurrentPathAction,
+    willDrawPathSectionEvent
+} from '../actions/WayfindingActions';
 
-/*const mode = {
-    DEFAULT: 'default',
-    STACK: 'stack',
-};*/
-
-class WayfindingController extends EventDispatcher {
+class WayfindingController {
     constructor() {
-        super();
         this.awm = null;
         this.current = null;
-        this._currentPathSections = null;
+        this.currentIndex = -1;
 
-        window.wayfindingController = this;
         this.labelsOnWayfinding = [];
-        this._sources = [];
+
+        this.cancelSource = new CancellationTokenSource();
     }
 
-    init(awm) {
+    init(awm, dispatch) {
         this.awm = awm;
-    }
-
-    getPath(object, pmr = false) {
-        if (object === null) {
-            return null;
-        }
-
-        return placesController.getPath(object.placeId, pmr);
-    }
-
-    isStackMode() { // TODO ADD MODE
-        return true;
-    }
-
-    isDefaultMode() { // TODO ADD MODE
-        return false;
+        this.dispatch = dispatch;
     }
 
     setPath(path) {
         if (path === null) {
-            return Promise.reject(new Error('Path not valid to be draw'));
+            throw new Error('Path not valid to be draw');
         }
 
         if (!path.computed) {
             console.error('WayfindingController.goToPath > Path must be computed before ', path);
-            return Promise.reject(new Error('Path not computed'));
+            throw new Error('Path not computed');
         }
 
-        let promise = Promise.resolve();
-        let source = null;
-        if (this.current !== null) {
-            promise = promise.then(() => this.reset()).then(() => {
-                source = new CancellationTokenSource();
-                this._sources.push(source);
-                this.current = path;
-                this._currentPathSections = this.current.getPathSections(this.isStackMode());
-            });
-        } else {
-            source = new CancellationTokenSource();
-            this._sources.push(source);
-            this.current = path;
-            this._currentPathSections = this.current.getPathSections(this.isStackMode());
+        if (path === this.current) {
+            this.reset(true);
+            return;
         }
 
-        return promise;
+        this.reset();
+
+        this.current = path;
+        this.currentIndex = -1;
+
+        this.dispatch(setCurrentPathAction(this.current));
     }
 
-    drawPath(path, pathSectionIndex = null) {
-        return this.setPath(path)
-            .then(() => floorsController.computeStack(this._currentPathSections, this._sources[this._sources.length-1].token))
-            .then(() => {
-                if(this.isStackMode()) {
-                    floorsController.explodeStack(150);
-                }
+    /**
+    * @public
+    * @param path
+    * @param pathSectionIndex
+    * @return {Promise<void>}
+    */
+    async drawPath(path: Path, pathSectionIndex: ?PathSection = null) {
+        try {
+            this.setPath(path);
 
-                labelController.hideLabelsInStack(floorsController.getStack()); // TODO
+            const pathSections = path.getPathSections(true);
+            const length = pathSectionIndex === null ? pathSections.length : pathSectionIndex + 1;
 
-                labelController.displayLabelsOnPath(this._currentPathSections, true);
-
-                let promise = Promise.resolve();
-                for (let i = 0; i < this._currentPathSections.length; i++){
-                    if(i <= pathSectionIndex || pathSectionIndex === null) {
-                        this._sources[this._sources.length - 1].token.throwIfCancellationRequested();
-
-                        if((i === pathSectionIndex && pathSectionIndex !== null)) {
-                            promise = promise.then(() => this.addDelay(1000, this._sources[this._sources.length - 1], 'Path was stopped'));
-                        }
-
-                        promise = promise.then(() => this._handlePathSection(i, this._sources[this._sources.length - 1], pathSectionIndex));
+            if (pathSectionIndex !== null) {
+                if (pathSectionIndex <= this.currentIndex) {
+                    for (let i = pathSectionIndex; i <= this.currentIndex; i++) {
+                        this.awm.wayfindingManager.removePathSection(pathSections[i]);
                     }
-                }
-
-                return promise.catch((e) => {
-                    return this.reset().then(
-                        ()=>{
-                            if (e.message !== 'Not Locked'
-                                && e.message !== 'Scale was stopped'
-                                && e.message !== 'Path was stopped'
-                                && e.message !== 'Operation canceled.')  return Promise.reject(e);
-                        }
-                    )
-                });
-            })
-            .then(()=> this.addDelay(1500, this._sources[this._sources.length - 1], 'Path was stopped'))
-            .then(()=> this._finalView(path, pathSectionIndex, this._sources[this._sources.length - 1].token))
-            .catch((e) => {
-                if (e.message !== 'Path not valid to be draw'
-                    && e.message !== 'Path not computed'
-                    && e.message !== 'centerOn canceled'
-                    && e.message !== 'delay was stopped') {
-                    return Promise.reject(e);
                 } else {
-                    return this.reset();
-                }
-            });
-    }
-
-    _finalView(path, pathSectionIndex = null, token = CancellationToken.none ) {
-        const isTargetOnSameFloor = (path.from.adsumObject.parent === path.to.adsumObject.parent);
-        return new Promise(
-            (resolve, reject)=> {
-                if(pathSectionIndex !== null || isTargetOnSameFloor) {
-                    return resolve();
-                }
-
-                floorsController.centerOnStack(
-                    {
-                        fitRatio: 1.2,
-                        zoom: true,
-                        altitude: 0,
-                        time: 1300
-                    },
-                    token
-            ).then(() => {
-                        if(pathSectionIndex === null) {
-                            floorsController.bounceDownAllFloors(path.to.adsumObject);
-                        }
-                        resolve();
-            }).catch((e) => {
-                    reject(e);
-                });
-        });
-    }
-
-    _handlePathSection(currentPathSectionIndex, source, pathSectionIndex = null) {
-        let skipStep = false;
-        let stepBefore = false;
-        if(pathSectionIndex !== null) {
-            skipStep = (currentPathSectionIndex !== pathSectionIndex);
-            stepBefore = (currentPathSectionIndex === pathSectionIndex -1);
-        }
-
-        const pathSection = this._currentPathSections[currentPathSectionIndex];
-        const previousPathSection = currentPathSectionIndex === 0 ? null : this._currentPathSections[currentPathSectionIndex-1];
-        const nextPathSection = currentPathSectionIndex === this._currentPathSections.length -1 ? null : this._currentPathSections[currentPathSectionIndex + 1];
-
-        let promise = Promise.resolve();
-        const floor = pathSection.ground.isFloor || pathSection.ground.isSite ? pathSection.ground : null;
-
-        if(this.isStackMode() && previousPathSection && previousPathSection.isInterGround()) {
-
-            if(previousPathSection.grounds.length === 2) {
-                promise = promise.then(
-                    () => {
-                        const floorId = previousPathSection.grounds[Math.floor(previousPathSection.grounds.length /2)].id;
-                        return floorsController.setCurrentFloor( floorId , source.token, true, false);
+                    let current = null;
+                    let previous = null;
+                    for (let i = this.currentIndex + 1; i < pathSectionIndex; i++) {
+                        current = pathSections[i];
+                        // eslint-disable-next-line no-await-in-loop
+                        await this.drawPathSection(current, previous, false);
+                        previous = current;
                     }
-                );
-            }
-            if(!floor.isSite) {
-                promise = promise.then(() => {
-                    return floorsController.centerOn(
-                        floor,
-                        {
-                            fitRatio: 1.3,
-                            zoom: true,
-                            altitude: 0,
-                            time: skipStep ? 0 : 1300
-                        },
-                        source.token
-                    )
-                });
-            }
-        }
-
-        if(!pathSection.isInterGround()) {
-            promise = promise.then(
-                () => {
-                    //debugger
-                    return floorsController.setCurrentFloor(floor === null ? null : floor.id, source.token, true, true, !skipStep)
                 }
-            );
-        } else {
-            if(pathSection.grounds.length > 2) {
-                promise = promise.then(
-                    () => {
-                        const floorId = pathSection.grounds[Math.floor(pathSection.grounds.length / 2)].id;
-                        return floorsController.setCurrentFloor(floorId, source.token, false, false);
-                    }
-                );
+
+                this.currentIndex = pathSectionIndex - 1;
             }
 
-            if(!nextPathSection.ground.isSite) {
-                promise = promise.then(() => {
-                    return floorsController.centerOnObjects(
-                        pathSection.grounds,
-                        {
-                            fitRatio: 1.3,
-                            zoom: true,
-                            altitude: 0,
-                            azimuth: pathSection.getAzimuthOrientation(),
-                            time: skipStep ? 0 : 1500
-                        },
-                        source.token
-                    )
-                } );
+            let current = null;
+            let previous = null;
+            for (let i = this.currentIndex + 1; i < length; i++) {
+                current = pathSections[i];
+                this.currentIndex = i;
+
+                this.dispatch(willDrawPathSectionEvent(current, previous, i));
+
+                // eslint-disable-next-line no-await-in-loop
+                await this.drawPathSection(current, previous);
+
+                this.dispatch(didDrawPathSectionEvent(current, previous, i));
+
+                previous = current;
             }
-
-            promise = promise.then(() => floorsController.showInterFloor());
-
-            promise = promise.then(() => {
-                return floorsController.createFloorsLabels(this.awm.objectManager.floors.get(1),{ x: 400, y: 550 });
-            });
-
-        }
-
-        // Scale label
-        if(this.isStackMode() && !pathSection.isInterGround() && previousPathSection && previousPathSection.isInterGround()) {
-            promise = promise.then(() => {
-                const toPlace = pathSection.from === null ? null : ACA.getPlace(pathSection.from.id);
-                const label = (toPlace !== null) ? labelController.getAdsumObject3DFromPlace(toPlace) : null;
-                return labelController.animateLabel(label, source.token);
-            });
-        }
-
-        // Draw the step
-        if (!(this.isDefaultMode() && pathSection.isInterGround())) { // TODO
-            promise = promise.then(() => this._drawPathSection(pathSection, source.token, skipStep));
-        }
-
-        // Scale label
-        if (this.isStackMode() && !pathSection.isInterGround() && (!skipStep || stepBefore)) {
-
-            if (nextPathSection) {
-                promise = promise.then(() => this.createWayfindingLabel(pathSection, nextPathSection));
-                promise = promise.then((textLabel) => {
-                    if(!textLabel) return Promise.resolve(); // TODO
-                    const toPlace = pathSection.to === null ? null : ACA.getPlace(pathSection.to.id);
-                    const label = (toPlace !== null) ? labelController.getAdsumObject3DFromPlace(toPlace) : null;
-                    return Promise.all([
-                        labelController.animateLabel(label, source.token),
-                        labelController.animateLabel(textLabel, source.token)
-                    ]);
-                });
+        } catch (e) {
+            if (e.message === 'Path was stopped' || e instanceof CancelError) {
+                console.warn(e.message);
             } else {
-                promise = promise.then(() => {
-                    const toPlace = pathSection.to === null ? null : ACA.getPlace(pathSection.to.id);
-                    const label = (toPlace !== null) ? labelController.getAdsumObject3DFromPlace(toPlace) : null;
-                    return labelController.animateLabel(label, source.token);
-                });
+                throw e;
             }
         }
+    }
 
-         if (currentPathSectionIndex === this._currentPathSections.length - 1) {
-            promise = promise.then(() => selectionController.updateSelection(pathSection.to.adsumObject));
-         }
+    async drawPathSection(pathSection: PathSection, previousPathSection: ?PathSection = null, animated: boolean = true): Promise<void> {
+        const isVertical = pathSection.isInterGround() && Math.abs(pathSection.getInclination()) > 30;
 
-        if(!skipStep) {
-            promise = promise.then(() => this.addDelay(pathSection.isInterGround() ? 2300 : 1000, source, 'Path was stopped'));
+        const opts = {
+            keepSiteVisible: false,
+            bounce: true,
+            center: true,
+            centerOnOptions: {
+                zoom: true,
+                altitude: isVertical ? 10 : 80,
+                time: 1500,
+                minDistance: 50,
+                maxDistance: 800,
+            },
+        };
+
+        if (previousPathSection === null || previousPathSection.isInterGround()) {
+            const registration = this.cancelSource.token.register(() => {
+                this.awm.sceneManager.reset();
+                this.awm.cameraManager.reset();
+            });
+
+            await this.awm.sceneManager.setCurrentFloor(pathSection.ground, animated, opts);
+
+            this.cancelSource.token.throwIfCancellationRequested();
+
+            registration.unregister();
         }
 
-        promise = promise.then(() => {
-            return new Promise(
-                (resolve)=> {
-                    this.dispatchEvent(
-                        {
-                            type: "pathSection.did.draw",
-                            previous: previousPathSection,
-                            current: pathSection,
-                            currentIndex: currentPathSectionIndex,
-                        },
-                    );
-                    resolve();
-                }
-            );
+        const drawOptions = {
+            center: true,
+            oriented: false,
+            speed: isVertical ? 50 : 30,
+            // Delay the pattern show to display them after the camera animation
+            showDelay: 1800,
+            // Custom Camera Center on options for that call
+            centerOnOptions: {
+                zoom: true,
+                altitude: isVertical ? 10 : 80,
+                time: 1500,
+                fitRatio: 1.2,
+                minDistance: 100,
+                maxDistance: 1500,
+            },
+        };
+
+        const registration2 = this.cancelSource.token.register(() => {
+            this.awm.wayfindingManager.removePathSection(pathSection);
         });
 
-        return promise;
-    }
+        await this.awm.wayfindingManager.drawPathSection(pathSection, drawOptions, animated);
 
-    addDelay(delay, source, errMessage) {
-        let tokenTimeOut = null;
-        return new Promise((resolve, reject) => {
-            try {
-                source.token.throwIfCancellationRequested();
-            } catch (e) {
-                if (e.message === 'Operation was canceled') {
-                    reject(new Error('delay was stopped'));
-                } else {
-                    reject(e);
-                }
-            }
-            const registration = source.token.register(() => {
-                if (tokenTimeOut) {
-                    clearTimeout(tokenTimeOut);
-                    reject(new Error(errMessage));
-                }
-            });
-            tokenTimeOut = setTimeout(
-                () => {
-                    registration.unregister();
-                    resolve(true);
-                },
-                delay
-            );
-        })
-    }
+        if (!isVertical && pathSection.to && pathSection.to.adsumObject) {
+            await selectionController.select(pathSection.to.adsumObject, true, false, true);
 
-    createWayfindingLabel(pathSection, nextPathSection) {
-        if(!nextPathSection.to.adsumObject) return Promise.resolve();
-        const currentFloor = pathSection.ground;
-        const nextFloor = nextPathSection.to.adsumObject.parent;
-        const toPois = pathSection.to === null ? null : ACA.getPoisFromPlace(pathSection.to.id);
-        const toPoi = toPois && toPois.length > 0 ? toPois[0] : null;
+            if (animated) {
+                let timeout = null;
 
-        return new Promise(
-            (resolve)=> {
-                labelController.createPopOverOnAdsumObject(
-                    pathSection.to.adsumObject.parent,
-                    `${toPoi.name} to ${nextFloor.name}`,
-                    currentFloor.altitude < nextFloor.altitude ? "up": "down",
-                    pathSection.to.adsumObject.offset
-                ).then((label)=>{
-                    this.labelsOnWayfinding.push(label);
-                    resolve(label);
+                const reg = this.cancelSource.token.register(() => { clearTimeout(timeout); });
+                await new Promise((resolve) => {
+                    timeout = setTimeout(resolve, 500);
                 });
+                reg.unregister();
             }
-        );
-    }
-
-    removeWayfindingLabels() {
-        for (const label of this.labelsOnWayfinding) {
-            labelController.removePopOver(label);
         }
-        this.labelsOnWayfinding = [];
+
+        registration2.unregister();
+
+        this.cancelSource.token.throwIfCancellationRequested();
     }
 
-    _drawPathSection(pathSection, token = CancellationToken.none, skipStep = false) {
-        this.awm.wayfindingManager.removePathSection(pathSection);
+    async goToKioskLocation() {
+        const registration = this.cancelSource.token.register(() => {
+            this.awm.sceneManager.reset();
+            this.awm.cameraManager.reset();
+        });
 
-        const pathSectionObject = this.awm.wayfindingManager.options.pathBuilder.build(pathSection);
+        await this.awm.cameraManager.setCurrentFloor(this.awm.objectManager.user.parent);
+        await this.awm.cameraManager.centerOnFloor(this.awm.objectManager.user.parent);
 
-        const drawer = new PathSectionDrawer(
-            pathSectionObject,
-            this.awm.cameraManager,
-            this.awm.wayfindingManager.projector,
-        );
-
-        return drawer.draw(token, skipStep).catch((e) => { if (e.message !== 'Path was stopped') return Promise.reject(e); });
+        registration.unregister();
     }
 
-    goToKioskLocation() {
-        let promise = Promise.resolve();
-        promise = promise.then(() => floorsController.reset());
-        promise = promise.then(() => this.awm.cameraManager.centerOnFloor(this.awm.defaultFloor));
-        return promise;
-    }
+    reset(keepCurrent: boolean = false) {
+        this.cancelSource.cancel();
 
-    reset() {
-        if(this._sources.length) {
-            for(let i=0; i< this._sources.length-1; i++) {
-                if(this._sources[i] && !this._sources[i]._registrations) {
-                    delete this._sources[i];
-                }
-            }
-            this._sources[this._sources.length-1].cancel();
-        }
-        if (this.current !== null) {
+        selectionController.reset();
+
+        if (!keepCurrent && this.current !== null) {
             // Remove previously drawn paths
             this.awm.wayfindingManager.removePath(this.current);
             this.current = null;
-            this._currentPathSections = null;
+            this.dispatch(resetPathEvent());
         }
 
-        this.removeWayfindingLabels();
-        labelController.reset(); // TODO
-        floorsController.removeFloorsLabels();
-        return floorsController.reset();
+        this.cancelSource = new CancellationTokenSource();
     }
 }
 

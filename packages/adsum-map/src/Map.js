@@ -1,34 +1,37 @@
 // @flow
 
 import * as React from 'react';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, Store } from 'redux';
 import { connect } from 'react-redux';
+import type { AdsumWebMap } from '@adactive/adsum-web-map';
 
-import { mapActions } from '../index';
+import { initAction, openAction, closeAction } from './actions/MainActions';
 
 import './map.css';
 
 import type { MapStateType } from './initialState';
 
 type MappedStatePropsType = {|
-    mapState: MapStateType
-    |};
+  mapState: MapStateType
+|};
+
 type MappedDispatchPropsType = {|
-    init: (onClickFunc: () => any) => void,
-    willOpen: () => void,
-    willClose: () => void
-    |};
+  init: (awm: AdsumWebMap, store: Store) => void,
+  open: () => void,
+  close: () => void
+|};
+
 type OwnPropsType = {|
-    isOpen: boolean,
-    store: any,
-    onClick: () => any,
-    device: number,
-    display: string,
-    backgroundImage: string,
-    PopOver: any,
-    multiPlaceSelection: string
-    |};
+  awm: AdsumWebMap,
+  store: Store,
+  onClick: () => any,
+  isOpen: boolean,
+  children?: React.Node,
+  className?: string
+|};
+
 type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
+
 /**
  * Map widget: display map
  * @memberof module:Map
@@ -36,38 +39,26 @@ type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
  * @extends React.Component
  */
 class Map extends React.Component<PropsType> {
-    /**
-     * Initialize map
-     */
-    componentDidMount() {
-        const {
-            store,
-            onClick,
-            device,
-            display,
-            backgroundImage,
-            PopOver,
-            wireFraming,
-            multiPlaceSelection,
-            pmr,
-            zoom
-        } = this.props;
-        this.props.init(store, device, display, backgroundImage, onClick, PopOver, wireFraming, multiPlaceSelection, pmr, zoom);
-    }
-
     componentWillUpdate(nextProps: PropsType) {
         const {
-            isOpen,
-            willOpen,
-            willClose,
-        } = this.props;
+            awm, store, onClick, init
+        } = nextProps;
+
+        if (!this.initialized && awm !== null) {
+            init(awm, store, onClick);
+            this.initialized = true;
+        }
+
+        const { isOpen, open, close } = this.props;
 
         if (!isOpen && nextProps.isOpen) {
-            willOpen();
+            open();
         } else if (isOpen && !nextProps.isOpen) {
-            willClose();
+            close();
         }
     }
+
+    initialized: boolean = false;
 
     render() {
         const {
@@ -79,7 +70,6 @@ class Map extends React.Component<PropsType> {
         return (
             <div className={`map-wrapper ${isOpen ? 'open' : ''} ${className || ''}`}>
                 {children}
-                <div id="adsum-web-map-container" />
             </div>
         );
     }
@@ -90,9 +80,9 @@ const mapStateToProps = (state: MapStateType): MappedStatePropsType => ({
 });
 
 const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => bindActionCreators({
-    init: (store: any, device: number, display: string, backgroundImage: string, onClick: () => any, PopOver: any, wireFraming: boolean, multiPlaceSelection: string, pmr: boolean, zoom: any): void => dispatch(mapActions.init(store, device, display, backgroundImage, onClick, PopOver, wireFraming, multiPlaceSelection, pmr, zoom)),
-    willOpen: (): void => dispatch(mapActions.willOpen()),
-    willClose: (): void => dispatch(mapActions.willClose()),
+    init: (awm: AdsumWebMap, store: Store, onClick: () => any): void => dispatch(initAction(awm, store, onClick)),
+    open: (): void => dispatch(openAction()),
+    close: (): void => dispatch(closeAction()),
 }, dispatch);
 
 export default connect(

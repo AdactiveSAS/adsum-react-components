@@ -1,205 +1,138 @@
 // @flow
 
-import { CameraCenterOnOptions } from '@adactive/adsum-web-map';
-import labelController from './LabelController';
-import _ from 'lodash';
-// import ACA from '../../../services/ClientAPI';
+import { CancellationTokenSource } from 'prex-es5';
+import { AdsumWebMap } from '@adactive/adsum-web-map';
 import ACA from '@adactive/adsum-utils/services/ClientAPI';
+import { Poi, Place } from '@adactive/adsum-client-api';
 import placesController from './PlacesController';
-import floorsController from './FloorsController';
 
 class SelectionController {
     constructor() {
         this.awm = null;
-        this.current = [];
-        this.locked = false;
-        this.multiPlaceSelection = null;
-
-        this._cameraCenterOnOptions = new CameraCenterOnOptions({
-            fitRatio: 6,
-            zoom: false
-        });
-
-        this.labelsPopOver = [];
+        this.selection = new Set();
+        this.cancelSource = new CancellationTokenSource();
     }
 
-    init(awm, multiPlaceSelection) {
+    init(awm: AdsumWebMap, dispatch: *): SelectionController {
         this.awm = awm;
-        this.multiPlaceSelection = multiPlaceSelection === 'multipleLevel' ? 'multipleLevel' : 'singleLevel';
+        this.dispatch = dispatch;
+
         return this;
     }
 
-    selectMultiplePlaces(poi) {
-        const places = ACA.getPlacesFromPoi(poi.id);
-
-        if (!places) return;
-
-        this.reset();
-
-        let promise = Promise.resolve();
-        this.locked = true;
-
-        if (this.multiPlaceSelection === 'multipleLevel') {
-            const centerOnStackOptions = {
-                fitRatio: 1.2,
-                altitude: 30,
-                time: 1300
-            };
-
-            floorsController.explodeAndShiftStack(-300, -300, 150, centerOnStackOptions);
+    async selectPoi(poi: Poi, reset: boolean = true, centerOn: boolean = true): Promise<void> {
+        if (reset) {
+            this.reset();
         }
+        const places = ACA.getPlaces(poi.places);
 
-        let havePoiOnTheFloor = false;
-        _.each(places, (place) => {
-            const path = placesController.getPath(place.id);
-            const to = path.to.adsumObject;
-            this.current.push(to);
-            if (this.multiPlaceSelection === 'singleLevel') {
-                if (to && to.parent) {
-                    if(!havePoiOnTheFloor && to.parent.id === this.awm.defaultFloor.id) {
-                        havePoiOnTheFloor = true;
-                    }
-                    if (to.isBuilding) {
-                        promise = promise.then(() => this.highlightBuilding(to));
-                    } else if (to.isSpace) {
-                        promise = promise.then(() => this.highlightSpace(to));
-                    } else if (to.isLabel) {
-                        promise = promise.then(() => this.highlightLabel(to));
-                    }
-                }
-            } else if (to && to.isBuilding) {
-                promise = promise.then(() => this.highlightBuilding(to));
-            } else if (to && to.isSpace) {
-                promise = promise.then(() => this.highlightSpace(to));
-            } else if (to && to.isLabel) {
-                promise = promise.then(() => this.highlightLabel(to));
-            }
-        });
-
-        promise = promise.then(() => {
-            this.locked = false;
-        });
-
-        if(!havePoiOnTheFloor) {
-            return new Promise((resolve,reject) => {
-                if(this.current.length > 0) {
-                    const to = this.current[0];
-                    if (to && to.parent) {
-                        return floorsController.stackFromFloor(to.parent.id).then(
-                            ()=>{
-                                resolve();
-                            }
-                        );
-                    }
-                }
-                return promise.then(()=>resolve());
-            });
-        }
-
-
-        promise = promise.then(() => {
-            return floorsController.stackFromFloor(this.awm.defaultFloor.id)
-        });
-
-        return promise;
+        await Promise.all(places.map((place: Place): Promise<void> => this.selectPlace(place, false, centerOn)));
     }
 
-    updateSelection(object, centerOn = false) {
-        if (this.locked || (this.current.length > 0 && this.current[0] === object)) {
-            return Promise.resolve();
+    async selectPlace(place: Place, reset: boolean = true, centerOn: boolean = true): Promise<void> {
+        if (reset) {
+            this.reset();
         }
+
+        const path = placesController.getPath(place.id);
+        await this.select(path.to.adsumObject, false, centerOn, false);
+    }
+
+    async select(adsumObject: ?AdsumObject3D, reset: boolean = true, centerOn: boolean = true, onlyIfPoi: boolean = true) {
+        if (reset) {
+            this.reset();
+        }
+
+        if (!adsumObject) {
+            return;
+        }
+
         // if no poi link to the place do not select
-        if (object && ACA.getPoisFromPlace(object.placeId).length === 0) {
-            return Promise.resolve();
+        if (onlyIfPoi) {
+            const place = ACA.getPlace(adsumObject.placeId);
+            if (place === null || place.pois.size === 0) {
+                return;
+            }
         }
 
-        // Make sure to unselect previously selected
-        this.reset();
+        this.selection.add(adsumObject);
 
-        this.current.push(object);
-
-        if (this.current.length > 0 && this.current[0] !== null && this.current[0].isBuilding) {
-            this.locked = true;
-            return this.highlightBuilding(this.current[0], centerOn)
-                .then(() => {
-                    this.locked = false;
-                });
-        } else if (this.current.length > 0 && this.current[0] !== null && this.current[0].isSpace) {
-            this.locked = true;
-            return this.highlightSpace(this.current[0], centerOn)
-                .then(() => {
-                    this.locked = false;
-                });
-        } else if (this.current.length > 0 && this.current[0] !== null && this.current[0].isLabel) {
-            this.locked = true;
-            return this.highlightLabel(this.current[0])
-                .then(() => {
-                    this.locked = false;
-                });
-        }
-
-        return Promise.resolve();
+        await this.highlight(adsumObject, centerOn);
     }
 
-    getCurrent() {
-        return this.current;
+    getSelection(): Array {
+        return Array.from(this.selection);
     }
 
-    highlightBuilding(building, centerOn = false) {
-        let promise = Promise.resolve();
-        if (centerOn) promise = promise.then(() => this.awm.cameraManager.centerOn(building, true, this._cameraCenterOnOptions));
-        return promise
-            .then(() => {
-                building.setColor(0x78e08f);
+    async highlight(adsumObject: ?AdsumObject3D, centerOn: boolean = false) {
+        let ground = null;
+        if (adsumObject.isBuilding) {
+            adsumObject.setColor(0x78e08f);
+            adsumObject.labels.forEach((label) => {
+                // label.setScale(3, 3, 3);
+                label.select();
             });
-    }
-
-    resetBuilding(building) {
-        building.resetColor();
-    }
-
-    highlightSpace(space, centerOn = false) {
-        let promise = Promise.resolve();
-        if (centerOn) promise = promise.then(() => this.awm.cameraManager.centerOn(space, true, this._cameraCenterOnOptions));
-        promise = promise.then(() => labelController.createPopOverOnAdsumObject(space));
-        return promise
-            .then((label) => {
-                this.labelsPopOver.push(label);
-                space.setColor(0x78e08f);
-                space.bounceUp(3);
+        } else if (adsumObject.isSpace) {
+            adsumObject.setColor(0x78e08f);
+            adsumObject.bounceUp(2);
+            adsumObject.labels.forEach((label) => {
+                // label.setScale(3, 3, 3);
+                label.select();
             });
-    }
+            ground = adsumObject.parent;
+        } else if (adsumObject.isLabel) {
+            // adsumObject.setScale(3, 3, 3);
+            adsumObject.select();
 
-    highlightLabel(label) {
-        return this.awm.cameraManager.centerOn(label, true, this._cameraCenterOnOptions);
-    }
-
-    resetSpace(space) {
-        space.resetColor();
-        space.bounceDown();
-    }
-
-    removePopOvers() {
-        for (const label of this.labelsPopOver) {
-            labelController.removePopOver(label);
+            const { parent } = adsumObject;
+            if (parent.isSpace) {
+                ground = parent.parent;
+            } else if (parent.isFloor) {
+                ground = parent;
+            }
+        } else {
+            return;
         }
-        this.labelsPopOver = [];
+
+        if (centerOn) {
+            const registration = this.cancelSource.token.register(() => {
+                this.awm.cameraManager.reset();
+                this.awm.sceneManager.reset();
+            });
+            await this.awm.sceneManager.setCurrentFloor(ground, true);
+            await this.awm.cameraManager.centerOn(adsumObject, true);
+            registration.unregister();
+        }
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    unlight(adsumObject: ?AdsumObject3D): void {
+        if (adsumObject.isBuilding) {
+            adsumObject.resetColor();
+        } else if (adsumObject.isSpace) {
+            adsumObject.resetColor();
+            adsumObject.bounceDown();
+            adsumObject.labels.forEach((label) => {
+                // label.setScale(1, 1, 1);
+                label.unselect();
+            });
+        } else if (adsumObject.isLabel) {
+            // adsumObject.setScale(1, 1, 1);
+            adsumObject.unselect();
+        }
+    }
+
+    unselect(adsumObject: AdsumObject3D) {
+        this.unlight(adsumObject);
+        this.selection.delete(adsumObject);
     }
 
     reset() {
-        // Make sure to unselect previously selected
-        if (this.current.length > 0) {
-            _.each(this.current, (adsumObject: Object) => {
-                if (adsumObject && adsumObject.isBuilding) {
-                    this.resetBuilding(adsumObject);
-                } else if (adsumObject && adsumObject.isSpace) {
-                    this.resetSpace(adsumObject);
-                }
-            });
-        }
+        this.cancelSource.cancel();
 
-        this.removePopOvers();
-        this.current = [];
+        this.selection.forEach((adsumObject) => { this.unselect(adsumObject); });
+
+        this.cancelSource = new CancellationTokenSource();
     }
 }
 

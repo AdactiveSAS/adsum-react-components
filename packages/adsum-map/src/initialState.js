@@ -11,8 +11,6 @@ export type MapReducerStateType = {|
   +isOpen: boolean,
   +state: MapStateType,
   +mode: MapModeType,
-  +getBuildings: ?() => ?Object,
-  +getFloors: ?() => ?Object,
   +zoom: MapZoomType,
   +currentFloor: ?number,
   +previousFloor: ?number,
@@ -20,9 +18,12 @@ export type MapReducerStateType = {|
   +currentClickedEvent: ?Object,
   +getCurrentSelectedObject: ?Object,
   +cameraMoved: boolean,
-  +getSortedPaths: ?Object,
+  +getPath: ?(id: number, pmr: boolean) => ?Path,
   +reset: ?Object,
-  +wayFinder: ?Object
+  +wayfindingState: {|
+    +drawing: boolean,
+    +currentSectionIndex: ?number
+  |}
 |};
 
 /**
@@ -51,6 +52,10 @@ export const initialState: MapReducerStateType = {
     currentClickedEvent: null,
     getCurrentSelectedObject: null,
     cameraMoved: false,
-    getSortedPaths: null,
+    getPath: null,
     reset: null,
+    wayfindingState: {
+        drawing: false,
+        currentSectionIndex: null,
+    }
 };
