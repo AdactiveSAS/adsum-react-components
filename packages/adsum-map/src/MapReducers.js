@@ -119,6 +119,12 @@ const mapReducers: MapReducersType = (
             isOpen: false,
         };
     }
+    case mainActionsTypes.DID_CATCH_ERROR: {
+        return {
+            ...state,
+            state: 'idle'
+        };
+    }
     case mainActionsTypes.WILL_INIT:
     default:
         return state;
