@@ -49,7 +49,7 @@ function* onInit(action: WillInitActionType): Generator {
 function* onReset(action: WillResetActionType): Generator {
     yield delay(200);
 
-    yield call([mainController, mainController.reset], action.stop);
+    yield call([mainController, mainController.reset], action.stop, action.resetFloor);
 
     yield put(didResetAction());
 }

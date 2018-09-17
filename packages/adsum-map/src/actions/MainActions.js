@@ -66,9 +66,9 @@ export function didCloseAction(): DidCloseActionType {
 /**
  * RESET
  */
-export type WillResetActionType = {| type: types.WILL_RESET, stop: boolean |};
-export function resetAction(stop: boolean = false): WillResetActionType {
-    return { type: types.WILL_RESET, stop };
+export type WillResetActionType = {| type: types.WILL_RESET, stop: boolean, resetFloor: boolean |};
+export function resetAction(stop: boolean = false, resetFloor: boolean = true): WillResetActionType {
+    return { type: types.WILL_RESET, stop, resetFloor };
 }
 export type DidResetActionType = {| type: types.DID_RESET |};
 export function didResetAction(): DidResetActionType {
