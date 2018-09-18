@@ -4,9 +4,7 @@ import { delay } from 'redux-saga';
 import { put, call, takeLatest } from 'redux-saga/effects';
 import wayfindingController from '../controllers/WayfindingController';
 import placesController from '../controllers/PlacesController';
-import type {
-    WillDrawPathSectionActionType, WillGoToPlaceActionType, WillGoToPoiActionType
-} from '../actions/WayfindingActions';
+import type { WillDrawPathSectionActionType, WillGoToPlaceActionType, WillGoToPoiActionType, WillResetPathActionType } from '../actions/WayfindingActions';
 import { didDrawAction, types } from '../actions/WayfindingActions';
 import { didCatchErrorAction } from '../actions/MainActions';
 
@@ -46,10 +44,20 @@ function* onDrawPathSection(action: WillDrawPathSectionActionType): Generator {
     }
 }
 
+function* onResetPath(action: WillResetPathActionType): Generator {
+    try {
+        yield call([wayfindingController, wayfindingController.reset]);
+    } catch (e) {
+        console.error('Error while onResetPath method', action, e);
+        yield put(didCatchErrorAction());
+    }
+}
+
 const wayfindingSagas = [
     takeLatest(types.WILL_DRAW_TO_PLACE, onGoToPlace),
     takeLatest(types.WILL_DRAW_TO_POI, onGoToPoi),
     takeLatest(types.WILL_DRAW_PATH_SECTION, onDrawPathSection),
+    takeLatest(types.WILL_RESET_PATH, onResetPath),
 ];
 
 export default wayfindingSagas;

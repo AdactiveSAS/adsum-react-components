@@ -10,7 +10,8 @@ export const types = {
     SET_CURRENT_PATH: 'map/SET_CURRENT_PATH',
     EVENT_WILL_DRAW_PATH_SECTION: 'map/EVENT_WILL_DRAW_PATH_SECTION',
     EVENT_DID_DRAW_PATH_SECTION: 'map/EVENT_DID_DRAW_PATH_SECTION',
-    EVENT_RESET_PATH: 'map/EVENT_RESET_PATH',
+    WILL_RESET_PATH: 'map/WILL_RESET_PATH',
+    EVENT_DID_RESET_PATH: 'map/EVENT_DID_RESET_PATH',
 };
 
 export type WillGoToPlaceActionType = {|
@@ -113,12 +114,21 @@ export function didDrawPathSectionEvent(current: PathSection, previous: ?PathSec
     };
 }
 
-export type ResetPathEventType = {|
-  type: types.EVENT_RESET_PATH
+export type WillResetPathActionType = {|
+    type: types.WILL_RESET_PATH
 |};
-export function resetPathEvent(): ResetPathEventType {
+export function willResetPathAction(): WillResetPathActionType {
     return {
-        type: types.EVENT_RESET_PATH,
+        type: types.WILL_RESET_PATH,
+    };
+}
+
+export type DidResetPathEventType = {|
+  type: types.EVENT_DID_RESET_PATH
+|};
+export function didResetPathEvent(): DidResetPathEventType {
+    return {
+        type: types.EVENT_DID_RESET_PATH,
     };
 }
 
@@ -130,4 +140,5 @@ export type WayfindingActionsType =
   | SetCurrentPathActionType
   | WillDrawPathSectionEventType
   | DidDrawPathSectionEventType
-  | ResetPathEventType;
+  | DidResetPathEventType
+  | WillResetPathActionType;

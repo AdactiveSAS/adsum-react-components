@@ -7,7 +7,7 @@ import type { WillInitActionType } from '../actions/MainActions';
 
 import {
     didDrawPathSectionEvent,
-    resetPathEvent,
+    didResetPathEvent,
     setCurrentPathAction,
     willDrawPathSectionEvent
 } from '../actions/WayfindingActions';
@@ -232,7 +232,7 @@ class WayfindingController {
             // Remove previously drawn paths
             this.awm.wayfindingManager.removePath(this.current);
             this.current = null;
-            this.dispatch(resetPathEvent());
+            this.dispatch(didResetPathEvent());
         }
 
         this.cancelSource = new CancellationTokenSource();

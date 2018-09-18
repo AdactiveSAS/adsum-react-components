@@ -72,7 +72,7 @@ const mapReducers: MapReducersType = (
             }
         };
     }
-    case wayfindingActionsTypes.EVENT_RESET_PATH: {
+    case wayfindingActionsTypes.EVENT_DID_RESET_PATH: {
         return {
             ...state,
             wayfindingState: {
