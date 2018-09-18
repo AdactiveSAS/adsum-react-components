@@ -3,7 +3,6 @@
 import { delay } from 'redux-saga';
 import { put, call, takeLatest } from 'redux-saga/effects';
 import selectionController from '../controllers/SelectionController';
-// import placesController from '../controllers/PlacesController';
 import type {
     WillSelectActionType, WillSelectPlaceActionType, WillSelectPoiActionType
 } from '../actions/SelectionActions';
