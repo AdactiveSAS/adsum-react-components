@@ -11,7 +11,7 @@ import type {
 } from '../actions/MainActions';
 import {
     didInitAction, didResetAction, didChangeFloorAction,
-    didZoomAction, didCloseAction, didOpenAction, types,
+    didZoomAction, didCloseAction, didOpenAction, didCatchErrorAction, types,
 } from '../actions/MainActions';
 import { selectAction } from '../actions/SelectionActions';
 import clickController from '../controllers/ClickController';
@@ -47,38 +47,61 @@ function* onInit(action: WillInitActionType): Generator {
 }
 
 function* onReset(action: WillResetActionType): Generator {
-    yield delay(200);
+    try {
+        yield delay(200);
+        yield call([mainController, mainController.reset], action.stop);
 
-    yield call([mainController, mainController.reset], action.stop, action.resetFloor);
-
-    yield put(didResetAction());
+        yield put(didResetAction());
+    } catch (e) {
+        console.error('Error while resetting Map in Reset method', action, e);
+        yield put(didCatchErrorAction());
+    }
 }
 
 function* onChangeFloor(action: WillChangeFloorType): Generator {
-    yield delay(200);
-    yield call([mainController, mainController.setCurrentFloor], action.floorId, action.centerOn, action.animated);
+    try {
+        yield delay(200);
+        yield call([mainController, mainController.setCurrentFloor], action.floorId, action.centerOn, action.animated);
+    } catch (e) {
+        console.error('Error while changing floor in Set Current Floor', action, e);
+        yield put(didCatchErrorAction());
+    }
 }
 
 function* onZoom(action: WillZoomActionType): Generator {
-    yield delay(200);
-    yield call([mainController, mainController.zoom], action.value);
+    try {
+        yield delay(200);
+        yield call([mainController, mainController.zoom], action.value);
 
-    yield put(didZoomAction());
+        yield put(didZoomAction());
+    } catch (e) {
+        console.error('Error while zooming Map in Zoom method', action, e);
+        yield put(didCatchErrorAction());
+    }
 }
 
 function* onClose(action: WillCloseActionType): Generator {
-    yield delay(200);
-    yield call([mainController, mainController.stop], action.reset);
+    try {
+        yield delay(200);
+        yield call([mainController, mainController.stop], action.reset);
 
-    yield put(didCloseAction());
+        yield put(didCloseAction());
+    } catch (e) {
+        console.error('Error while closing Map in Stop method', action, e);
+        yield put(didCatchErrorAction());
+    }
 }
 
 function* onOpen(action: WillOpenActionType): Generator {
-    yield delay(200);
+    try {
+        yield delay(200);
+        mainController.start();
 
-    mainController.start();
-
-    yield put(didOpenAction());
+        yield put(didOpenAction());
+    } catch (e) {
+        console.error('Error while opening Map in Start method', action, e);
+        yield put(didCatchErrorAction());
+    }
 }
 
 const mainSagas = [

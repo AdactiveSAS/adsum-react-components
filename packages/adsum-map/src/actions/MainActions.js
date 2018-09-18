@@ -16,6 +16,7 @@ export const types = {
     DID_SET_ZOOM: 'map/DID_SET_ZOOM',
     FLOOR_WILL_CHANGE: 'map/FLOOR_WILL_CHANGE',
     FLOOR_DID_CHANGE: 'map/FLOOR_DID_CHANGE',
+    DID_CATCH_ERROR: 'map/DID_CATCH_ERROR'
 };
 
 /**
@@ -117,6 +118,18 @@ export function didChangeFloorAction(current: ?FloorObject, previous: ?FloorObje
     };
 }
 
+/**
+ * ERROR
+ */
+export type DidCatchErrorType = {|
+  type: types.DID_CATCH_ERROR
+|};
+export function didCatchErrorAction(): DidCatchErrorType {
+    return {
+        type: types.DID_CATCH_ERROR
+    };
+}
+
 export type MainActionsType =
   WillInitActionType
   | DidInitActionType
@@ -129,4 +142,5 @@ export type MainActionsType =
   | WillZoomActionType
   | DidZoomActionType
   | WillChangeFloorType
-  | DidChangeFloorType;
+  | DidChangeFloorType
+  | DidCatchErrorType;

@@ -3,37 +3,52 @@
 import { delay } from 'redux-saga';
 import { put, call, takeLatest } from 'redux-saga/effects';
 import selectionController from '../controllers/SelectionController';
-import placesController from '../controllers/PlacesController';
 import type {
     WillSelectActionType, WillSelectPlaceActionType, WillSelectPoiActionType
 } from '../actions/SelectionActions';
 import { didSelectAction, types } from '../actions/SelectionActions';
+import { didCatchErrorAction } from '../actions/MainActions';
 
 function* onSelect(action: WillSelectActionType): Generator {
-    yield delay(200);
-    yield call(
-        [selectionController, selectionController.select],
-        action.adsumObject, action.reset, action.centerOn, action.onlyIfPoi,
-    );
-    put(didSelectAction(selectionController.getSelection()));
+    try {
+        yield delay(200);
+        yield call(
+            [selectionController, selectionController.select],
+            action.adsumObject, action.reset, action.centerOn, action.onlyIfPoi,
+        );
+        put(didSelectAction(selectionController.getSelection()));
+    } catch (e) {
+        console.error('Error while selecting in Select method', action, e);
+        yield put(didCatchErrorAction());
+    }
 }
 
 function* onSelectPoi(action: WillSelectPoiActionType): Generator {
-    yield delay(200);
-    yield call(
-        [selectionController, selectionController.selectPoi],
-        action.poi, action.reset, action.centerOn,
-    );
-    put(didSelectAction(selectionController.getSelection()));
+    try {
+        yield delay(200);
+        yield call(
+            [selectionController, selectionController.selectPoi],
+            action.poi, action.reset, action.centerOn,
+        );
+        put(didSelectAction(selectionController.getSelection()));
+    } catch (e) {
+        console.error('Error while selecting POI in Select POI method', action, e);
+        yield put(didCatchErrorAction());
+    }
 }
 
 function* onSelectPlace(action: WillSelectPlaceActionType): Generator {
-    yield delay(200);
-    yield call(
-        [selectionController, selectionController.selectPlace],
-        action.place, action.reset, action.centerOn,
-    );
-    put(didSelectAction(selectionController.getSelection()));
+    try {
+        yield delay(200);
+        yield call(
+            [selectionController, selectionController.selectPlace],
+            action.place, action.reset, action.centerOn,
+        );
+        put(didSelectAction(selectionController.getSelection()));
+    } catch (e) {
+        console.error('Error while selecting Place in Select Place method', action, e);
+        yield put(didCatchErrorAction());
+    }
 }
 
 const selectionSagas = [
