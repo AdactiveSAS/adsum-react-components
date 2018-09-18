@@ -60,12 +60,14 @@ class MainController {
         this.awm.stop();
     }
 
-    async reset() {
+    async reset(stop: boolean = false, resetFloor: boolean = true) {
         selectionController.reset();
         wayfindingController.reset();
 
-        await this.awm.sceneManager.setCurrentFloor(this.awm.defaultFloor, false);
-        await this.awm.cameraManager.centerOnFloor(this.awm.defaultFloor, false);
+        if (resetFloor) {
+            await this.awm.sceneManager.setCurrentFloor(this.awm.defaultFloor, false);
+            await this.awm.cameraManager.centerOnFloor(this.awm.defaultFloor, false);
+        }
     }
 
     getCurrentFloor(): ?FloorObject {

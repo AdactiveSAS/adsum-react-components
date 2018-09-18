@@ -18,7 +18,7 @@ type MappedStatePropsType = {|
 type MappedDispatchPropsType = {|
   init: (awm: AdsumWebMap, store: Store) => void,
   open: () => void,
-  close: () => void
+  close: (reset: boolean) => void
 |};
 
 type OwnPropsType = {|
@@ -27,7 +27,8 @@ type OwnPropsType = {|
   onClick: () => any,
   isOpen: boolean,
   children?: React.Node,
-  className?: string
+  className?: string,
+  resetOnClose: string
 |};
 
 type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
@@ -39,6 +40,10 @@ type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
  * @extends React.Component
  */
 class Map extends React.Component<PropsType> {
+    static defaultProps = {
+      resetOnClose: true
+    };
+
     componentWillUpdate(nextProps: PropsType) {
         const {
             awm, store, onClick, init
@@ -49,12 +54,12 @@ class Map extends React.Component<PropsType> {
             this.initialized = true;
         }
 
-        const { isOpen, open, close } = this.props;
+        const { isOpen, open, close, resetOnClose } = this.props;
 
         if (!isOpen && nextProps.isOpen) {
             open();
         } else if (isOpen && !nextProps.isOpen) {
-            close();
+            close(resetOnClose);
         }
     }
 
@@ -82,7 +87,7 @@ const mapStateToProps = (state: MapStateType): MappedStatePropsType => ({
 const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => bindActionCreators({
     init: (awm: AdsumWebMap, store: Store, onClick: () => any): void => dispatch(initAction(awm, store, onClick)),
     open: (): void => dispatch(openAction()),
-    close: (): void => dispatch(closeAction()),
+    close: (reset: boolean): void => dispatch(closeAction(reset)),
 }, dispatch);
 
 export default connect(
