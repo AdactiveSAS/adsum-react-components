@@ -48,7 +48,7 @@ class MainController {
 
     start() {
         this.awm.start();
-        this.userAnimation.start();
+        this.userAnimation.restart();
     }
 
     async stop(reset: boolean = true) {
