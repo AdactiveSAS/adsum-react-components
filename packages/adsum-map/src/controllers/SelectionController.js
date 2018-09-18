@@ -5,6 +5,7 @@ import { AdsumWebMap } from '@adactive/adsum-web-map';
 import ACA from '@adactive/adsum-utils/services/ClientAPI';
 import { Poi, Place } from '@adactive/adsum-client-api';
 import placesController from './PlacesController';
+import type {WillInitActionType} from "../actions/MainActions";
 
 class SelectionController {
     constructor() {
@@ -13,9 +14,9 @@ class SelectionController {
         this.cancelSource = new CancellationTokenSource();
     }
 
-    init(awm: AdsumWebMap, dispatch: *): SelectionController {
-        this.awm = awm;
-        this.dispatch = dispatch;
+    init(action: WillInitActionType): SelectionController {
+        this.awm = action.awm;
+        this.dispatch = action.store.dispatch;
 
         return this;
     }
