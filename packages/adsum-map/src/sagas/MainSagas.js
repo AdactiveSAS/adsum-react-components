@@ -2,8 +2,9 @@
 
 import { delay } from 'redux-saga';
 import { put, call, takeLatest } from 'redux-saga/effects';
-import { MOUSE_EVENTS, SCENE_EVENTS } from '@adactive/adsum-web-map';
+import { MOUSE_EVENTS, SCENE_EVENTS, WAYFINDING_EVENTS } from '@adactive/adsum-web-map';
 import mainController from '../controllers/MainController';
+import wayfindingController from '../controllers/WayfindingController';
 import placesController from '../controllers/PlacesController';
 import type {
     WillInitActionType, WillChangeFloorType, WillResetActionType,
@@ -18,7 +19,7 @@ import clickController from '../controllers/ClickController';
 
 function* onInit(action: WillInitActionType): Generator {
     yield delay(200);
-    yield call([mainController, mainController.init], action.awm, action.store.dispatch);
+    yield call([mainController, mainController.init], action);
 
     const { dispatch } = action.store;
 
@@ -35,6 +36,13 @@ function* onInit(action: WillInitActionType): Generator {
             if (action.onClick) {
                 action.onClick(firstIntersectObject, event.intersects);
             }
+        }
+    );
+
+    action.awm.wayfindingManager.addEventListener(
+        WAYFINDING_EVENTS.user.position.didChanged,
+        () => {
+            wayfindingController.updateUserObjectLabelPosition();
         }
     );
 

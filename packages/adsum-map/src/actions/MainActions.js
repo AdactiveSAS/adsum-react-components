@@ -1,7 +1,7 @@
 // @flow
 
 import type { Store } from 'redux';
-import type { AdsumWebMap, FloorObject } from '@adactive/adsum-web-map';
+import type { AdsumWebMap, FloorObject, LabelObject } from '@adactive/adsum-web-map';
 
 export const types = {
     WILL_INIT: 'map/WILL_INIT',
@@ -22,10 +22,16 @@ export const types = {
 /**
  * INIT
  */
-export type WillInitActionType = {| type: types.WILL_INIT, awm: AdsumWebMap, store: Store, onClick?: () => any |};
-export function initAction(awm: AdsumWebMap, store: Store, onClick: () => any): WillInitActionType {
+export type WillInitActionType = {|
+    type: types.WILL_INIT,
+    awm: AdsumWebMap,
+    store: Store,
+    userObjectLabel: ?LabelObject,
+    onClick?: () => any
+|};
+export function initAction(awm: AdsumWebMap, store: Store, onClick: () => any, userObjectLabel: ?LabelObject = null): WillInitActionType {
     return {
-        type: types.WILL_INIT, awm, store, onClick
+        type: types.WILL_INIT, awm, store, onClick, userObjectLabel
     };
 }
 

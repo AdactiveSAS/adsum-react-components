@@ -3,6 +3,8 @@
 import { CancellationTokenSource, CancelError } from 'prex-es5';
 import { Path, PathSection } from '@adactive/adsum-web-map';
 import selectionController from './SelectionController';
+import type { WillInitActionType } from '../actions/MainActions';
+
 import {
     didDrawPathSectionEvent,
     resetPathEvent,
@@ -16,14 +18,47 @@ class WayfindingController {
         this.current = null;
         this.currentIndex = -1;
 
-        this.labelsOnWayfinding = [];
+        this.userObjectLabel = null;
 
         this.cancelSource = new CancellationTokenSource();
     }
 
-    init(awm, dispatch) {
-        this.awm = awm;
-        this.dispatch = dispatch;
+    init(action: WillInitActionType) {
+        this.awm = action.awm;
+        this.dispatch = action.store.dispatch;
+        this.userObjectLabel = action.userObjectLabel;
+        this.userObjectLabelOffset = this.userObjectLabel === null
+            ? null
+            : Object.assign({}, this.userObjectLabel.offset);
+
+        this.updateUserObjectLabelPosition();
+    }
+
+    updateUserObjectLabelPosition() {
+        if (this.userObjectLabel === null) {
+            return;
+        }
+
+        const { user } = this.awm.objectManager;
+
+        if (user === null || user.parent === null) {
+            if (this.userObjectLabel.parent !== null) {
+                this.awm.objectManager.removeLabel(this.userObjectLabel);
+            }
+
+            return;
+        }
+
+        if (this.userObjectLabel.parent !== user.parent) {
+            this.awm.objectManager.addLabel(this.userObjectLabel, user.parent);
+        }
+        const { x, y, z } = user.getPosition();
+        this.userObjectLabel.moveTo(x, y, z);
+        this.userObjectLabel.moveBy(
+            this.userObjectLabelOffset.x,
+            this.userObjectLabelOffset.y,
+            this.userObjectLabelOffset.z,
+        );
     }
 
     setPath(path) {

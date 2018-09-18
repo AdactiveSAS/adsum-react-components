@@ -10,7 +10,7 @@ import { Tween } from 'es6-tween';
 import selectionController from './SelectionController';
 import wayfindingController from './WayfindingController';
 import placesController from './PlacesController';
-import labelController from './LabelController';
+import type { WillInitActionType } from '../actions/MainActions';
 
 /**
  * @memberof module:Map
@@ -26,16 +26,15 @@ class MainController {
     /**
      * Initializing of map
      */
-    async init(awm: AdsumWebMap, dispatch: *) {
-        this.awm = awm;
-        this.dispatch = dispatch;
+    async init(action: WillInitActionType) {
+        this.awm = action.awm;
+        this.dispatch = action.store.dispatch;
 
         // Init the Map
         await this.awm.init();
-        selectionController.init(this.awm, dispatch);
-        placesController.init(this.awm);
-        labelController.init(this.awm);
-        wayfindingController.init(this.awm, dispatch);
+        selectionController.init(action);
+        placesController.init(action);
+        wayfindingController.init(action);
 
         this.userAnimation = new Tween({ rotation: 0 })
             .to({ rotation: Math.PI * 2 }, 2000)

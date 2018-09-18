@@ -117,6 +117,7 @@ class AdsumSearch extends React.Component<PropTypes, StateType> {
                             placeholder={placeHolder || translate[lang].search}
                             value={this.state.searchInput}
                             style={inputCSS}
+                            onChange={_ => {}}
                         />
                     </div>
                 </div>

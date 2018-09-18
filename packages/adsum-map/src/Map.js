@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { bindActionCreators, Store } from 'redux';
 import { connect } from 'react-redux';
-import type { AdsumWebMap } from '@adactive/adsum-web-map';
+import type { AdsumWebMap, LabelObject } from '@adactive/adsum-web-map';
 
 import { initAction, openAction, closeAction } from './actions/MainActions';
 
@@ -12,23 +12,24 @@ import './map.css';
 import type { MapStateType } from './initialState';
 
 type MappedStatePropsType = {|
-  mapState: MapStateType
+    mapState: MapStateType
 |};
 
 type MappedDispatchPropsType = {|
-  init: (awm: AdsumWebMap, store: Store) => void,
-  open: () => void,
-  close: (reset: boolean) => void
+    init: (awm: AdsumWebMap, store: Store) => void,
+    open: () => void,
+    close: (reset: boolean) => void
 |};
 
 type OwnPropsType = {|
-  awm: AdsumWebMap,
-  store: Store,
-  onClick: () => any,
-  isOpen: boolean,
-  children?: React.Node,
-  className?: string,
-  resetOnClose: string
+    awm: AdsumWebMap,
+    store: Store,
+    onClick: () => any,
+    isOpen: boolean,
+    children?: React.Node,
+    className?: string,
+    userObjectLabel?: ?LabelObject,
+    resetOnClose: string
 |};
 
 type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
@@ -41,20 +42,22 @@ type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
  */
 class Map extends React.Component<PropsType> {
     static defaultProps = {
-      resetOnClose: true
+        resetOnClose: true
     };
 
     componentWillUpdate(nextProps: PropsType) {
         const {
-            awm, store, onClick, init
+            awm, store, onClick, init, userObjectLabel
         } = nextProps;
 
         if (!this.initialized && awm !== null) {
-            init(awm, store, onClick);
+            init(awm, store, onClick, userObjectLabel);
             this.initialized = true;
         }
 
-        const { isOpen, open, close, resetOnClose } = this.props;
+        const {
+            isOpen, open, close, resetOnClose
+        } = this.props;
 
         if (!isOpen && nextProps.isOpen) {
             open();
@@ -85,7 +88,8 @@ const mapStateToProps = (state: MapStateType): MappedStatePropsType => ({
 });
 
 const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => bindActionCreators({
-    init: (awm: AdsumWebMap, store: Store, onClick: () => any): void => dispatch(initAction(awm, store, onClick)),
+    init: (awm: AdsumWebMap, store: Store, onClick: () => any, userObjectLabel: ?LabelObject = null): void =>
+        dispatch(initAction(awm, store, onClick, userObjectLabel)),
     open: (): void => dispatch(openAction()),
     close: (reset: boolean): void => dispatch(closeAction(reset)),
 }, dispatch);
