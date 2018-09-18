@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { Path } from '@adactive/adsum-web-map';
 import { Place } from '@adactive/adsum-client-api';
 import ACA from '@adactive/adsum-utils/services/ClientAPI';
+import type { WillInitActionType } from '../actions/MainActions';
 
 class PlacesController {
     constructor() {
@@ -11,8 +12,8 @@ class PlacesController {
         this.sortedPathsPMR = new Map();
     }
 
-    init(awm) {
-        this.awm = awm;
+    init(action: WillInitActionType) {
+        this.awm = action.awm;
         return this;
     }
 
