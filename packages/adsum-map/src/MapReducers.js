@@ -98,7 +98,7 @@ const mapReducers: MapReducersType = (
         };
     }
     case wayfindingActionsTypes.SET_CURRENT_PATH: {
-        const { object } : { object: any } = action;
+        const { object }: { object: any } = action;
 
         return {
             ...state,

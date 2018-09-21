@@ -67,6 +67,10 @@ class MainController {
             await this.awm.sceneManager.setCurrentFloor(this.awm.defaultFloor, false);
             await this.awm.cameraManager.centerOnFloor(this.awm.defaultFloor, false);
         }
+
+        if (stop) {
+            await this.stop(false);
+        }
     }
 
     getCurrentFloor(): ?FloorObject {
