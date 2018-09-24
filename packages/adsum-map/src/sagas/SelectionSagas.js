@@ -16,7 +16,8 @@ function* onSelect(action: WillSelectActionType): Generator {
             [selectionController, selectionController.select],
             action.adsumObject, action.reset, action.centerOn, action.onlyIfPoi,
         );
-        put(didSelectAction(selectionController.getSelection()));
+
+        yield put(didSelectAction(selectionController.getSelection()));
     } catch (e) {
         console.error('Error while selecting in Select method', action, e);
         yield put(didCatchErrorAction());
@@ -30,7 +31,8 @@ function* onSelectPoi(action: WillSelectPoiActionType): Generator {
             [selectionController, selectionController.selectPoi],
             action.poi, action.reset, action.centerOn,
         );
-        put(didSelectAction(selectionController.getSelection()));
+
+        yield put(didSelectAction(selectionController.getSelection()));
     } catch (e) {
         console.error('Error while selecting POI in Select POI method', action, e);
         yield put(didCatchErrorAction());
@@ -44,7 +46,8 @@ function* onSelectPlace(action: WillSelectPlaceActionType): Generator {
             [selectionController, selectionController.selectPlace],
             action.place, action.reset, action.centerOn,
         );
-        put(didSelectAction(selectionController.getSelection()));
+
+        yield put(didSelectAction(selectionController.getSelection()));
     } catch (e) {
         console.error('Error while selecting Place in Select Place method', action, e);
         yield put(didCatchErrorAction());
