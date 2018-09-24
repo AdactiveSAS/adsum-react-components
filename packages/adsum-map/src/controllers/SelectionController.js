@@ -7,6 +7,8 @@ import { Poi, Place } from '@adactive/adsum-client-api';
 import placesController from './PlacesController';
 import type {WillInitActionType} from "../actions/MainActions";
 
+import { didResetSelectionAction } from '../actions/SelectionActions';
+
 class SelectionController {
     constructor() {
         this.awm = null;
@@ -132,6 +134,8 @@ class SelectionController {
         this.cancelSource.cancel();
 
         this.selection.forEach((adsumObject) => { this.unselect(adsumObject); });
+
+        this.dispatch(didResetSelectionAction());
 
         this.cancelSource = new CancellationTokenSource();
     }

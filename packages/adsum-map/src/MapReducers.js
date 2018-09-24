@@ -90,6 +90,12 @@ const mapReducers: MapReducersType = (
             getCurrentSelectedObject
         };
     }
+    case selectionActionsTypes.DID_RESET_SELECTION: {
+        return {
+            ...state,
+            getCurrentSelectedObject: null
+        };
+    }
     case mainActionsTypes.DID_RESET:
     case mainActionsTypes.DID_DRAW: {
         return {
