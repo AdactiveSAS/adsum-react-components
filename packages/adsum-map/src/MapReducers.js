@@ -82,7 +82,7 @@ const mapReducers: MapReducersType = (
         };
     }
     case selectionActionsTypes.DID_SELECT: {
-        const { getCurrentSelectedObject } = action;
+        const getCurrentSelectedObject = action.selection;
 
         return {
             ...state,
