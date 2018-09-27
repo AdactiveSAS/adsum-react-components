@@ -19,6 +19,7 @@ class WayfindingController {
         this.currentIndex = -1;
 
         this.userObjectLabel = null;
+        this.getDrawPathSectionOptions = () => ({ drawOptions: null, setCurrentFloorOptions: null });
 
         this.cancelSource = new CancellationTokenSource();
     }
@@ -30,6 +31,10 @@ class WayfindingController {
         this.userObjectLabelOffset = this.userObjectLabel === null
             ? null
             : Object.assign({}, this.userObjectLabel.offset);
+
+        if (action.getDrawPathSectionOptions) {
+            this.getDrawPathSectionOptions = action.getDrawPathSectionOptions;
+        }
 
         this.updateUserObjectLabelPosition();
     }
@@ -141,20 +146,7 @@ class WayfindingController {
     }
 
     async drawPathSection(pathSection: PathSection, previousPathSection: ?PathSection = null, animated: boolean = true): Promise<void> {
-        const isVertical = pathSection.isInterGround() && Math.abs(pathSection.getInclination()) > 30;
-
-        const opts = {
-            keepSiteVisible: false,
-            bounce: true,
-            center: true,
-            centerOnOptions: {
-                zoom: true,
-                altitude: isVertical ? 10 : 80,
-                time: 1500,
-                minDistance: 50,
-                maxDistance: 800,
-            },
-        };
+        const { drawOptions, setCurrentFloorOptions } = this.getDrawPathSectionOptions(pathSection);
 
         if (previousPathSection === null || previousPathSection.isInterGround()) {
             const registration = this.cancelSource.token.register(() => {
@@ -162,29 +154,12 @@ class WayfindingController {
                 this.awm.cameraManager.reset();
             });
 
-            await this.awm.sceneManager.setCurrentFloor(pathSection.ground, animated, opts);
+            await this.awm.sceneManager.setCurrentFloor(pathSection.ground, animated, setCurrentFloorOptions);
 
             this.cancelSource.token.throwIfCancellationRequested();
 
             registration.unregister();
         }
-
-        const drawOptions = {
-            center: true,
-            oriented: false,
-            speed: isVertical ? 50 : 30,
-            // Delay the pattern show to display them after the camera animation
-            showDelay: 1800,
-            // Custom Camera Center on options for that call
-            centerOnOptions: {
-                zoom: true,
-                altitude: isVertical ? 10 : 80,
-                time: 1500,
-                fitRatio: 1.2,
-                minDistance: 100,
-                maxDistance: 1500,
-            },
-        };
 
         const registration2 = this.cancelSource.token.register(() => {
             this.awm.wayfindingManager.removePathSection(pathSection);
@@ -192,7 +167,7 @@ class WayfindingController {
 
         await this.awm.wayfindingManager.drawPathSection(pathSection, drawOptions, animated);
 
-        if (!isVertical && pathSection.to && pathSection.to.adsumObject) {
+        if (pathSection.to && pathSection.to.adsumObject) {
             await selectionController.select(pathSection.to.adsumObject, true, false, true);
 
             if (animated) {

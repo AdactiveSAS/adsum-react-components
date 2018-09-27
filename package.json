@@ -14,7 +14,8 @@
 	},
 	"scripts": {
 		"build-css": "node-less-chokidar packages",
-		"precommit": "build-css"
+		"precommit": "build-css",
+		"lint": "eslint packages/adsum-map --fix"
 	},
 	"dependencies": {},
 	 "keywords": [
