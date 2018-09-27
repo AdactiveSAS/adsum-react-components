@@ -28,17 +28,19 @@ export type WillInitActionType = {|
     store: Store,
     userObjectLabel: ?LabelObject,
     onClick?: () => any,
-    getDrawPathSectionOptions?: (pathSection: PathSection) => { drawOptions: ?object, setCurrentFloorOptions: ?object }
+    getDrawPathSectionOptions?: (pathSection: PathSection) => { drawOptions: ?object, setCurrentFloorOptions: ?object },
+    zoom?: { min?: number, max?: number }
 |};
 export function initAction(
     awm: AdsumWebMap,
     store: Store,
     onClick: () => any,
     userObjectLabel: ?LabelObject = null,
-    getDrawPathSectionOptions: (pathSection: PathSection) => { drawOptions: ?object, setCurrentFloorOptions: ?object } = null
+    getDrawPathSectionOptions: (pathSection: PathSection) => { drawOptions: ?object, setCurrentFloorOptions: ?object } = null,
+    zoom: { min?: number, max?: number } = null
 ): WillInitActionType {
     return {
-        type: types.WILL_INIT, awm, store, onClick, userObjectLabel, getDrawPathSectionOptions
+        type: types.WILL_INIT, awm, store, onClick, userObjectLabel, getDrawPathSectionOptions, zoom
     };
 }
 

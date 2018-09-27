@@ -43,6 +43,18 @@ class MainController {
                 this.awm.objectManager.user.setRotation(rotation);
             });
 
+        if (action.zoom) {
+            const { min, max } = action.zoom;
+
+            if (min) {
+                this.awm.cameraManager.control.minDistance = this.awm.getProjector().meterToAdsumDistance(min);
+            }
+
+            if (max) {
+                this.awm.cameraManager.control.maxDistance = this.awm.getProjector().meterToAdsumDistance(max);
+            }
+        }
+
         this.start();
     }
 
