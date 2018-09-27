@@ -1,11 +1,10 @@
 // @flow
 
 import { CancellationTokenSource } from 'prex-es5';
-import { AdsumWebMap } from '@adactive/adsum-web-map';
 import ACA from '@adactive/adsum-utils/services/ClientAPI';
 import { Poi, Place } from '@adactive/adsum-client-api';
 import placesController from './PlacesController';
-import type {WillInitActionType} from "../actions/MainActions";
+import type { WillInitActionType } from '../actions/MainActions';
 
 import { didResetSelectionAction } from '../actions/SelectionActions';
 

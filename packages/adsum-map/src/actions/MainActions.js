@@ -1,7 +1,7 @@
 // @flow
 
 import type { Store } from 'redux';
-import type { AdsumWebMap, FloorObject, LabelObject } from '@adactive/adsum-web-map';
+import type { AdsumWebMap, FloorObject, LabelObject, PathSection } from '@adactive/adsum-web-map';
 
 export const types = {
     WILL_INIT: 'map/WILL_INIT',
@@ -27,11 +27,18 @@ export type WillInitActionType = {|
     awm: AdsumWebMap,
     store: Store,
     userObjectLabel: ?LabelObject,
-    onClick?: () => any
+    onClick?: () => any,
+    getDrawPathSectionOptions?: (pathSection: PathSection) => { drawOptions: ?object, setCurrentFloorOptions: ?object }
 |};
-export function initAction(awm: AdsumWebMap, store: Store, onClick: () => any, userObjectLabel: ?LabelObject = null): WillInitActionType {
+export function initAction(
+    awm: AdsumWebMap,
+    store: Store,
+    onClick: () => any,
+    userObjectLabel: ?LabelObject = null,
+    getDrawPathSectionOptions: (pathSection: PathSection) => { drawOptions: ?object, setCurrentFloorOptions: ?object } = null
+): WillInitActionType {
     return {
-        type: types.WILL_INIT, awm, store, onClick, userObjectLabel
+        type: types.WILL_INIT, awm, store, onClick, userObjectLabel, getDrawPathSectionOptions
     };
 }
 

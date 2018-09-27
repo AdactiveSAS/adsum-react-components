@@ -20,14 +20,23 @@
     "prex-es5": "^0.4.2"
   },
   "devDependencies": {
+    "@adactive/adsum-client-api": "^2.2.0",
+    "@adactive/adsum-web-map": "^5.8.0-rc.2",
     "@adactive/adsum-utils": "^0.0.2-y.44.56",
     "prop-types": "^15.6.1",
-    "react": "^16.3.1"
+    "react": "^16.3.1",
+    "react-redux": "^5.0.7",
+    "redux": "^3.7.2",
+    "redux-saga": "^0.16.0"
   },
   "peerDependencies": {
+    "@adactive/adsum-client-api": "^2.2.0",
+    "@adactive/adsum-web-map": "^5.8.0-rc.2",
     "@adactive/adsum-utils": "^0.0.2-y.44.45",
     "prop-types": "^15.6.1",
-    "react": "^16.3.1"
+    "react": "^16.3.1",
+    "redux": "^3.7.2",
+    "redux-saga": "^0.16.0"
   },
   "keywords": [
     "adsum",

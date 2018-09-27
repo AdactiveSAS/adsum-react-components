@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { bindActionCreators, Store } from 'redux';
 import { connect } from 'react-redux';
-import type { AdsumWebMap, LabelObject } from '@adactive/adsum-web-map';
+import type { AdsumWebMap, LabelObject, PathSection } from '@adactive/adsum-web-map';
 
 import { initAction, openAction, closeAction } from './actions/MainActions';
 
@@ -12,6 +12,7 @@ import './map.css';
 import type { MapStateType } from './initialState';
 
 type MappedStatePropsType = {|
+    // eslint-disable-next-line react/no-unused-prop-types
     mapState: MapStateType
 |};
 
@@ -47,11 +48,11 @@ class Map extends React.Component<PropsType> {
 
     componentWillUpdate(nextProps: PropsType) {
         const {
-            awm, store, onClick, init, userObjectLabel
+            awm, store, onClick, init, userObjectLabel, getDrawPathSectionOptions
         } = nextProps;
 
         if (!this.initialized && awm !== null) {
-            init(awm, store, onClick, userObjectLabel);
+            init(awm, store, onClick, userObjectLabel, getDrawPathSectionOptions);
             this.initialized = true;
         }
 
@@ -88,8 +89,13 @@ const mapStateToProps = (state: MapStateType): MappedStatePropsType => ({
 });
 
 const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => bindActionCreators({
-    init: (awm: AdsumWebMap, store: Store, onClick: () => any, userObjectLabel: ?LabelObject = null): void =>
-        dispatch(initAction(awm, store, onClick, userObjectLabel)),
+    init: (
+        awm: AdsumWebMap,
+        store: Store,
+        onClick: () => any,
+        userObjectLabel: ?LabelObject = null,
+        getDrawPathSectionOptions: (pathSection: PathSection) => { drawOptions: ?object, setCurrentFloorOptions: ?object } = null
+    ): void => dispatch(initAction(awm, store, onClick, userObjectLabel, getDrawPathSectionOptions)),
     open: (): void => dispatch(openAction()),
     close: (reset: boolean): void => dispatch(closeAction(reset)),
 }, dispatch);
