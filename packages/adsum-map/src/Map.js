@@ -30,6 +30,7 @@ type OwnPropsType = {|
     children?: React.Node,
     className?: string,
     userObjectLabel?: ?LabelObject,
+    getDrawPathSectionOptions?: ?(pathSection: PathSection) => { drawOptions: ?object, setCurrentFloorOptions: ?object },
     resetOnClose: boolean,
     preventAutoSelectOnClick: boolean
 |};
