@@ -62,10 +62,10 @@ export type DidSelectActionType = {|
   type: types.DID_SELECT,
   selection: AdsumObject3D[]
 |};
-export function didSelectAction(selection: AdsumObject3D[]): DidSelectActionType {
+export function didSelectAction(currentSelectedObject: AdsumObject3D[]): DidSelectActionType {
     return {
         type: types.DID_SELECT,
-        selection,
+        currentSelectedObject
     };
 }
 
