@@ -43,16 +43,17 @@ type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
  */
 class Map extends React.Component<PropsType> {
     static defaultProps = {
-        resetOnClose: true
+        resetOnClose: true,
+        preventAutoSelectOnClick: false
     };
 
     componentWillUpdate(nextProps: PropsType) {
         const {
-            awm, store, onClick, init, userObjectLabel, getDrawPathSectionOptions
+            awm, store, onClick, preventAutoSelectOnClick, init, userObjectLabel, getDrawPathSectionOptions
         } = nextProps;
 
         if (!this.initialized && awm !== null) {
-            init(awm, store, onClick, userObjectLabel, getDrawPathSectionOptions);
+            init(awm, store, onClick, preventAutoSelectOnClick, userObjectLabel, getDrawPathSectionOptions);
             this.initialized = true;
         }
 
@@ -93,9 +94,10 @@ const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => bindActionC
         awm: AdsumWebMap,
         store: Store,
         onClick: () => any,
+        preventAutoSelectOnClick: boolean = false,
         userObjectLabel: ?LabelObject = null,
         getDrawPathSectionOptions: (pathSection: PathSection) => { drawOptions: ?object, setCurrentFloorOptions: ?object } = null
-    ): void => dispatch(initAction(awm, store, onClick, userObjectLabel, getDrawPathSectionOptions)),
+    ): void => dispatch(initAction(awm, store, onClick, preventAutoSelectOnClick, userObjectLabel, getDrawPathSectionOptions)),
     open: (): void => dispatch(openAction()),
     close: (reset: boolean): void => dispatch(closeAction(reset)),
 }, dispatch);
