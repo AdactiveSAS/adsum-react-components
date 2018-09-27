@@ -30,7 +30,8 @@ type OwnPropsType = {|
     children?: React.Node,
     className?: string,
     userObjectLabel?: ?LabelObject,
-    resetOnClose: string
+    resetOnClose: boolean,
+    preventAutoSelectOnClick: boolean
 |};
 
 type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
