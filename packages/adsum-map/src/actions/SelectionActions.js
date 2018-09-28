@@ -8,6 +8,7 @@ export const types = {
     WILL_SELECT_A_POI: 'map/WILL_SELECT_A_POI',
     WILL_SELECT_A_PLACE: 'map/WILL_SELECT_A_PLACE',
     DID_SELECT: 'map/DID_SELECT',
+    DID_RESET_SELECTION: 'map/DID_RESET_SELECTION',
 };
 
 export type WillSelectActionType = {|
@@ -61,15 +62,23 @@ export type DidSelectActionType = {|
   type: types.DID_SELECT,
   selection: AdsumObject3D[]
 |};
-export function didSelectAction(selection: AdsumObject3D[]): DidSelectActionType {
+export function didSelectAction(currentSelectedObject: AdsumObject3D[]): DidSelectActionType {
     return {
         type: types.DID_SELECT,
-        selection,
+        currentSelectedObject
     };
+}
+
+export type DidResetSelectionActionType = {|
+    type: types.DID_RESET_SELECTION
+|};
+export function didResetSelectionAction(): DidResetSelectionActionType {
+    return { type: types.DID_RESET_SELECTION };
 }
 
 export type SelectionActionsType =
   WillSelectActionType
   | WillSelectPlaceActionType
   | WillSelectPoiActionType
-  | DidSelectActionType;
+  | DidSelectActionType
+  | DidResetSelectionActionType;

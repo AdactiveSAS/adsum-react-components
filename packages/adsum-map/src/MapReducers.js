@@ -82,12 +82,18 @@ const mapReducers: MapReducersType = (
         };
     }
     case selectionActionsTypes.DID_SELECT: {
-        const getCurrentSelectedObject = action.selection;
+        const { currentSelectedObject } = action;
 
         return {
             ...state,
             state: 'idle',
-            getCurrentSelectedObject
+            currentSelectedObject
+        };
+    }
+    case selectionActionsTypes.DID_RESET_SELECTION: {
+        return {
+            ...state,
+            currentSelectedObject: []
         };
     }
     case mainActionsTypes.DID_RESET:
