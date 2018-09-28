@@ -28,19 +28,34 @@ export type WillInitActionType = {|
     store: Store,
     userObjectLabel: ?LabelObject,
     onClick?: () => any,
-    getDrawPathSectionOptions?: (pathSection: PathSection) => { drawOptions: ?object, setCurrentFloorOptions: ?object },
-    zoom?: { min?: number, max?: number }
+    getDrawPathSectionOptions?: (pathSection: PathSection) => {
+        drawOptions: ?object,
+        setCurrentFloorOptions: ?object
+    },
+    zoom?: { min?: number, max?: number },
+    autoSelectOnClick?: boolean
 |};
 export function initAction(
     awm: AdsumWebMap,
     store: Store,
     onClick: () => any,
+    autoSelectOnClick?: boolean = true,
     userObjectLabel: ?LabelObject = null,
-    getDrawPathSectionOptions: (pathSection: PathSection) => { drawOptions: ?object, setCurrentFloorOptions: ?object } = null,
+    getDrawPathSectionOptions: (pathSection: PathSection) => {
+        drawOptions: ?object,
+        setCurrentFloorOptions: ?object
+    } = null,
     zoom: { min?: number, max?: number } = null
 ): WillInitActionType {
     return {
-        type: types.WILL_INIT, awm, store, onClick, userObjectLabel, getDrawPathSectionOptions, zoom
+        type: types.WILL_INIT,
+        awm,
+        store,
+        onClick,
+        autoSelectOnClick,
+        userObjectLabel,
+        getDrawPathSectionOptions,
+        zoom
     };
 }
 
@@ -82,8 +97,17 @@ export function didCloseAction(): DidCloseActionType {
 /**
  * RESET
  */
-export type WillResetActionType = {| type: types.WILL_RESET, stop: boolean, resetFloor: boolean, resetFloorAnimated: boolean |};
-export function resetAction(stop: boolean = false, resetFloor: boolean = true, resetFloorAnimated: boolean = false): WillResetActionType {
+export type WillResetActionType = {|
+    type: types.WILL_RESET,
+    stop: boolean,
+    resetFloor: boolean,
+    resetFloorAnimated: boolean
+|};
+export function resetAction(
+    stop: boolean = false,
+    resetFloor: boolean = true,
+    resetFloorAnimated: boolean = false
+): WillResetActionType {
     return { type: types.WILL_RESET, stop, resetFloor, resetFloorAnimated };
 }
 export type DidResetActionType = {| type: types.DID_RESET |};
@@ -112,7 +136,11 @@ export type WillChangeFloorType = {|
     centerOn: boolean,
     animated: boolean
 |};
-export function changeFloorAction(floorId: ?number, centerOn: boolean = true, animated: boolean = true): WillChangeFloorType {
+export function changeFloorAction(
+    floorId: ?number,
+    centerOn: boolean = true,
+    animated: boolean = true
+): WillChangeFloorType {
     return {
         type: types.FLOOR_WILL_CHANGE,
         floorId,

@@ -30,8 +30,13 @@ type OwnPropsType = {|
     children?: React.Node,
     className?: string,
     userObjectLabel?: ?LabelObject,
-    resetOnClose: string,
-    zoom?: { min?: number, max?: number }
+    getDrawPathSectionOptions?: ?(pathSection: PathSection) => {
+        drawOptions: ?object,
+        setCurrentFloorOptions: ?object
+    },
+    resetOnClose: boolean,
+    zoom?: { min?: number, max?: number },
+    autoSelectOnClick: boolean
 |};
 
 type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
@@ -44,16 +49,17 @@ type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
  */
 class Map extends React.Component<PropsType> {
     static defaultProps = {
-        resetOnClose: true
+        resetOnClose: true,
+        autoSelectOnClick: true
     };
 
     componentWillUpdate(nextProps: PropsType) {
         const {
-            awm, store, onClick, init, userObjectLabel, getDrawPathSectionOptions, zoom
+            awm, store, onClick, autoSelectOnClick, init, userObjectLabel, getDrawPathSectionOptions, zoom
         } = nextProps;
 
         if (!this.initialized && awm !== null) {
-            init(awm, store, onClick, userObjectLabel, getDrawPathSectionOptions, zoom);
+            init(awm, store, onClick, autoSelectOnClick, userObjectLabel, getDrawPathSectionOptions, zoom);
             this.initialized = true;
         }
 
@@ -94,10 +100,16 @@ const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => bindActionC
         awm: AdsumWebMap,
         store: Store,
         onClick: () => any,
+        autoSelectOnClick: boolean = true,
         userObjectLabel: ?LabelObject = null,
-        getDrawPathSectionOptions: (pathSection: PathSection) => { drawOptions: ?object, setCurrentFloorOptions: ?object } = null,
+        getDrawPathSectionOptions: (pathSection: PathSection) => {
+            drawOptions: ?object,
+            setCurrentFloorOptions: ?object
+        } = null,
         zoom: { min?: number, max?: number } = null
-    ): void => dispatch(initAction(awm, store, onClick, userObjectLabel, getDrawPathSectionOptions, zoom)),
+    ): void => dispatch(
+        initAction(awm, store, onClick, autoSelectOnClick, userObjectLabel, getDrawPathSectionOptions, zoom)
+    ),
     open: (): void => dispatch(openAction()),
     close: (reset: boolean): void => dispatch(closeAction(reset)),
 }, dispatch);

@@ -96,7 +96,11 @@ class MainController {
         return this.awm.sceneManager.getCurrentFloor();
     }
 
-    async setCurrentFloor(floor: number | ?FloorObject | ?SiteObject, centerOn: boolean = true, animated: boolean = true): Promise<void> {
+    async setCurrentFloor(
+        floor: number | ?FloorObject | ?SiteObject,
+        centerOn: boolean = true,
+        animated: boolean = true
+    ): Promise<void> {
         const floorObject = typeof floor === 'number' ? this.awm.objectManager.floors.get(floor) : floor;
 
         await this.awm.sceneManager.setCurrentFloor(floorObject, animated);

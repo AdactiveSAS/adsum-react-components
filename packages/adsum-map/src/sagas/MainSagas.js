@@ -32,7 +32,11 @@ function* onInit(action: WillInitActionType): Generator {
         MOUSE_EVENTS.click,
         (event) => {
             const firstIntersectObject = clickController.getFirstIntersectObject(event);
-            dispatch(selectAction(firstIntersectObject, true, true));
+
+            if (action.autoSelectOnClick) {
+                dispatch(selectAction(firstIntersectObject, true, true));
+            }
+
             if (action.onClick) {
                 action.onClick(firstIntersectObject, event.intersects);
             }
