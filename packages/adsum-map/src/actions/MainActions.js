@@ -28,8 +28,9 @@ export type WillInitActionType = {|
     store: Store,
     userObjectLabel: ?LabelObject,
     onClick?: () => any,
+    getDrawPathSectionOptions?: (pathSection: PathSection) => { drawOptions: ?object, setCurrentFloorOptions: ?object },
+    zoom?: { min?: number, max?: number }
     autoSelectOnClick?: boolean,
-    getDrawPathSectionOptions?: (pathSection: PathSection) => { drawOptions: ?object, setCurrentFloorOptions: ?object }
 |};
 export function initAction(
     awm: AdsumWebMap,
@@ -37,10 +38,11 @@ export function initAction(
     onClick: () => any,
     autoSelectOnClick?: boolean = true,
     userObjectLabel: ?LabelObject = null,
-    getDrawPathSectionOptions: (pathSection: PathSection) => { drawOptions: ?object, setCurrentFloorOptions: ?object } = null
+    getDrawPathSectionOptions: (pathSection: PathSection) => { drawOptions: ?object, setCurrentFloorOptions: ?object } = null,
+    zoom: { min?: number, max?: number } = null
 ): WillInitActionType {
     return {
-        type: types.WILL_INIT, awm, store, onClick, autoSelectOnClick, userObjectLabel, getDrawPathSectionOptions
+        type: types.WILL_INIT, awm, store, onClick, autoSelectOnClick, userObjectLabel, getDrawPathSectionOptions, zoom
     };
 }
 
@@ -82,9 +84,9 @@ export function didCloseAction(): DidCloseActionType {
 /**
  * RESET
  */
-export type WillResetActionType = {| type: types.WILL_RESET, stop: boolean, resetFloor: boolean |};
-export function resetAction(stop: boolean = false, resetFloor: boolean = true): WillResetActionType {
-    return { type: types.WILL_RESET, stop, resetFloor };
+export type WillResetActionType = {| type: types.WILL_RESET, stop: boolean, resetFloor: boolean, resetFloorAnimated: boolean |};
+export function resetAction(stop: boolean = false, resetFloor: boolean = true, resetFloorAnimated: boolean = false): WillResetActionType {
+    return { type: types.WILL_RESET, stop, resetFloor, resetFloorAnimated };
 }
 export type DidResetActionType = {| type: types.DID_RESET |};
 export function didResetAction(): DidResetActionType {
