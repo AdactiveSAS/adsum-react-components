@@ -107,7 +107,9 @@ const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => bindActionC
             setCurrentFloorOptions: ?object
         } = null,
         zoom: { min?: number, max?: number } = null
-    ): void => dispatch(initAction(awm, store, onClick, autoSelectOnClick, userObjectLabel, getDrawPathSectionOptions, zoom)),
+    ): void => dispatch(
+        initAction(awm, store, onClick, autoSelectOnClick, userObjectLabel, getDrawPathSectionOptions, zoom)
+    ),
     open: (): void => dispatch(openAction()),
     close: (reset: boolean): void => dispatch(closeAction(reset)),
 }, dispatch);
