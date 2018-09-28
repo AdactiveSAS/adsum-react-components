@@ -46,11 +46,11 @@ class MainController {
         if (action.zoom) {
             const { min, max } = action.zoom;
 
-            if (min) {
+            if (min !== undefined) {
                 this.awm.cameraManager.control.minDistance = this.awm.getProjector().meterToAdsumDistance(min);
             }
 
-            if (max) {
+            if (max !== undefined) {
                 this.awm.cameraManager.control.maxDistance = this.awm.getProjector().meterToAdsumDistance(max);
             }
         }
