@@ -43,6 +43,25 @@ class MainController {
                 this.awm.objectManager.user.setRotation(rotation);
             });
 
+        if (action.zoom) {
+            const { min, max } = action.zoom;
+
+            /*
+            *
+            * This is using private AWM API and feature should be added in AWM
+            * See opened issue: https://github.com/AdactiveSAS/adsum-web-map/issues/71
+            *
+            * */
+
+            if (min !== undefined) {
+                this.awm.cameraManager.control.minDistance = this.awm.getProjector().meterToAdsumDistance(min);
+            }
+
+            if (max !== undefined) {
+                this.awm.cameraManager.control.maxDistance = this.awm.getProjector().meterToAdsumDistance(max);
+            }
+        }
+
         this.start();
     }
 

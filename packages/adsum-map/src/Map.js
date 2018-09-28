@@ -30,7 +30,8 @@ type OwnPropsType = {|
     children?: React.Node,
     className?: string,
     userObjectLabel?: ?LabelObject,
-    resetOnClose: string
+    resetOnClose: string,
+    zoom?: { min?: number, max?: number }
 |};
 
 type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
@@ -48,11 +49,11 @@ class Map extends React.Component<PropsType> {
 
     componentWillUpdate(nextProps: PropsType) {
         const {
-            awm, store, onClick, init, userObjectLabel, getDrawPathSectionOptions
+            awm, store, onClick, init, userObjectLabel, getDrawPathSectionOptions, zoom
         } = nextProps;
 
         if (!this.initialized && awm !== null) {
-            init(awm, store, onClick, userObjectLabel, getDrawPathSectionOptions);
+            init(awm, store, onClick, userObjectLabel, getDrawPathSectionOptions, zoom);
             this.initialized = true;
         }
 
@@ -94,8 +95,9 @@ const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => bindActionC
         store: Store,
         onClick: () => any,
         userObjectLabel: ?LabelObject = null,
-        getDrawPathSectionOptions: (pathSection: PathSection) => { drawOptions: ?object, setCurrentFloorOptions: ?object } = null
-    ): void => dispatch(initAction(awm, store, onClick, userObjectLabel, getDrawPathSectionOptions)),
+        getDrawPathSectionOptions: (pathSection: PathSection) => { drawOptions: ?object, setCurrentFloorOptions: ?object } = null,
+        zoom: { min?: number, max?: number } = null
+    ): void => dispatch(initAction(awm, store, onClick, userObjectLabel, getDrawPathSectionOptions, zoom)),
     open: (): void => dispatch(openAction()),
     close: (reset: boolean): void => dispatch(closeAction(reset)),
 }, dispatch);
