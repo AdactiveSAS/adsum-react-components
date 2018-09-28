@@ -32,7 +32,7 @@ type OwnPropsType = {|
     userObjectLabel?: ?LabelObject,
     getDrawPathSectionOptions?: ?(pathSection: PathSection) => { drawOptions: ?object, setCurrentFloorOptions: ?object },
     resetOnClose: boolean,
-    preventAutoSelectOnClick: boolean
+    autoSelectOnClick: boolean
 |};
 
 type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
@@ -46,16 +46,16 @@ type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
 class Map extends React.Component<PropsType> {
     static defaultProps = {
         resetOnClose: true,
-        preventAutoSelectOnClick: false
+        autoSelectOnClick: true
     };
 
     componentWillUpdate(nextProps: PropsType) {
         const {
-            awm, store, onClick, preventAutoSelectOnClick, init, userObjectLabel, getDrawPathSectionOptions
+            awm, store, onClick, autoSelectOnClick, init, userObjectLabel, getDrawPathSectionOptions
         } = nextProps;
 
         if (!this.initialized && awm !== null) {
-            init(awm, store, onClick, preventAutoSelectOnClick, userObjectLabel, getDrawPathSectionOptions);
+            init(awm, store, onClick, autoSelectOnClick, userObjectLabel, getDrawPathSectionOptions);
             this.initialized = true;
         }
 
@@ -96,10 +96,10 @@ const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => bindActionC
         awm: AdsumWebMap,
         store: Store,
         onClick: () => any,
-        preventAutoSelectOnClick: boolean = false,
+        autoSelectOnClick: boolean = true,
         userObjectLabel: ?LabelObject = null,
         getDrawPathSectionOptions: (pathSection: PathSection) => { drawOptions: ?object, setCurrentFloorOptions: ?object } = null
-    ): void => dispatch(initAction(awm, store, onClick, preventAutoSelectOnClick, userObjectLabel, getDrawPathSectionOptions)),
+    ): void => dispatch(initAction(awm, store, onClick, autoSelectOnClick, userObjectLabel, getDrawPathSectionOptions)),
     open: (): void => dispatch(openAction()),
     close: (reset: boolean): void => dispatch(closeAction(reset)),
 }, dispatch);

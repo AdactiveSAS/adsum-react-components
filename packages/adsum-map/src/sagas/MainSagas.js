@@ -33,7 +33,7 @@ function* onInit(action: WillInitActionType): Generator {
         (event) => {
             const firstIntersectObject = clickController.getFirstIntersectObject(event);
 
-            if (!action.preventAutoSelectOnClick) {
+            if (action.autoSelectOnClick) {
                 dispatch(selectAction(firstIntersectObject, true, true));
             }
 
