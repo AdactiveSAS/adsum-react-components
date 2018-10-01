@@ -64,6 +64,14 @@ class MainController {
         }
 
         if (action.backgroundImage) {
+
+            /*
+            *
+            * This is using private AWM API and feature should be added in AWM
+            * See opened issue: https://github.com/AdactiveSAS/adsum-web-map/issues/72
+            *
+            * */
+
             const backgroundTextureLoader = new three.TextureLoader();
             backgroundTextureLoader.crossOrigin = '';
 
