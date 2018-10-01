@@ -6,6 +6,7 @@ import {
     SiteObject,
 } from '@adactive/adsum-web-map';
 import { Tween } from 'es6-tween';
+import * as three from 'three';
 
 import selectionController from './SelectionController';
 import wayfindingController from './WayfindingController';
@@ -60,6 +61,18 @@ class MainController {
             if (max !== undefined) {
                 this.awm.cameraManager.control.maxDistance = this.awm.getProjector().meterToAdsumDistance(max);
             }
+        }
+
+        if (action.backgroundImage) {
+            const backgroundTextureLoader = new three.TextureLoader();
+            backgroundTextureLoader.crossOrigin = '';
+
+            const backgroundTexture = backgroundTextureLoader.load(action.backgroundImage);
+            backgroundTexture.wrapS = three.RepeatWrapping;
+            backgroundTexture.wrapT = three.RepeatWrapping;
+            backgroundTexture.repeat.set(1, 1);
+
+            this.awm.sceneManager.scene.background = backgroundTexture;
         }
 
         this.start();
