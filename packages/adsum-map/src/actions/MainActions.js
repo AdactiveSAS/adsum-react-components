@@ -33,7 +33,8 @@ export type WillInitActionType = {|
         setCurrentFloorOptions: ?object
     },
     zoom?: { min?: number, max?: number },
-    autoSelectOnClick?: boolean
+    autoSelectOnClick?: boolean,
+    backgroundImage?: ?string,
 |};
 export function initAction(
     awm: AdsumWebMap,
@@ -45,7 +46,8 @@ export function initAction(
         drawOptions: ?object,
         setCurrentFloorOptions: ?object
     } = null,
-    zoom: { min?: number, max?: number } = null
+    zoom: { min?: number, max?: number } = null,
+    backgroundImage: ?string = null,
 ): WillInitActionType {
     return {
         type: types.WILL_INIT,
@@ -55,7 +57,8 @@ export function initAction(
         autoSelectOnClick,
         userObjectLabel,
         getDrawPathSectionOptions,
-        zoom
+        zoom,
+        backgroundImage,
     };
 }
 

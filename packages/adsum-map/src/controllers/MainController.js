@@ -6,6 +6,7 @@ import {
     SiteObject,
 } from '@adactive/adsum-web-map';
 import { Tween } from 'es6-tween';
+import { TextureLoader, RepeatWrapping } from 'three';
 
 import selectionController from './SelectionController';
 import wayfindingController from './WayfindingController';
@@ -60,6 +61,26 @@ class MainController {
             if (max !== undefined) {
                 this.awm.cameraManager.control.maxDistance = this.awm.getProjector().meterToAdsumDistance(max);
             }
+        }
+
+        if (action.backgroundImage) {
+
+            /*
+            *
+            * This is using private AWM API and feature should be added in AWM
+            * See opened issue: https://github.com/AdactiveSAS/adsum-web-map/issues/72
+            *
+            * */
+
+            const backgroundTextureLoader = new TextureLoader();
+            backgroundTextureLoader.crossOrigin = '';
+
+            const backgroundTexture = backgroundTextureLoader.load(action.backgroundImage);
+            backgroundTexture.wrapS = RepeatWrapping;
+            backgroundTexture.wrapT = RepeatWrapping;
+            backgroundTexture.repeat.set(1, 1);
+
+            this.awm.sceneManager.scene.background = backgroundTexture;
         }
 
         this.start();
