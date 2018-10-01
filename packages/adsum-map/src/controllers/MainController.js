@@ -6,7 +6,7 @@ import {
     SiteObject,
 } from '@adactive/adsum-web-map';
 import { Tween } from 'es6-tween';
-import { TextureLoader } from 'three';
+import { TextureLoader, RepeatWrapping } from 'three';
 
 import selectionController from './SelectionController';
 import wayfindingController from './WayfindingController';
@@ -72,12 +72,12 @@ class MainController {
             *
             * */
 
-            const backgroundTextureLoader = new three.TextureLoader();
+            const backgroundTextureLoader = new TextureLoader();
             backgroundTextureLoader.crossOrigin = '';
 
             const backgroundTexture = backgroundTextureLoader.load(action.backgroundImage);
-            backgroundTexture.wrapS = three.RepeatWrapping;
-            backgroundTexture.wrapT = three.RepeatWrapping;
+            backgroundTexture.wrapS = RepeatWrapping;
+            backgroundTexture.wrapT = RepeatWrapping;
             backgroundTexture.repeat.set(1, 1);
 
             this.awm.sceneManager.scene.background = backgroundTexture;
