@@ -6,7 +6,7 @@ import {
     SiteObject,
 } from '@adactive/adsum-web-map';
 import { Tween } from 'es6-tween';
-import * as three from 'three';
+import { TextureLoader } from 'three';
 
 import selectionController from './SelectionController';
 import wayfindingController from './WayfindingController';
