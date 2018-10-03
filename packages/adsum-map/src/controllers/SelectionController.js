@@ -3,6 +3,7 @@
 import { CancellationTokenSource } from 'prex-es5';
 import ACA from '@adactive/adsum-utils/services/ClientAPI';
 import { Poi, Place } from '@adactive/adsum-client-api';
+import type { AdsumObject3D, CameraCenterOnOptions } from '@adactive/adsum-web-map';
 import placesController from './PlacesController';
 import type { WillInitActionType } from '../actions/MainActions';
 
@@ -22,13 +23,29 @@ class SelectionController {
         return this;
     }
 
-    async selectPoi(poi: Poi, reset: boolean = true, centerOn: boolean = true): Promise<void> {
+    async selectPoi(
+        poi: Poi,
+        reset: boolean = true,
+        centerOn: boolean = true,
+        centerOnOptions: ?CameraCenterOnOptions = null,
+        stayOnCurrentFloor: boolean = true,
+        ground: ?AdsumObject3D = null,
+        animated: boolean = true,
+    ): Promise<void> {
         if (reset) {
             this.reset();
         }
         const places = ACA.getPlaces(poi.places);
 
-        await Promise.all(places.map((place: Place): Promise<void> => this.selectPlace(place, false, centerOn)));
+        await Promise.all(places.map((place: Place): Promise<void> => this.selectPlace(place, false, false)));
+
+        if (centerOn) {
+            const adsumObjectsFromPlaces = places.map((place: Place): AdsumObject3D => {
+                return placesController.getPath(place.id).to.adsumObject;
+            });
+
+            await this.handleCenterOn(adsumObjectsFromPlaces, centerOnOptions, stayOnCurrentFloor, ground, animated);
+        }
     }
 
     async selectPlace(place: Place, reset: boolean = true, centerOn: boolean = true): Promise<void> {
@@ -97,14 +114,41 @@ class SelectionController {
         }
 
         if (centerOn) {
-            const registration = this.cancelSource.token.register(() => {
-                this.awm.cameraManager.reset();
-                this.awm.sceneManager.reset();
-            });
-            await this.awm.sceneManager.setCurrentFloor(ground, true);
-            await this.awm.cameraManager.centerOn(adsumObject, true);
-            registration.unregister();
+            await this.handleCenterOn(
+                [adsumObject],
+                null, // TODO: pass centerOnOptions in the parameters
+                false,
+                ground,
+                true, // TODO: pass animated in the parameters
+            );
         }
+    }
+
+    async handleCenterOn(
+        adsumObjects: Array<?AdsumObject3D>,
+        centerOnOptions: CameraCenterOnOptions = null,
+        stayOnCurrentFloor: boolean = true,
+        ground: AdsumObject3D = null,
+        animated: boolean = true,
+    ) {
+        const registration = this.cancelSource.token.register(() => {
+            this.awm.cameraManager.reset();
+            this.awm.sceneManager.reset();
+        });
+
+        if (stayOnCurrentFloor) {
+            ground = this.awm.sceneManager.getCurrentFloor();
+        }
+
+        await this.awm.sceneManager.setCurrentFloor(ground, animated);
+
+        if (adsumObjects.length === 1) {
+            await this.awm.cameraManager.centerOn(adsumObjects[0], animated, centerOnOptions);
+        } else if (adsumObjects.length > 1) {
+            await this.awm.cameraManager.centerOnObjects(adsumObjects, animated, centerOnOptions);
+        }
+
+        registration.unregister();
     }
 
     // eslint-disable-next-line class-methods-use-this

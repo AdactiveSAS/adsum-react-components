@@ -27,7 +27,13 @@ function* onSelectPoi(action: WillSelectPoiActionType): Generator {
         yield delay(200);
         yield call(
             [selectionController, selectionController.selectPoi],
-            action.poi, action.reset, action.centerOn,
+            action.poi,
+            action.reset,
+            action.centerOn,
+            action.centerOnOptions,
+            action.stayOnCurrentFloor,
+            action.ground,
+            action.animated,
         );
 
         yield put(didSelectAction(selectionController.getSelection()));
