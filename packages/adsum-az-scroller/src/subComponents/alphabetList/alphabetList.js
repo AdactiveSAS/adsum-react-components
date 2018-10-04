@@ -1,60 +1,38 @@
 // @flow
 
-import * as React from 'react';
 import type { Node } from 'react';
+import * as React from 'react';
 
 import './alphabetList.css';
 
 type PropsType = {|
     onLetterClicked: (index: number) => () => void,
     letterIndexesMapping: { [string]: number },
-    letterToHighlight: string,
+    letterToHighlight: ?string,
     alphabetListClassNames?: string,
     letterClassNames?: string
 |};
 
-type StateType = {|
-    letterToHighlight: ?string
-|};
+function AlphabeticList(props: PropsType): Node {
+    const {
+        alphabetListClassNames, letterClassNames, letterIndexesMapping, onLetterClicked, letterToHighlight
+    } = props;
 
-/**
- * @class
- * @extends React.Component
- */
-class AlphabeticList extends React.Component<PropsType, StateType> {
-    static defaultProps = {
-        alphabetListClassNames: '',
-        letterClassNames: '',
-    };
+    let mixedAlphabetListClassNames = 'alphabetList';
+    let mixedLetterClassNames = 'letter';
 
-    state: StateType = {
-        letterToHighlight: null,
-    };
-
-    setCurrentLetter(letterToHighlight: string): void {
-        this.setState({ letterToHighlight });
+    if (alphabetListClassNames) {
+        mixedAlphabetListClassNames = `${mixedAlphabetListClassNames} ${alphabetListClassNames}`;
+    }
+    if (letterClassNames) {
+        mixedLetterClassNames = `${mixedLetterClassNames} ${letterClassNames}`;
     }
 
-    render(): Node {
-        const {
-            alphabetListClassNames, letterClassNames, letterIndexesMapping, onLetterClicked,
-        } = this.props;
-
-        const { letterToHighlight } = this.state;
-        let mixedAlphabetListClassNames = 'alphabetList';
-        let mixedLetterClassNames = 'letter';
-
-        if (alphabetListClassNames) {
-            mixedAlphabetListClassNames = `${mixedAlphabetListClassNames} ${alphabetListClassNames}`;
-        }
-        if (letterClassNames) {
-            mixedLetterClassNames = `${mixedLetterClassNames} ${letterClassNames}`;
-        }
-
-        return (
-            <ul className={mixedAlphabetListClassNames}>
-                {
-                    Object.keys(letterIndexesMapping).map((letter: string): Node => (
+    return (
+        <ul className={mixedAlphabetListClassNames}>
+            {
+                Object.keys(letterIndexesMapping)
+                    .map((letter: string): Node => (
                         <li
                             key={letter}
                             onClick={onLetterClicked(letterIndexesMapping[letter])}
@@ -63,10 +41,15 @@ class AlphabeticList extends React.Component<PropsType, StateType> {
                             {letter}
                         </li>
                     ))
-                }
-            </ul>
-        );
-    }
+            }
+        </ul>
+    );
 }
+
+
+AlphabeticList.defaultProps = {
+    alphabetListClassNames: '',
+    letterClassNames: '',
+};
 
 export default AlphabeticList;

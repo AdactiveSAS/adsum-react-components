@@ -44,7 +44,7 @@ function* startModalTimer(counter: number) {
 const modalHandler = ((): any => {
     let modalTimerTask = null;
 
-    return function* (action: ModalHandlerActionsType): any {
+    return function* generatorFunction(action: ModalHandlerActionsType): any {
         const screenSaverState = yield select(screenSaverSelector);
 
         switch (action.type) {
@@ -65,7 +65,8 @@ const modalHandler = ((): any => {
             yield put(closeModal());
             yield put(closeContent());
             break;
-        default: break;
+        default:
+            break;
         }
     };
 })();

@@ -221,7 +221,7 @@ class ClientAPI {
             const categories = this.entityManager.getRepository('Category').getAll();
 
             this._allCategories = categories.map((category) => {
-                if (category.logo && category.logo.value && !isNaN(category.logo.value)) {
+                if (category.logo && category.logo.value && !Number.isNaN(category.logo.value)) {
                     category.logo = this.getFile(category.logo.value);
                 }
                 return category;

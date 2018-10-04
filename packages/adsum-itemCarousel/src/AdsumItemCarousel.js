@@ -17,19 +17,19 @@ export type ItemObject = {
 };
 
 type PropTypes = {|
-    +isOpen: boolean,
-    +items: Array<ItemObject>,
-    +itemsPerPage: number,
-    +onItemClicked: () => null,
-    +listWrapperCSS?: CSSStyleDeclaration,
-    +thumbNailWrapperCSS?: CSSStyleDeclaration,
-    +logoWrapperCSS?: CSSStyleDeclaration,
-    +logoCSS?: CSSStyleDeclaration,
-    +titleWrapperCSS?: CSSStyleDeclaration,
-    +titleCSS?: CSSStyleDeclaration,
-    +dashCSS?: CSSStyleDeclaration,
-    +carouselOptions?: Object,
-    +defaultLogo?: string
+    isOpen?: boolean,
+    items?: Array<ItemObject>,
+    itemsPerPage?: number,
+    onItemClicked?: () => null,
+    listWrapperCSS?: CSSStyleDeclaration,
+    thumbNailWrapperCSS?: CSSStyleDeclaration,
+    logoWrapperCSS?: CSSStyleDeclaration,
+    logoCSS?: CSSStyleDeclaration,
+    titleWrapperCSS?: CSSStyleDeclaration,
+    titleCSS?: CSSStyleDeclaration,
+    dashCSS?: CSSStyleDeclaration,
+    carouselOptions?: Object,
+    defaultLogo?: string
 |};
 
 type StateType = {|
@@ -42,40 +42,38 @@ class AdsumItemCarousel extends React.Component<PropTypes, StateType> {
         items: [],
         itemsPerPage: 0,
         onItemClicked: null,
+        listWrapperCSS: {},
+        thumbNailWrapperCSS: {},
+        logoWrapperCSS: {},
+        logoCSS: {},
+        titleWrapperCSS: {},
+        titleCSS: {},
+        dashCSS: {},
+        carouselOptions: {},
+        defaultLogo: '',
     };
-
-    constructor(props: PropTypes) {
-        super(props);
-
-        this.bindAll();
-    }
 
     state = {
         slideIndex: 0,
-    }
-
-    bindAll() {
-        this.generateThumbNails = this.generateThumbNails.bind(this);
-        this.generatePagination = this.generatePagination.bind(this);
-        this.createPagination = this.createPagination.bind(this);
-        this.displayLogo = this.displayLogo.bind(this);
-        this.onItemClicked = this.onItemClicked.bind(this);
-    }
+    };
 
     componentDidUpdate(prevProps: PropTypes) {
-        if (prevProps.items !== this.props.items) {
+        const { items } = this.props;
+
+        if (prevProps.items !== items) {
+            // eslint-disable-next-line react/no-did-update-set-state
             this.setState({
                 slideIndex: 0,
             });
         }
     }
 
-    onItemClicked(item: ItemObject) {
+    onItemClicked = (item: ItemObject) => {
         const { onItemClicked } = this.props;
         onItemClicked(item);
-    }
+    };
 
-    createPagination(): Array<Array<ItemObject>> {
+    createPagination = (): Array<Array<ItemObject>> => {
         const { items, itemsPerPage } = this.props;
         let ret = [];
         const pagination = [];
@@ -104,15 +102,15 @@ class AdsumItemCarousel extends React.Component<PropTypes, StateType> {
         });
 
         return pagination;
-    }
+    };
 
-    generatePagination(items: Array<Array<ItemObject>>): Array<Element<'ul'>> | Element<'ul'> {
+    generatePagination = (items: Array<Array<ItemObject>>): Array<Element<'ul'>> | Element<'ul'> => {
         const { listWrapperCSS } = this.props;
 
         if (items.length > 0) {
             return _.map(items, (item: Array<ItemObject>, index: number) => (
                 <ul className="row item" key={index} style={listWrapperCSS}>
-                    { this.generateThumbNails(item) }
+                    {this.generateThumbNails(item)}
                 </ul>
             ));
         }
@@ -121,26 +119,27 @@ class AdsumItemCarousel extends React.Component<PropTypes, StateType> {
                 <li className="no-result">No items</li>
             </ul>
         );
-    }
+    };
 
-    displayLogo(item: ItemObject): Element<'img'> | Element<'span'> {
+    displayLogo = (item: ItemObject): Element<'img'> | Element<'span'> => {
         const { logoCSS, defaultLogo } = this.props;
 
         if (item.logo && item.logo.uri) {
             return (
-                <img className="thumbnail-panel-logo" src={item.logo.uri} style={logoCSS} />
+                <img className="thumbnail-panel-logo" src={item.logo.uri} alt="thumbnail panel logo" style={logoCSS} />
             );
-        } if (defaultLogo) {
+        }
+        if (defaultLogo) {
             return (
-                <img className="thumbnail-panel-logo" src={defaultLogo} style={logoCSS} />
+                <img className="thumbnail-panel-logo" src={defaultLogo} alt="thumbnail panel logo" style={logoCSS} />
             );
         }
         return (
             <span className="thumbnail-panel-logo" style={logoCSS}>{item.name}</span>
         );
-    }
+    };
 
-    generateThumbNails(items: Array<ItemObject>): Element<'li'> {
+    generateThumbNails = (items: Array<ItemObject>): Element<'li'> => {
         const {
             thumbNailWrapperCSS, logoWrapperCSS, titleWrapperCSS, dashCSS, titleCSS,
         } = this.props;
@@ -168,10 +167,11 @@ class AdsumItemCarousel extends React.Component<PropTypes, StateType> {
                 </span>
             </li>
         ));
-    }
+    };
 
     render(): Node {
         const { isOpen, carouselOptions } = this.props;
+        const { slideIndex } = this.state;
 
         if (!isOpen) return null;
 
@@ -182,8 +182,8 @@ class AdsumItemCarousel extends React.Component<PropTypes, StateType> {
                 <div className="templateCarousel">
                     <Carousel
                         {...carouselOptions}
-                        slideIndex={this.state.slideIndex}
-                        afterSlide={slideIndex => this.setState({ slideIndex })}
+                        slideIndex={slideIndex}
+                        afterSlide={newSlideIndex => this.setState({ slideIndex: newSlideIndex })}
                     >
                         {
                             this.generatePagination(pagination)

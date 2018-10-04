@@ -54,6 +54,8 @@ class Map extends React.Component<PropsType> {
         autoSelectOnClick: true,
     };
 
+    initialized: boolean = false;
+
     componentWillUpdate(nextProps: PropsType) {
         const {
             awm,
@@ -91,8 +93,6 @@ class Map extends React.Component<PropsType> {
             close(resetOnClose);
         }
     }
-
-    initialized: boolean = false;
 
     render() {
         const {

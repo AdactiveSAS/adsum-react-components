@@ -8,16 +8,16 @@ import './adsumSearch.css';
 import translate from './adsumSearch.lang.json';
 
 type PropTypes = {|
-    +isOpen: boolean,
-    +lang: 'en' | 'fr',
-    +data: Array<Object>,
-    +fuseOptions: Object,
-    +queryValue: string,
-    +searchWrapperCSS?: CSSStyleDeclaration,
-    +inputCSS?: CSSStyleDeclaration,
-	+searchIconCSS?: CSSStyleDeclaration,
-	+searchIcon?: string,
-    +placeHolder?: string
+    isOpen?: boolean,
+    lang?: 'en' | 'fr',
+    data?: Array<Object>,
+    fuseOptions?: Object,
+    queryValue?: string,
+    searchWrapperCSS?: CSSStyleDeclaration,
+    inputCSS?: CSSStyleDeclaration,
+    searchIconCSS?: CSSStyleDeclaration,
+    searchIcon?: string,
+    placeHolder?: string
 |};
 
 type StateType = {|
@@ -25,20 +25,24 @@ type StateType = {|
 |};
 
 class AdsumSearch extends React.Component<PropTypes, StateType> {
-    static defaultProps = {
+    static defaultProps: PropTypes = {
         isOpen: false,
         lang: 'en',
         data: [],
         fuseOptions: {},
         queryValue: '',
+        searchWrapperCSS: {},
+        inputCSS: {},
+        searchIconCSS: {},
+        searchIcon: '',
         placeHolder: null,
     };
 
     constructor(props) {
         super(props);
+        const { data, fuseOptions } = this.props;
 
-        this.bindAll();
-        this.fuse = this.implementFuse(this.props.data, this.props.fuseOptions);
+        this.fuse = this.implementFuse(data, fuseOptions);
         this.textInput = React.createRef();
     }
 
@@ -46,57 +50,52 @@ class AdsumSearch extends React.Component<PropTypes, StateType> {
         searchInput: '',
     };
 
-    bindAll() {
-        this.implementFuse = this.implementFuse.bind(this);
-        this.updateValue = this.updateValue.bind(this);
-        this.search = this.search.bind(this);
-        this.focusTextInput = this.focusTextInput.bind(this);
-    }
-
     componentDidMount() {
-        this.setState({
-            searchInput: this.props.queryValue,
-        });
-    }
-
-    componentDidUpdate(prevProps: PropsType) {
-        if (prevProps.data !== this.props.data) {
-            this.fuse = this.implementFuse(this.props.data, this.props.fuseOptions);
-        }
-
-        if (prevProps.queryValue !== this.props.queryValue) {
-            this.updateValue(this.props.queryValue);
-        } else {
-            this.focusTextInput();
-        }
-    }
-
-    focusTextInput() {
-        this.textInput.current.focus();
-    }
-
-    updateValue(queryValue: string) {
+        const { queryValue } = this.props;
         this.setState({
             searchInput: queryValue,
         });
     }
 
-    implementFuse(data: Array<Object>, options: Object) {
-        const fuse = new Fuse(data, options);
-        return fuse;
+    componentDidUpdate(prevProps: PropsType) {
+        const { data, fuseOptions, queryValue } = this.props;
+
+        if (prevProps.data !== data) {
+            this.fuse = this.implementFuse(data, fuseOptions);
+        }
+
+        if (prevProps.queryValue !== queryValue) {
+            this.updateValue(queryValue);
+        } else {
+            this.focusTextInput();
+        }
     }
 
-    search(searchInput: string): Array<string> {
+    focusTextInput = () => {
+        this.textInput.current.focus();
+    };
+
+    updateValue = (queryValue: string) => {
+        this.setState({
+            searchInput: queryValue,
+        });
+    };
+
+    implementFuse = (data: Array<Object>, options: Object) => new Fuse(data, options);
+
+    search = (searchInput: string): Array<string> => {
         if (searchInput.length > 0) {
             return this.fuse.search(searchInput);
         }
         return [];
-    }
+    };
 
     render(): Node {
         const {
             isOpen, lang, searchWrapperCSS, inputCSS, placeHolder, searchIcon, searchIconCSS,
         } = this.props;
+
+        const { searchInput } = this.state;
 
         if (!isOpen) return null;
 
@@ -105,18 +104,19 @@ class AdsumSearch extends React.Component<PropTypes, StateType> {
                 <div className="form-group">
                     <div className="input-group">
                         {
-		                    searchIcon
-		                      ? <img className="icon-search" src={searchIcon} style={searchIconCSS} />
-			                    : null
-	                    }
+                            searchIcon
+                                ? <img className="icon-search" src={searchIcon} alt="search icon" style={searchIconCSS} />
+                                : null
+                        }
                         <input
                             type="text"
                             ref={this.textInput}
                             className="form-control search-input"
                             placeholder={placeHolder || translate[lang].search}
-                            value={this.state.searchInput}
+                            value={searchInput}
                             style={inputCSS}
-                            onChange={(_) => {}}
+                            onChange={() => {
+                            }}
                         />
                     </div>
                 </div>

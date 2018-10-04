@@ -1,7 +1,9 @@
-import en_keyset from './en_keyset.json';
-import fr_keyset from './fr_keyset.json';
+import enKeyset from './en_keyset.json';
+import frKeyset from './fr_keyset.json';
 
-export const keysets = {
-    en: en_keyset,
-    fr: fr_keyset,
+const keysets = {
+    en: enKeyset,
+    fr: frKeyset,
 };
+
+export default keysets;

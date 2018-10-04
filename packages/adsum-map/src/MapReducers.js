@@ -3,7 +3,7 @@
 import { types as mainActionsTypes } from './actions/MainActions';
 import { types as wayfindingActionsTypes } from './actions/WayfindingActions';
 import { types as selectionActionsTypes } from './actions/SelectionActions';
-import { initialState } from './initialState';
+import initialState from './initialState';
 
 import type { MapReducerStateType } from './initialState';
 import type { MainActionsType } from './actions/MainActions';

@@ -29,13 +29,7 @@ function ClockCreator<T: ComponentType<ClockUIPropsType>>(ClockUI: T): Element<t
             timeFormat: '24hrs',
         };
 
-        constructor(props: AdsumClockPropsType) {
-            super(props);
-
-            this.getTime = this.getTime.bind(this);
-        }
-
-        timerID: IntervalId;
+        timerID: IntervalId = null;
 
         state = {
             year: '',
@@ -64,19 +58,22 @@ function ClockCreator<T: ComponentType<ClockUIPropsType>>(ClockUI: T): Element<t
             clearInterval(this.timerID);
         }
 
-        getTime() {
+        getTime = () => {
             const { timeFormat } = this.props;
             let { lang } = this.props;
 
-            if (Object.keys(translate).indexOf(lang) === -1) {
+            if (Object.keys(translate)
+                .indexOf(lang) === -1) {
                 console.warn(`AdsumClock does not support language: ${lang}, goes to default ${AdsumClock.defaultProps.lang}`);
+                // eslint-disable-next-line prefer-destructuring
                 lang = AdsumClock.defaultProps.lang;
             }
 
             const time = new Date();
             const day = translate[lang].days[time.getDay()];
 
-            const dateStr = (time.getDate().toString().length === 1) ? `0${time.getDate()}${translate[lang].date}` : `${time.getDate()}${translate[lang].date}`;
+            const dateStr = (time.getDate()
+                .toString().length === 1) ? `0${time.getDate()}${translate[lang].date}` : `${time.getDate()}${translate[lang].date}`;
             const month = (lang === 'zh') ? `${time.getMonth() + 1}${translate[lang].month}` : translate[lang].month[time.getMonth()];
             const year = `${time.getFullYear()}${translate[lang].year}`;
 
@@ -87,20 +84,25 @@ function ClockCreator<T: ComponentType<ClockUIPropsType>>(ClockUI: T): Element<t
             if (timeFormat === '12hrs') {
                 if (time.getHours() === 12) {
                     hours = `${time.getHours()}`;
-                    minutes = (time.getMinutes().toString().length === 1) ? `0${time.getMinutes()}` : `${time.getMinutes()}`;
+                    minutes = (time.getMinutes()
+                        .toString().length === 1) ? `0${time.getMinutes()}` : `${time.getMinutes()}`;
                     timeStr = `${hours}:${minutes} ${translate[lang].pm}`;
                 } else if (time.getHours() > 12) {
                     hours = `${time.getHours() - 12}`;
-                    minutes = (time.getMinutes().toString().length === 1) ? `0${time.getMinutes()}` : `${time.getMinutes()}`;
+                    minutes = (time.getMinutes()
+                        .toString().length === 1) ? `0${time.getMinutes()}` : `${time.getMinutes()}`;
                     timeStr = `${hours}:${minutes} ${translate[lang].pm}`;
                 } else {
                     hours = `${time.getHours()}`;
-                    minutes = (time.getMinutes().toString().length === 1) ? `0${time.getMinutes()}` : `${time.getMinutes()}`;
+                    minutes = (time.getMinutes()
+                        .toString().length === 1) ? `0${time.getMinutes()}` : `${time.getMinutes()}`;
                     timeStr = `${hours}:${minutes} ${translate[lang].am}`;
                 }
             } else {
-                hours = (time.getHours().toString().length === 1) ? `0${time.getHours()}` : `${time.getHours()}`;
-                minutes = (time.getMinutes().toString().length === 1) ? `0${time.getMinutes()}` : `${time.getMinutes()}`;
+                hours = (time.getHours()
+                    .toString().length === 1) ? `0${time.getHours()}` : `${time.getHours()}`;
+                minutes = (time.getMinutes()
+                    .toString().length === 1) ? `0${time.getMinutes()}` : `${time.getMinutes()}`;
                 timeStr = `${hours}:${minutes}`;
             }
 
@@ -120,7 +122,7 @@ function ClockCreator<T: ComponentType<ClockUIPropsType>>(ClockUI: T): Element<t
             }
 
             this.setState(newState);
-        }
+        };
 
         render(): T {
             return <ClockUI {...this.props} {...this.state} />;

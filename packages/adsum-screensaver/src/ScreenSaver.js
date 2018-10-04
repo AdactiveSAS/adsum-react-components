@@ -53,15 +53,7 @@ class ScreenSaver extends React.Component<PropsType> {
         inactivityTimer: 10000,
     };
 
-    timer: TimeoutID;
-
-    clearInactivityTimer: () => void;
-
-    constructor(props: PropsType) {
-        super(props);
-
-        this.clearInactivityTimer = this.clearInactivityTimer.bind(this);
-    }
+    timer: ?TimeoutID = null;
 
     /**
      * Start screensaver timeout
@@ -86,27 +78,31 @@ class ScreenSaver extends React.Component<PropsType> {
     componentWillUpdate(nextProps: PropsType) {
         const { modalIsOpen, contentIsOpen } = this.props;
 
-        if (nextProps.modalIsOpen === true && modalIsOpen === false) this.stopInactivityTimer();
-        else if (modalIsOpen === true && nextProps.modalIsOpen === false && nextProps.contentIsOpen === false) this.clearInactivityTimer();
-        else if (nextProps.contentIsOpen === false && contentIsOpen === true) this.clearInactivityTimer();
+        if (nextProps.modalIsOpen === true && modalIsOpen === false) {
+            this.stopInactivityTimer();
+        } else if (modalIsOpen === true && nextProps.modalIsOpen === false && nextProps.contentIsOpen === false) {
+            this.clearInactivityTimer();
+        } else if (nextProps.contentIsOpen === false && contentIsOpen === true) this.clearInactivityTimer();
     }
 
-    clearInactivityTimer() {
-        const { openModal, openContent, inactivityTimer } = this.props;
+    clearInactivityTimer = () => {
+        const {
+            openModal, openContent, inactivityTimer, modalIsOpen, contentIsOpen, initialModalCounter, modalIsEnabled, setModalCounter,
+        } = this.props;
 
         if (this.timer) clearTimeout(this.timer);
 
         this.timer = setTimeout(() => {
-            if (!this.props.modalIsOpen && !this.props.contentIsOpen) {
-                if (this.props.modalIsEnabled) {
-                    this.props.setModalCounter(this.props.initialModalCounter);
+            if (!modalIsOpen && !contentIsOpen) {
+                if (modalIsEnabled) {
+                    setModalCounter(initialModalCounter);
                     openModal(true);
                 } else {
                     openContent();
                 }
             }
         }, inactivityTimer);
-    }
+    };
 
     stopInactivityTimer() {
         if (this.timer) clearTimeout(this.timer);
@@ -149,8 +145,8 @@ class ScreenSaver extends React.Component<PropsType> {
                 }}
             >
                 <div className="centralised">
-                    { modalIsOpen ? modalComponent : null }
-                    { contentIsOpen ? children : null }
+                    {modalIsOpen ? modalComponent : null}
+                    {contentIsOpen ? children : null}
                 </div>
 
             </div>
