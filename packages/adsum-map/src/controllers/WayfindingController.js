@@ -9,7 +9,7 @@ import {
     didDrawPathSectionEvent,
     didResetPathEvent,
     setCurrentPathAction,
-    willDrawPathSectionEvent
+    willDrawPathSectionEvent,
 } from '../actions/WayfindingActions';
 
 class WayfindingController {

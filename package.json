@@ -1,29 +1,36 @@
 {
-	"devDependencies": {
-		"babel-eslint": "^8.2.3",
-		"eslint": "^4.19.1",
-		"eslint-config-airbnb": "^16.1.0",
-		"eslint-loader": "^2.0.0",
-		"eslint-plugin-flowtype": "^2.49.3",
-		"eslint-plugin-import": "^2.12.0",
-		"eslint-plugin-jsx-a11y": "^6.0.3",
-		"eslint-plugin-react": "^7.9.1",
-		"flow-bin": "^0.72.0",
-		"lerna": "^2.10.2",
-		"node-less-chokidar": "^0.1.2"
-	},
-	"scripts": {
-		"build-css": "node-less-chokidar packages",
-		"precommit": "build-css",
-		"lint": "eslint packages/adsum-map --fix"
-	},
-	"dependencies": {},
-	 "keywords": [
-		"react",
-		"redux",
-		"touchscreen",
-		"touch",
-		"adsum",
-		"adadactive"
-	  ]
+  "name": "adsum-react-components-mono-repo",
+  "private": true,
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^7.1.2",
+    "babel-preset-airbnb": "^2.5.3",
+    "eslint": "^4.0.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-flowtype": "^2.50.3",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.11.1",
+    "flow-bin": "^0.72.0",
+    "lerna": "^2.10.2",
+    "node-less-chokidar": "^0.1.2"
+  },
+  "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "build-css": "node-less-chokidar packages",
+    "precommit": "build-css",
+    "lint": "eslint packages"
+  },
+  "dependencies": {},
+  "keywords": [
+    "react",
+    "redux",
+    "touchscreen",
+    "touch",
+    "adsum",
+    "adadactive"
+  ],
+  "workspaces": [
+    "packages/*"
+  ]
 }

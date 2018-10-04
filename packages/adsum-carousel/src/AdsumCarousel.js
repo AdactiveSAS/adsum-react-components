@@ -17,13 +17,13 @@ export type MediaType = {|
 |};
 
 type PropsType = {|
-    +isOpen: boolean,
-    +medias: Array<MediaType>,
-    +onMediaTouch: (MediaType) => void,
-    +carouselOptions?: Object,
-    +style?: CSSStyleDeclaration,
-    +ButtonModalForImage?: HTMLButtonElement,
-    +dynamicAutoPlayInterval?: boolean
+    isOpen?: boolean,
+    medias?: Array<MediaType>,
+    onMediaTouch?: (MediaType) => void,
+    carouselOptions?: Object,
+    dynamicAutoPlayInterval?: boolean,
+    style?: CSSStyleDeclaration,
+    ButtonModalForImage?: ?HTMLButtonElement,
 |};
 
 class AdsumCarousel extends React.Component<PropsType> {
@@ -45,9 +45,11 @@ class AdsumCarousel extends React.Component<PropsType> {
             slidesToShow: 1,
             slidesToScroll: 1,
             adaptiveHeight: true,
-            wrapAround: true
+            wrapAround: true,
         },
-        dynamicAutoPlayInterval: false
+        dynamicAutoPlayInterval: false,
+        style: {},
+        ButtonModalForImage: null,
     };
 
     constructor(props: PropsType) {
@@ -63,26 +65,28 @@ class AdsumCarousel extends React.Component<PropsType> {
 
         this.state = {
             autoplay: !!(props.medias && props.medias.length > 1),
-            autoPlayInterval: 10000
+            autoPlayInterval: 10000,
         };
     }
 
     componentDidMount() {
         const {
-            dynamicAutoPlayInterval, medias, carouselOptions, autoplayInterval
+            dynamicAutoPlayInterval, medias, carouselOptions, autoplayInterval,
         } = this.props;
+
+        const { autoplay, autoPlayInterval } = this.state;
 
         if (this._videoPlayers[0]) {
             this.playVideo(0);
         } else if (dynamicAutoPlayInterval) {
             this.setState({
-                autoplay: this.state.autoplay,
-                autoPlayInterval: medias.length > 0 && medias[0].autoPlayInterval ? medias[0].autoPlayInterval : this.state.autoPlayInterval
+                autoplay,
+                autoPlayInterval: medias.length > 0 && medias[0].autoPlayInterval ? medias[0].autoPlayInterval : autoPlayInterval,
             });
         } else if (autoplayInterval) {
             this.setState({
-                autoplay: this.state.autoplay,
-                autoPlayInterval: carouselOptions && carouselOptions.autoPlayInterval ? carouselOptions.autoPlayInterval : this.state.autoPlayInterval
+                autoplay,
+                autoPlayInterval: carouselOptions && carouselOptions.autoPlayInterval ? carouselOptions.autoPlayInterval : autoPlayInterval,
             });
         }
     }
@@ -100,12 +104,16 @@ class AdsumCarousel extends React.Component<PropsType> {
      * @param id
      */
     playVideo(id: number) {
+        const { autoPlayInterval } = this.state;
+
         this.setState(
             {
                 autoplay: false,
-                autoPlayInterval: this.state.autoPlayInterval
+                autoPlayInterval,
             },
-            () => { this._videoPlayers[id].play(); }
+            () => {
+                this._videoPlayers[id].play();
+            },
         );
     }
 
@@ -114,12 +122,16 @@ class AdsumCarousel extends React.Component<PropsType> {
      * Wrapper for nuka-carousel to select next slide
      */
     goToNextSlide() {
+        const { autoPlayInterval } = this.state;
+
         this.setState(
             {
                 autoplay: true,
-                autoPlayInterval: this.state.autoPlayInterval
+                autoPlayInterval,
             },
-            () => { this.carousel.nextSlide(); }
+            () => {
+                this.carousel.nextSlide();
+            },
         );
     }
 
@@ -128,7 +140,9 @@ class AdsumCarousel extends React.Component<PropsType> {
      * @param id
      */
     slideDidChange(id: number | string) {
-        if (!this.props.isOpen) return;
+        const { isOpen } = this.props;
+
+        if (!isOpen) return;
 
         if (this._videoPlayers[id]) {
             this.playVideo(id);
@@ -137,17 +151,18 @@ class AdsumCarousel extends React.Component<PropsType> {
 
     slideBeforeChange(id: number | string) {
         const { dynamicAutoPlayInterval, medias } = this.props;
+        const { autoplay, autoPlayInterval } = this.state;
 
         if (dynamicAutoPlayInterval && medias.length) {
             if (id + 1 === medias.length) {
                 this.setState({
-                    autoplay: this.state.autoplay,
-                    autoPlayInterval: medias[0].autoPlayInterval ? medias[0].autoPlayInterval : this.state.autoPlayInterval
+                    autoplay,
+                    autoPlayInterval: medias[0].autoPlayInterval ? medias[0].autoPlayInterval : autoPlayInterval,
                 });
             } else {
                 this.setState({
-                    autoplay: this.state.autoplay,
-                    autoPlayInterval: medias[id + 1].autoPlayInterval ? medias[id + 1].autoPlayInterval : this.state.autoPlayInterval
+                    autoplay,
+                    autoPlayInterval: medias[id + 1].autoPlayInterval ? medias[id + 1].autoPlayInterval : autoPlayInterval,
                 });
             }
         }
@@ -158,14 +173,26 @@ class AdsumCarousel extends React.Component<PropsType> {
      *
      */
     generateSlides(): Array<Node> {
-        const { medias, onMediaTouch, ButtonModalForImage } = this.props;
-        const parentStyle = this.props.style || null;
+        const {
+            medias, onMediaTouch, ButtonModalForImage, style,
+        } = this.props;
+
+        const parentStyle = style || null;
         const ret = [];
 
         medias.forEach((media: MediaType, index: number) => {
             if (media.file.file_type === 'video/mp4' || media.file.file_type === 'video/x-m4v') {
                 const component = (
-                    <div key={media.file.uri} onClick={() => { onMediaTouch(media); }} onTouchEndCapture={() => { onMediaTouch(media); }} >
+                    <div
+                        role="complementary"
+                        key={media.file.uri}
+                        onClick={() => {
+                            onMediaTouch(media);
+                        }}
+                        onTouchEndCapture={() => {
+                            onMediaTouch(media);
+                        }}
+                    >
                         <VideoSlide
                             index={index}
                             media={media}
@@ -180,13 +207,21 @@ class AdsumCarousel extends React.Component<PropsType> {
                 ret.push(component);
             } else {
                 const component = (
-                    <div key={media.file.uri} onClick={() => { onMediaTouch(media); }} onTouchEndCapture={() => { onMediaTouch(media); }} >
+                    <div
+                        role="complementary"
+                        key={media.file.uri}
+                        onClick={() => {
+                            onMediaTouch(media);
+                        }}
+                        onTouchEndCapture={() => {
+                            onMediaTouch(media);
+                        }}
+                    >
                         <ImageSlide media={media} parentStyle={parentStyle} />
                         {
-                            ButtonModalForImage ?
-                                <ButtonModalForImage media={media} />
-                                :
-                                null
+                            ButtonModalForImage
+                                ? <ButtonModalForImage media={media} />
+                                : null
                         }
                     </div>
                 );
@@ -200,25 +235,27 @@ class AdsumCarousel extends React.Component<PropsType> {
 
     render(): Node {
         const {
-            isOpen, carouselOptions, style
+            isOpen, carouselOptions, style,
         } = this.props;
+
+        const { autoplay, autoPlayInterval } = this.state;
 
         if (!isOpen) return null;
 
         return (
-            <div style={style} >
+            <div style={style}>
                 <Carousel
                     {...carouselOptions}
-                    autoplay={this.state.autoplay}
+                    autoplay={autoplay}
                     afterSlide={this.slideDidChange}
                     beforeSlide={this.slideBeforeChange}
-                    autoplayInterval={this.state.autoPlayInterval}
+                    autoplayInterval={autoPlayInterval}
                     className="adsumCarousel"
                     ref={(carousel: Carousel) => {
                         this.carousel = carousel;
                     }}
                 >
-                    { this.generateSlides() }
+                    {this.generateSlides()}
                 </Carousel>
             </div>
         );

@@ -37,7 +37,7 @@ type OwnPropsType = {|
     resetOnClose: boolean,
     zoom?: { min?: number, max?: number },
     autoSelectOnClick: boolean,
-    backgroundImage?: ?string,
+    backgroundImage?: ?string
 |};
 
 type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
@@ -51,8 +51,10 @@ type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
 class Map extends React.Component<PropsType> {
     static defaultProps = {
         resetOnClose: true,
-        autoSelectOnClick: true
+        autoSelectOnClick: true,
     };
+
+    initialized: boolean = false;
 
     componentWillUpdate(nextProps: PropsType) {
         const {
@@ -82,7 +84,7 @@ class Map extends React.Component<PropsType> {
         }
 
         const {
-            isOpen, open, close, resetOnClose
+            isOpen, open, close, resetOnClose,
         } = this.props;
 
         if (!isOpen && nextProps.isOpen) {
@@ -92,13 +94,11 @@ class Map extends React.Component<PropsType> {
         }
     }
 
-    initialized: boolean = false;
-
     render() {
         const {
             isOpen,
             children,
-            className
+            className,
         } = this.props;
 
         return (
@@ -126,23 +126,21 @@ const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => bindActionC
         } = null,
         zoom: { min?: number, max?: number } = null,
         backgroundImage: ?string = null,
-    ): void => dispatch(
-        initAction(
-            awm,
-            store,
-            onClick,
-            autoSelectOnClick,
-            userObjectLabel,
-            getDrawPathSectionOptions,
-            zoom,
-            backgroundImage,
-        )
-    ),
+    ): void => dispatch(initAction(
+        awm,
+        store,
+        onClick,
+        autoSelectOnClick,
+        userObjectLabel,
+        getDrawPathSectionOptions,
+        zoom,
+        backgroundImage,
+    )),
     open: (): void => dispatch(openAction()),
     close: (reset: boolean): void => dispatch(closeAction(reset)),
 }, dispatch);
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(Map);

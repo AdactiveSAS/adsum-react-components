@@ -8,7 +8,7 @@ import wayfindingController from '../controllers/WayfindingController';
 import placesController from '../controllers/PlacesController';
 import type {
     WillInitActionType, WillChangeFloorType, WillResetActionType,
-    WillZoomActionType, WillCloseActionType, WillOpenActionType
+    WillZoomActionType, WillCloseActionType, WillOpenActionType,
 } from '../actions/MainActions';
 import {
     didInitAction, didResetAction, didChangeFloorAction,
@@ -25,7 +25,7 @@ function* onInit(action: WillInitActionType): Generator {
 
     action.awm.sceneManager.addEventListener(
         SCENE_EVENTS.floor.didChanged,
-        ({ current, previous }) => { dispatch(didChangeFloorAction(current, previous)); }
+        ({ current, previous }) => { dispatch(didChangeFloorAction(current, previous)); },
     );
 
     action.awm.mouseManager.addEventListener(
@@ -40,14 +40,14 @@ function* onInit(action: WillInitActionType): Generator {
             if (action.onClick) {
                 action.onClick(firstIntersectObject, event.intersects);
             }
-        }
+        },
     );
 
     action.awm.wayfindingManager.addEventListener(
         WAYFINDING_EVENTS.user.position.didChanged,
         () => {
             wayfindingController.updateUserObjectLabelPosition();
-        }
+        },
     );
 
     yield call([placesController, placesController.sortAllAdsumPlaces]);

@@ -1,7 +1,9 @@
 // @flow
 
 import type { Store } from 'redux';
-import type { AdsumWebMap, FloorObject, LabelObject, PathSection } from '@adactive/adsum-web-map';
+import type {
+    AdsumWebMap, FloorObject, LabelObject, PathSection,
+} from '@adactive/adsum-web-map';
 
 export const types = {
     WILL_INIT: 'map/WILL_INIT',
@@ -16,7 +18,7 @@ export const types = {
     DID_SET_ZOOM: 'map/DID_SET_ZOOM',
     FLOOR_WILL_CHANGE: 'map/FLOOR_WILL_CHANGE',
     FLOOR_DID_CHANGE: 'map/FLOOR_DID_CHANGE',
-    DID_CATCH_ERROR: 'map/DID_CATCH_ERROR'
+    DID_CATCH_ERROR: 'map/DID_CATCH_ERROR',
 };
 
 /**
@@ -34,7 +36,7 @@ export type WillInitActionType = {|
     },
     zoom?: { min?: number, max?: number },
     autoSelectOnClick?: boolean,
-    backgroundImage?: ?string,
+    backgroundImage?: ?string
 |};
 export function initAction(
     awm: AdsumWebMap,
@@ -109,9 +111,11 @@ export type WillResetActionType = {|
 export function resetAction(
     stop: boolean = false,
     resetFloor: boolean = true,
-    resetFloorAnimated: boolean = false
+    resetFloorAnimated: boolean = false,
 ): WillResetActionType {
-    return { type: types.WILL_RESET, stop, resetFloor, resetFloorAnimated };
+    return {
+        type: types.WILL_RESET, stop, resetFloor, resetFloorAnimated,
+    };
 }
 export type DidResetActionType = {| type: types.DID_RESET |};
 export function didResetAction(): DidResetActionType {
@@ -142,7 +146,7 @@ export type WillChangeFloorType = {|
 export function changeFloorAction(
     floorId: ?number,
     centerOn: boolean = true,
-    animated: boolean = true
+    animated: boolean = true,
 ): WillChangeFloorType {
     return {
         type: types.FLOOR_WILL_CHANGE,
@@ -172,7 +176,7 @@ export type DidCatchErrorType = {|
 |};
 export function didCatchErrorAction(): DidCatchErrorType {
     return {
-        type: types.DID_CATCH_ERROR
+        type: types.DID_CATCH_ERROR,
     };
 }
 

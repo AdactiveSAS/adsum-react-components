@@ -1,9 +1,9 @@
+import { modes, ecLevel } from 'qrcode.es'; // eslint-disable-line import/no-unresolved
 import AdsumQrCode from './src/AdsumQrCode';
-import { modes, ecLevel } from 'qrcode.es';
 
 export {
     modes,
-    ecLevel
+    ecLevel,
 };
 
 export default AdsumQrCode;

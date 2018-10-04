@@ -23,13 +23,13 @@ const VideoSlide = ({
     media,
     onPlayerInit,
     onVideoEnded,
-    shouldReplayVideo
+    shouldReplayVideo,
 }: PropsType): Node => {
     const videoOptions = {
         sources: [{
             src: media.file.uri,
-            type: media.file.file_type
-        }]
+            type: media.file.file_type,
+        }],
     };
 
     return (

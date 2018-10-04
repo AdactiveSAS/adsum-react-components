@@ -5,4 +5,4 @@
 /packages/*/package-lock.json
 /node_modules
 lerna-debug.log
-.DS_Store
+.npmrc

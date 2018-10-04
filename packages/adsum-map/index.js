@@ -7,4 +7,6 @@ import * as SelectionActions from './src/actions/SelectionActions';
 
 export type { MapReducerStateType } from './src/initialState';
 
-export { Map, MainActions, WayfindingActions, SelectionActions };
+export {
+    Map, MainActions, WayfindingActions, SelectionActions,
+};

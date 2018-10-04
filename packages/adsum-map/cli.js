@@ -28,4 +28,3 @@ if (cmdValue === 'copy') {
             .catch(err => console.error(err));
     }
 }
-

@@ -1,6 +1,6 @@
 // @flow
 
-import type { AdsumObject3D } from '@adactive/adsum-web-map';
+import type { AdsumObject3D, CameraCenterOnOptions } from '@adactive/adsum-web-map';
 import type { Place, Poi } from '@adactive/adsum-client-api';
 
 export const types = {
@@ -24,7 +24,7 @@ export function selectAction(adsumObject: ?AdsumObject3D, reset: boolean = true,
         adsumObject,
         reset,
         centerOn,
-        onlyIfPoi
+        onlyIfPoi,
     };
 }
 
@@ -39,7 +39,7 @@ export function selectPlaceAction(place: Place, reset: boolean = true, centerOn:
         type: types.WILL_SELECT_A_PLACE,
         place,
         reset,
-        centerOn
+        centerOn,
     };
 }
 
@@ -47,14 +47,30 @@ export type WillSelectPoiActionType = {|
   type: types.WILL_SELECT_A_POI,
   poi: Poi,
   reset: boolean,
-  centerOn: boolean
+  centerOn: boolean,
+  centerOnOptions: CameraCenterOnOptions,
+  stayOnCurrentFloor: boolean,
+  ground: ?AdsumObject3D,
+  animated: boolean
 |};
-export function selectPoiAction(poi: Poi, reset: boolean = true, centerOn: boolean = false): WillSelectPoiActionType {
+export function selectPoiAction(
+    poi: Poi,
+    reset: boolean = true,
+    centerOn: boolean = false,
+    centerOnOptions: CameraCenterOnOptions = null,
+    stayOnCurrentFloor: boolean = true,
+    ground: ?AdsumObject3D = null,
+    animated: boolean = true,
+): WillSelectPoiActionType {
     return {
         type: types.WILL_SELECT_A_POI,
         poi,
         reset,
-        centerOn
+        centerOn,
+        centerOnOptions,
+        stayOnCurrentFloor,
+        ground,
+        animated,
     };
 }
 
@@ -65,7 +81,7 @@ export type DidSelectActionType = {|
 export function didSelectAction(currentSelectedObject: AdsumObject3D[]): DidSelectActionType {
     return {
         type: types.DID_SELECT,
-        currentSelectedObject
+        currentSelectedObject,
     };
 }
 

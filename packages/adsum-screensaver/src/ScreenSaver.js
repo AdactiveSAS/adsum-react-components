@@ -50,24 +50,19 @@ type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
 class ScreenSaver extends React.Component<PropsType> {
     static defaultProps = {
         initialModalCounter: 10,
-        inactivityTimer: 10000
+        inactivityTimer: 10000,
     };
 
-    timer: TimeoutID;
-    clearInactivityTimer: () => void;
-
-    constructor(props: PropsType) {
-        super(props);
-
-        this.clearInactivityTimer = this.clearInactivityTimer.bind(this);
-    }
+    timer: ?TimeoutID = null;
 
     /**
      * Start screensaver timeout
      *
      */
     componentDidMount() {
-        const { setModalCounter, initialModalCounter, modalComponent, disableModal } = this.props;
+        const {
+            setModalCounter, initialModalCounter, modalComponent, disableModal,
+        } = this.props;
 
         if (modalComponent) {
             setModalCounter(initialModalCounter);
@@ -83,27 +78,31 @@ class ScreenSaver extends React.Component<PropsType> {
     componentWillUpdate(nextProps: PropsType) {
         const { modalIsOpen, contentIsOpen } = this.props;
 
-        if (nextProps.modalIsOpen === true && modalIsOpen === false) this.stopInactivityTimer();
-        else if (modalIsOpen === true && nextProps.modalIsOpen === false && nextProps.contentIsOpen === false) this.clearInactivityTimer();
-        else if (nextProps.contentIsOpen === false && contentIsOpen === true) this.clearInactivityTimer();
+        if (nextProps.modalIsOpen === true && modalIsOpen === false) {
+            this.stopInactivityTimer();
+        } else if (modalIsOpen === true && nextProps.modalIsOpen === false && nextProps.contentIsOpen === false) {
+            this.clearInactivityTimer();
+        } else if (nextProps.contentIsOpen === false && contentIsOpen === true) this.clearInactivityTimer();
     }
 
-    clearInactivityTimer() {
-        const { openModal, openContent, inactivityTimer } = this.props;
+    clearInactivityTimer = () => {
+        const {
+            openModal, openContent, inactivityTimer, modalIsOpen, contentIsOpen, initialModalCounter, modalIsEnabled, setModalCounter,
+        } = this.props;
 
         if (this.timer) clearTimeout(this.timer);
 
         this.timer = setTimeout(() => {
-            if (!this.props.modalIsOpen && !this.props.contentIsOpen) {
-                if (this.props.modalIsEnabled) {
-                    this.props.setModalCounter(this.props.initialModalCounter);
+            if (!modalIsOpen && !contentIsOpen) {
+                if (modalIsEnabled) {
+                    setModalCounter(initialModalCounter);
                     openModal(true);
                 } else {
                     openContent();
                 }
             }
         }, inactivityTimer);
-    }
+    };
 
     stopInactivityTimer() {
         if (this.timer) clearTimeout(this.timer);
@@ -123,7 +122,7 @@ class ScreenSaver extends React.Component<PropsType> {
             contentIsOpen,
             onTouchToNavigateClicked,
             onOverlayClicked,
-            isHere
+            isHere,
         } = this.props;
 
         const overlayClassNames = ['screenSaver'];
@@ -146,8 +145,8 @@ class ScreenSaver extends React.Component<PropsType> {
                 }}
             >
                 <div className="centralised">
-                    { modalIsOpen ? modalComponent : null }
-                    { contentIsOpen ? children : null }
+                    {modalIsOpen ? modalComponent : null}
+                    {contentIsOpen ? children : null}
                 </div>
 
             </div>
@@ -159,7 +158,7 @@ const mapStateToProps = (state: AppStateType): MappedStatePropsType => ({
     screensaverIsOpen: state.screenSaver.screensaverIsOpen,
     modalIsOpen: state.screenSaver.modalIsOpen,
     contentIsOpen: state.screenSaver.contentIsOpen,
-    modalIsEnabled: state.screenSaver.modalIsEnabled
+    modalIsEnabled: state.screenSaver.modalIsEnabled,
 });
 
 const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => ({
@@ -175,5 +174,5 @@ const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => ({
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(ScreenSaver);

@@ -4,7 +4,9 @@ import { delay } from 'redux-saga';
 import { put, call, takeLatest } from 'redux-saga/effects';
 import wayfindingController from '../controllers/WayfindingController';
 import placesController from '../controllers/PlacesController';
-import type { WillDrawPathSectionActionType, WillGoToPlaceActionType, WillGoToPoiActionType, WillResetPathActionType } from '../actions/WayfindingActions';
+import type {
+    WillDrawPathSectionActionType, WillGoToPlaceActionType, WillGoToPoiActionType, WillResetPathActionType,
+} from '../actions/WayfindingActions';
 import { didDrawAction, types } from '../actions/WayfindingActions';
 import { didCatchErrorAction } from '../actions/MainActions';
 

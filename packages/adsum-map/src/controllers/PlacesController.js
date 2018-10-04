@@ -117,7 +117,7 @@ class PlacesController {
     }
 
     async createAndComputePathFromUserLocationToPlace(place, pmr) {
-        // Get the object location
+    // Get the object location
         const location = this.awm.wayfindingManager.locationRepository.get(place.id);
 
         // Create path from user location and object location
