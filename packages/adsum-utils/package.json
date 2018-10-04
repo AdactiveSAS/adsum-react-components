@@ -13,6 +13,12 @@
   "bugs": {
     "url": "https://github.com/AdactiveSAS/adsum-react-components.git/issues"
   },
+  "devDependencies": {
+    "@adactive/adsum-client-api": "^2.2.0"
+  },
+  "peerDependencies": {
+    "@adactive/adsum-client-api": "^2.2.0"
+  },
   "scripts": {},
   "publishConfig": {
     "access": "public"
