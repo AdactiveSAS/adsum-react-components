@@ -24,11 +24,11 @@ type StateType = {|
 class AlphabeticList extends React.Component<PropsType, StateType> {
     static defaultProps = {
         alphabetListClassNames: '',
-        letterClassNames: ''
+        letterClassNames: '',
     };
 
     state: StateType = {
-        letterToHighlight: null
+        letterToHighlight: null,
     };
 
     setCurrentLetter(letterToHighlight: string): void {
@@ -37,7 +37,7 @@ class AlphabeticList extends React.Component<PropsType, StateType> {
 
     render(): Node {
         const {
-            alphabetListClassNames, letterClassNames, letterIndexesMapping, onLetterClicked
+            alphabetListClassNames, letterClassNames, letterIndexesMapping, onLetterClicked,
         } = this.props;
 
         const { letterToHighlight } = this.state;

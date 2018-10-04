@@ -20,8 +20,11 @@ import type { WillInitActionType } from '../actions/MainActions';
  */
 class MainController {
     awm: AdsumWebMap = null;
+
     device: number = null;
+
     mode: '3D' | '2D' = '3D';
+
     userAnimation: Tween = null;
 
     /**
@@ -64,8 +67,7 @@ class MainController {
         }
 
         if (action.backgroundImage) {
-
-            /*
+        /*
             *
             * This is using private AWM API and feature should be added in AWM
             * See opened issue: https://github.com/AdactiveSAS/adsum-web-map/issues/72
@@ -120,7 +122,7 @@ class MainController {
     async setCurrentFloor(
         floor: number | ?FloorObject | ?SiteObject,
         centerOn: boolean = true,
-        animated: boolean = true
+        animated: boolean = true,
     ): Promise<void> {
         const floorObject = typeof floor === 'number' ? this.awm.objectManager.floors.get(floor) : floor;
 

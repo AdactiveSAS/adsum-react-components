@@ -40,9 +40,7 @@ class SelectionController {
         await Promise.all(places.map((place: Place): Promise<void> => this.selectPlace(place, false, false)));
 
         if (centerOn) {
-            const adsumObjectsFromPlaces = places.map((place: Place): AdsumObject3D => {
-                return placesController.getPath(place.id).to.adsumObject;
-            });
+            const adsumObjectsFromPlaces = places.map((place: Place): AdsumObject3D => placesController.getPath(place.id).to.adsumObject);
 
             await this.handleCenterOn(adsumObjectsFromPlaces, centerOnOptions, stayOnCurrentFloor, ground, animated);
         }

@@ -1,21 +1,23 @@
 // @flow
 
 import { delay, takeEvery } from 'redux-saga';
-import { put, select, fork, cancel, cancelled } from 'redux-saga/effects';
+import {
+    put, select, fork, cancel, cancelled,
+} from 'redux-saga/effects';
 import {
     types,
     openModal,
     closeModal,
     decrementModal,
     openContent,
-    closeContent
+    closeContent,
 } from './ScreenSaverActions';
 
 import type {
     OpenModalActionType,
     CloseModalActionType,
     IsHereActionType,
-    CloseContentActionType
+    CloseContentActionType,
 } from './ScreenSaverActions';
 import type { ScreenSaverReducersStateType } from './ScreenSaverReducers';
 

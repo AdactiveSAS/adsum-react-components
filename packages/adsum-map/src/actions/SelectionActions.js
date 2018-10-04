@@ -24,7 +24,7 @@ export function selectAction(adsumObject: ?AdsumObject3D, reset: boolean = true,
         adsumObject,
         reset,
         centerOn,
-        onlyIfPoi
+        onlyIfPoi,
     };
 }
 
@@ -39,7 +39,7 @@ export function selectPlaceAction(place: Place, reset: boolean = true, centerOn:
         type: types.WILL_SELECT_A_PLACE,
         place,
         reset,
-        centerOn
+        centerOn,
     };
 }
 
@@ -51,7 +51,7 @@ export type WillSelectPoiActionType = {|
   centerOnOptions: CameraCenterOnOptions,
   stayOnCurrentFloor: boolean,
   ground: ?AdsumObject3D,
-  animated: boolean,
+  animated: boolean
 |};
 export function selectPoiAction(
     poi: Poi,
@@ -81,7 +81,7 @@ export type DidSelectActionType = {|
 export function didSelectAction(currentSelectedObject: AdsumObject3D[]): DidSelectActionType {
     return {
         type: types.DID_SELECT,
-        currentSelectedObject
+        currentSelectedObject,
     };
 }
 

@@ -14,7 +14,7 @@ export type MapReducersType = (state: MapReducerStateType, action: WayfindingAct
 
 const mapReducers: MapReducersType = (
     state: MapReducerStateType = initialState,
-    action: WayfindingActionsType | SelectionActionsType | MainActionsType
+    action: WayfindingActionsType | SelectionActionsType | MainActionsType,
 ): MapReducerStateType => {
     switch (action.type) {
     case mainActionsTypes.DID_INIT: {
@@ -57,8 +57,8 @@ const mapReducers: MapReducersType = (
             ...state,
             wayfindingState: {
                 drawing: true,
-                currentSectionIndex: currentIndex
-            }
+                currentSectionIndex: currentIndex,
+            },
         };
     }
     case wayfindingActionsTypes.EVENT_DID_DRAW_PATH_SECTION: {
@@ -68,8 +68,8 @@ const mapReducers: MapReducersType = (
             ...state,
             wayfindingState: {
                 drawing: false,
-                currentSectionIndex: currentIndex
-            }
+                currentSectionIndex: currentIndex,
+            },
         };
     }
     case wayfindingActionsTypes.EVENT_DID_RESET_PATH: {
@@ -77,8 +77,8 @@ const mapReducers: MapReducersType = (
             ...state,
             wayfindingState: {
                 drawing: false,
-                currentSectionIndex: null
-            }
+                currentSectionIndex: null,
+            },
         };
     }
     case selectionActionsTypes.DID_SELECT: {
@@ -87,13 +87,13 @@ const mapReducers: MapReducersType = (
         return {
             ...state,
             state: 'idle',
-            currentSelectedObject
+            currentSelectedObject,
         };
     }
     case selectionActionsTypes.DID_RESET_SELECTION: {
         return {
             ...state,
-            currentSelectedObject: []
+            currentSelectedObject: [],
         };
     }
     case mainActionsTypes.DID_RESET:
@@ -108,7 +108,7 @@ const mapReducers: MapReducersType = (
 
         return {
             ...state,
-            currentPath: object
+            currentPath: object,
         };
     }
     case mainActionsTypes.DID_OPEN: {
@@ -128,7 +128,7 @@ const mapReducers: MapReducersType = (
     case mainActionsTypes.DID_CATCH_ERROR: {
         return {
             ...state,
-            state: 'idle'
+            state: 'idle',
         };
     }
     case mainActionsTypes.WILL_INIT:

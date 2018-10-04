@@ -50,10 +50,11 @@ type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
 class ScreenSaver extends React.Component<PropsType> {
     static defaultProps = {
         initialModalCounter: 10,
-        inactivityTimer: 10000
+        inactivityTimer: 10000,
     };
 
     timer: TimeoutID;
+
     clearInactivityTimer: () => void;
 
     constructor(props: PropsType) {
@@ -67,7 +68,9 @@ class ScreenSaver extends React.Component<PropsType> {
      *
      */
     componentDidMount() {
-        const { setModalCounter, initialModalCounter, modalComponent, disableModal } = this.props;
+        const {
+            setModalCounter, initialModalCounter, modalComponent, disableModal,
+        } = this.props;
 
         if (modalComponent) {
             setModalCounter(initialModalCounter);
@@ -123,7 +126,7 @@ class ScreenSaver extends React.Component<PropsType> {
             contentIsOpen,
             onTouchToNavigateClicked,
             onOverlayClicked,
-            isHere
+            isHere,
         } = this.props;
 
         const overlayClassNames = ['screenSaver'];
@@ -159,7 +162,7 @@ const mapStateToProps = (state: AppStateType): MappedStatePropsType => ({
     screensaverIsOpen: state.screenSaver.screensaverIsOpen,
     modalIsOpen: state.screenSaver.modalIsOpen,
     contentIsOpen: state.screenSaver.contentIsOpen,
-    modalIsEnabled: state.screenSaver.modalIsEnabled
+    modalIsEnabled: state.screenSaver.modalIsEnabled,
 });
 
 const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => ({
@@ -175,5 +178,5 @@ const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => ({
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(ScreenSaver);

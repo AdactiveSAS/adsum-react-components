@@ -39,15 +39,20 @@ type StateType = {|
  */
 class AzScroller extends React.Component<PropsType, StateType> {
     static defaultProps = {
-        shouldShowSectionHeaders: false
+        shouldShowSectionHeaders: false,
     }
 
-    onLetterClicked: (index: number) => () => void
-    renderListItem: (index: number, key: string) => Node
-    itemSizeGetter: (index: number) => ?number
-    reactListComponent: ?ReactList
-    alphabetListComponent: ?AlphabetList
-    listToRender: Array<SectionHeaderInfoType | ListItemType> = []
+    onLetterClicked: (index: number) => () => void;
+
+    renderListItem: (index: number, key: string) => Node;
+
+    itemSizeGetter: (index: number) => ?number;
+
+    reactListComponent: ?ReactList;
+
+    alphabetListComponent: ?AlphabetList;
+
+    listToRender: Array<SectionHeaderInfoType | ListItemType> = [];
 
     constructor(props: PropsType) {
         super(props);
@@ -56,7 +61,7 @@ class AzScroller extends React.Component<PropsType, StateType> {
     }
 
     state = {
-        letterIndexesMapping: this.mapLettersToIndexes()
+        letterIndexesMapping: this.mapLettersToIndexes(),
     }
 
     bindAll() {
@@ -142,7 +147,7 @@ class AzScroller extends React.Component<PropsType, StateType> {
 
     render(): Node {
         const {
-            maxHeight, listClassNames, alphabetListClassNames, letterClassNames, listItemHeight
+            maxHeight, listClassNames, alphabetListClassNames, letterClassNames, listItemHeight,
         } = this.props;
         const listType: ListEnumType = listItemHeight ? 'variable' : 'uniform';
 

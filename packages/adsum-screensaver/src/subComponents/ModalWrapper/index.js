@@ -4,7 +4,7 @@ import * as React from 'react';
 import type { ElementType, Node } from 'react';
 import { connect } from 'react-redux';
 
-import { screenSaverActions } from '../../../';
+import { screenSaverActions } from '../../..';
 
 type AppStateType = {
     screenSaver: {
@@ -35,7 +35,7 @@ function ModalWrapper<T: ElementType>(Modal: T): React.ComponentType<PropsType> 
     }
 
     const mapStateToProps = (state: AppStateType): MappedStatePropsType => ({
-        modalTimer: state.screenSaver.modalTimer
+        modalTimer: state.screenSaver.modalTimer,
     });
 
     const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => ({
@@ -45,7 +45,7 @@ function ModalWrapper<T: ElementType>(Modal: T): React.ComponentType<PropsType> 
 
     return connect(
         mapStateToProps,
-        mapDispatchToProps
+        mapDispatchToProps,
     )(WrappedModal);
 }
 

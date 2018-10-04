@@ -27,7 +27,7 @@ class AdsumQrCode extends React.Component<PropsType> {
     };
 
     state = {
-        showModal: false
+        showModal: false,
     };
 
     componentDidUpdate(prevProps: PropsType) {
@@ -37,13 +37,13 @@ class AdsumQrCode extends React.Component<PropsType> {
 
             this.qrCode.generate(this.props.text, this.props.qrCodeOptions).then(() => {
                 this.setState({
-                    showModal: true
+                    showModal: true,
                 });
             });
         } else if (prevProps.isOpen && !this.props.isOpen) {
             this.qrCode = null;
             this.setState({
-                showModal: false
+                showModal: false,
             });
         }
     }
@@ -52,13 +52,13 @@ class AdsumQrCode extends React.Component<PropsType> {
 
     render(): Node {
         const {
-            isOpen, onClose, ModalProps, qrCodeCSS
+            isOpen, onClose, ModalProps, qrCodeCSS,
         } = this.props;
 
         const { showModal } = this.state;
 
         const hideModalCSS = {
-            overlay: 'hide'
+            overlay: 'hide',
         };
 
         let { classNames, showCloseIcon } = ModalProps;

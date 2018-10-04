@@ -57,5 +57,5 @@ export const initialState: MapReducerStateType = {
     wayfindingState: {
         drawing: false,
         currentSectionIndex: null,
-    }
+    },
 };

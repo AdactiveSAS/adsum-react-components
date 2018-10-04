@@ -36,6 +36,7 @@ function ClockCreator<T: ComponentType<ClockUIPropsType>>(ClockUI: T): Element<t
         }
 
         timerID: IntervalId;
+
         state = {
             year: '',
             month: '',
@@ -43,7 +44,7 @@ function ClockCreator<T: ComponentType<ClockUIPropsType>>(ClockUI: T): Element<t
             hours: '',
             minutes: '',
             dateStr: '',
-            timeStr: ''
+            timeStr: '',
         };
 
         /**
@@ -52,7 +53,7 @@ function ClockCreator<T: ComponentType<ClockUIPropsType>>(ClockUI: T): Element<t
         componentDidMount() {
             this.timerID = setInterval(
                 (): void => this.getTime(),
-                1000
+                1000,
             );
         }
 
@@ -109,7 +110,7 @@ function ClockCreator<T: ComponentType<ClockUIPropsType>>(ClockUI: T): Element<t
                 day,
                 hours,
                 minutes,
-                timeStr
+                timeStr,
             };
 
             if (lang === 'zh') {

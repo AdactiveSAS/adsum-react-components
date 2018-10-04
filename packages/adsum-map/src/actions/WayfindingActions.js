@@ -23,7 +23,7 @@ export function goToPlaceAction(placeId: ?number, pmr: boolean = false): WillGoT
     return {
         type: types.WILL_DRAW_TO_PLACE,
         placeId,
-        pmr
+        pmr,
     };
 }
 
@@ -36,7 +36,7 @@ export function goToPoiAction(poiId: ?number, pmr: boolean = false): WillGoToPoi
     return {
         type: types.WILL_DRAW_TO_POI,
         poiId,
-        pmr
+        pmr,
     };
 }
 
@@ -51,7 +51,7 @@ export function didDrawAction(placeId: ?number, pmr: boolean = false, pathSectio
         type: types.DID_DRAW,
         placeId,
         pmr,
-        pathSectionIndex
+        pathSectionIndex,
     };
 }
 
@@ -66,7 +66,7 @@ export function drawPathSectionAction(placeId: ?number, pathSectionIndex: number
         type: types.WILL_DRAW_PATH_SECTION,
         placeId,
         pathSectionIndex,
-        pmr
+        pmr,
     };
 }
 

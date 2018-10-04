@@ -1,9 +1,9 @@
-import AdsumQrCode from './src/AdsumQrCode';
 import { modes, ecLevel } from 'qrcode.es';
+import AdsumQrCode from './src/AdsumQrCode';
 
 export {
     modes,
-    ecLevel
+    ecLevel,
 };
 
 export default AdsumQrCode;

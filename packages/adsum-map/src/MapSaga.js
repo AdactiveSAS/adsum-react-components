@@ -9,7 +9,7 @@ function* mapSaga() {
     yield all([
         ...mainSagas,
         ...wayfindingSagas,
-        ...selectionSagas
+        ...selectionSagas,
     ]);
 }
 

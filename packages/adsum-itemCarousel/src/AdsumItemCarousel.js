@@ -41,7 +41,7 @@ class AdsumItemCarousel extends React.Component<PropTypes, StateType> {
         isOpen: false,
         items: [],
         itemsPerPage: 0,
-        onItemClicked: null
+        onItemClicked: null,
     };
 
     constructor(props: PropTypes) {
@@ -51,7 +51,7 @@ class AdsumItemCarousel extends React.Component<PropTypes, StateType> {
     }
 
     state = {
-        slideIndex: 0
+        slideIndex: 0,
     }
 
     bindAll() {
@@ -65,7 +65,7 @@ class AdsumItemCarousel extends React.Component<PropTypes, StateType> {
     componentDidUpdate(prevProps: PropTypes) {
         if (prevProps.items !== this.props.items) {
             this.setState({
-                slideIndex: 0
+                slideIndex: 0,
             });
         }
     }
@@ -110,18 +110,17 @@ class AdsumItemCarousel extends React.Component<PropTypes, StateType> {
         const { listWrapperCSS } = this.props;
 
         if (items.length > 0) {
-            return _.map(items, (item: Array<ItemObject>, index: number) =>
+            return _.map(items, (item: Array<ItemObject>, index: number) => (
                 <ul className="row item" key={index} style={listWrapperCSS}>
                     { this.generateThumbNails(item) }
                 </ul>
-            )
-        } else {
-            return (
-                <ul className="row item" key="0" style={listWrapperCSS}>
-                    <li className="no-result" >No items</li>
-                </ul>
-            );
+            ));
         }
+        return (
+            <ul className="row item" key="0" style={listWrapperCSS}>
+                <li className="no-result">No items</li>
+            </ul>
+        );
     }
 
     displayLogo(item: ItemObject): Element<'img'> | Element<'span'> {
@@ -129,23 +128,24 @@ class AdsumItemCarousel extends React.Component<PropTypes, StateType> {
 
         if (item.logo && item.logo.uri) {
             return (
-                <img className="thumbnail-panel-logo" src={item.logo.uri} style={logoCSS}/>
+                <img className="thumbnail-panel-logo" src={item.logo.uri} style={logoCSS} />
             );
-        } else if (defaultLogo) {
+        } if (defaultLogo) {
             return (
-                <img className="thumbnail-panel-logo" src={defaultLogo} style={logoCSS}/>
-            );
-        } else {
-            return (
-                <span className="thumbnail-panel-logo" style={logoCSS}>{item.name}</span>
+                <img className="thumbnail-panel-logo" src={defaultLogo} style={logoCSS} />
             );
         }
+        return (
+            <span className="thumbnail-panel-logo" style={logoCSS}>{item.name}</span>
+        );
     }
 
     generateThumbNails(items: Array<ItemObject>): Element<'li'> {
-        const { thumbNailWrapperCSS, logoWrapperCSS, titleWrapperCSS, dashCSS, titleCSS } = this.props;
+        const {
+            thumbNailWrapperCSS, logoWrapperCSS, titleWrapperCSS, dashCSS, titleCSS,
+        } = this.props;
 
-        return _.map(items, (item: ItemObject, index: number) =>
+        return _.map(items, (item: ItemObject, index: number) => (
             <li className="thumbnail-wrapper" key={index} onClick={(): void => this.onItemClicked(item)} style={thumbNailWrapperCSS}>
                 <span className="btn btn-standard width height">
                     <div className="flex-center">
@@ -167,7 +167,7 @@ class AdsumItemCarousel extends React.Component<PropTypes, StateType> {
                     </div>
                 </span>
             </li>
-        );
+        ));
     }
 
     render(): Node {
@@ -180,9 +180,10 @@ class AdsumItemCarousel extends React.Component<PropTypes, StateType> {
         return (
             <div className="templateCarousel-container">
                 <div className="templateCarousel">
-                    <Carousel {...carouselOptions}
-                          slideIndex={this.state.slideIndex}
-                          afterSlide={slideIndex => this.setState({ slideIndex })}
+                    <Carousel
+                        {...carouselOptions}
+                        slideIndex={this.state.slideIndex}
+                        afterSlide={slideIndex => this.setState({ slideIndex })}
                     >
                         {
                             this.generatePagination(pagination)

@@ -6,7 +6,7 @@ import type { Node } from 'react';
 import { keysets } from './keysets/keysets.js';
 import './adsumKeyboard.css';
 
-type KeyType = { value: string, test: string, class: string }
+type KeyType = { value: string, test: string, class: string };
 
 type PropsType = {|
     +isOpen: boolean,
@@ -27,7 +27,7 @@ class AdsumKeyboard extends React.Component<PropsType, StateType> {
         isOpen: false,
         lang: 'en',
         currentValue: '',
-        onKeyClicked: null
+        onKeyClicked: null,
     }
 
     constructor(props: PropsType) {
@@ -37,7 +37,7 @@ class AdsumKeyboard extends React.Component<PropsType, StateType> {
     }
 
     state = {
-        layout: 'layout1'
+        layout: 'layout1',
     }
 
     bindAll() {
@@ -48,7 +48,7 @@ class AdsumKeyboard extends React.Component<PropsType, StateType> {
 
     resetLayout(): void {
         this.setState({
-            layout: 'layout1'
+            layout: 'layout1',
         });
     }
 
@@ -66,7 +66,7 @@ class AdsumKeyboard extends React.Component<PropsType, StateType> {
 
     changeLayout(layout: string): void {
         this.setState({
-            layout
+            layout,
         });
     }
 
@@ -74,7 +74,9 @@ class AdsumKeyboard extends React.Component<PropsType, StateType> {
      * React render keyboard based on lang
      */
     render(): Node {
-        const { lang, isOpen, keyboardCSS, keyboardLineCSS, buttonCSS } = this.props;
+        const {
+            lang, isOpen, keyboardCSS, keyboardLineCSS, buttonCSS,
+        } = this.props;
         const keyset = keysets[lang] ? keysets[lang] : keysets.en;
 
         if (!isOpen) return null;

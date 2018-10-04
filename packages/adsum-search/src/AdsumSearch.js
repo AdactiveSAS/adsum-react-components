@@ -31,7 +31,7 @@ class AdsumSearch extends React.Component<PropTypes, StateType> {
         data: [],
         fuseOptions: {},
         queryValue: '',
-        placeHolder: null
+        placeHolder: null,
     };
 
     constructor(props) {
@@ -43,8 +43,8 @@ class AdsumSearch extends React.Component<PropTypes, StateType> {
     }
 
     state = {
-        searchInput: ''
-    }
+        searchInput: '',
+    };
 
     bindAll() {
         this.implementFuse = this.implementFuse.bind(this);
@@ -55,7 +55,7 @@ class AdsumSearch extends React.Component<PropTypes, StateType> {
 
     componentDidMount() {
         this.setState({
-            searchInput: this.props.queryValue
+            searchInput: this.props.queryValue,
         });
     }
 
@@ -77,7 +77,7 @@ class AdsumSearch extends React.Component<PropTypes, StateType> {
 
     updateValue(queryValue: string) {
         this.setState({
-            searchInput: queryValue
+            searchInput: queryValue,
         });
     }
 
@@ -95,7 +95,7 @@ class AdsumSearch extends React.Component<PropTypes, StateType> {
 
     render(): Node {
         const {
-            isOpen, lang, searchWrapperCSS, inputCSS, placeHolder, searchIcon, searchIconCSS
+            isOpen, lang, searchWrapperCSS, inputCSS, placeHolder, searchIcon, searchIconCSS,
         } = this.props;
 
         if (!isOpen) return null;
@@ -105,10 +105,9 @@ class AdsumSearch extends React.Component<PropTypes, StateType> {
                 <div className="form-group">
                     <div className="input-group">
                         {
-		                    searchIcon ?
-                                <img className="icon-search" src={searchIcon} style={searchIconCSS} />
-			                    :
-			                    null
+		                    searchIcon
+		                      ? <img className="icon-search" src={searchIcon} style={searchIconCSS} />
+			                    : null
 	                    }
                         <input
                             type="text"
@@ -117,7 +116,7 @@ class AdsumSearch extends React.Component<PropTypes, StateType> {
                             placeholder={placeHolder || translate[lang].search}
                             value={this.state.searchInput}
                             style={inputCSS}
-                            onChange={_ => {}}
+                            onChange={(_) => {}}
                         />
                     </div>
                 </div>

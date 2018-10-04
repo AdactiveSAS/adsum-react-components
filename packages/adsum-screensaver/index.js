@@ -13,6 +13,6 @@ export {
     screenSaverActions,
     screenSaverReducers,
     ScreenSaverSagas,
-    ModalWrapper
+    ModalWrapper,
 };
 export default ScreenSaver;
