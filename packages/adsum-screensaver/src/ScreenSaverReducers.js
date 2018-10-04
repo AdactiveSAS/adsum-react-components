@@ -19,7 +19,7 @@ export const initialState: ScreenSaverReducersStateType = {
     modalIsOpen: false,
     contentIsOpen: false,
     modalTimer: 10,
-    modalIsEnabled: true
+    modalIsEnabled: true,
 };
 
 const screenSaverReducers = (state: ScreenSaverReducersStateType = initialState, action: ScreensaverActionType): ScreenSaverReducersStateType => {
@@ -28,40 +28,40 @@ const screenSaverReducers = (state: ScreenSaverReducersStateType = initialState,
         return {
             ...state,
             modalIsOpen: true,
-            screensaverIsOpen: true
+            screensaverIsOpen: true,
         };
     case screenSaverActionsType.SET_MODAL_COUNTER:
         return {
             ...state,
-            modalTimer: action.modalTimer
+            modalTimer: action.modalTimer,
         };
     case screenSaverActionsType.DECREMENT_MODAL_TIMER:
         return {
             ...state,
-            modalTimer: --state.modalTimer
+            modalTimer: --state.modalTimer,
         };
     case screenSaverActionsType.CLOSE_MODAL:
         return {
             ...state,
             modalIsOpen: false,
-            screensaverIsOpen: false
+            screensaverIsOpen: false,
         };
     case screenSaverActionsType.OPEN_CONTENT:
         return {
             ...state,
             contentIsOpen: true,
-            screensaverIsOpen: true
+            screensaverIsOpen: true,
         };
     case screenSaverActionsType.CLOSE_CONTENT:
         return {
             ...state,
             contentIsOpen: false,
-            screensaverIsOpen: false
+            screensaverIsOpen: false,
         };
     case screenSaverActionsType.DISABLE_MODAL:
         return {
             ...state,
-            modalIsEnabled: false
+            modalIsEnabled: false,
         };
     default:
         return state;

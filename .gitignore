@@ -1,6 +1,8 @@
 .idea
 .DS_Store
 /packages/*/node_modules
+/packages/*/yarn.lock
+/packages/*/package-lock.json
 /node_modules
 lerna-debug.log
-.DS_Store
+.npmrc

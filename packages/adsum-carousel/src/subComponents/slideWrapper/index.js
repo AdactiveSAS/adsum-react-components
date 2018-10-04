@@ -41,7 +41,7 @@ const SlideWrapper = (Slide: SlideType): Node => (
 );
 
 SlideWrapper.defaultProps = {
-    parentStyle: {}
+    parentStyle: {},
 };
 
 export default SlideWrapper;

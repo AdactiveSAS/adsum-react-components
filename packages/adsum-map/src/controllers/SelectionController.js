@@ -1,110 +1,184 @@
 // @flow
 
-import { CameraCenterOnOptions } from '@adactive/adsum-web-map';
-import labelController from './LabelController';
-// import ACA from '../../../services/ClientAPI';
+import { CancellationTokenSource } from 'prex-es5';
 import ACA from '@adactive/adsum-utils/services/ClientAPI';
+import { Poi, Place } from '@adactive/adsum-client-api';
+import type { AdsumObject3D, CameraCenterOnOptions } from '@adactive/adsum-web-map';
+import placesController from './PlacesController';
+import type { WillInitActionType } from '../actions/MainActions';
+
+import { didResetSelectionAction } from '../actions/SelectionActions';
 
 class SelectionController {
     constructor() {
         this.awm = null;
-        this.current = null;
-        this.locked = false;
-
-        this._cameraCenterOnOptions = new CameraCenterOnOptions({
-            fitRatio: 6,
-            zoom: false
-        });
+        this.selection = new Set();
+        this.cancelSource = new CancellationTokenSource();
     }
 
-    init(awm) {
-        this.awm = awm;
+    init(action: WillInitActionType): SelectionController {
+        this.awm = action.awm;
+        this.dispatch = action.store.dispatch;
+
         return this;
     }
 
-    updateSelection(object, centerOn = false) {
-        if (this.locked || object === this.current) {
-            return Promise.resolve();
+    async selectPoi(
+        poi: Poi,
+        reset: boolean = true,
+        centerOn: boolean = true,
+        centerOnOptions: ?CameraCenterOnOptions = null,
+        stayOnCurrentFloor: boolean = true,
+        ground: ?AdsumObject3D = null,
+        animated: boolean = true,
+    ): Promise<void> {
+        if (reset) {
+            this.reset();
         }
+        const places = ACA.getPlaces(poi.places);
+
+        await Promise.all(places.map((place: Place): Promise<void> => this.selectPlace(place, false, false)));
+
+        if (centerOn) {
+            const adsumObjectsFromPlaces = places.map((place: Place): AdsumObject3D => placesController.getPath(place.id).to.adsumObject);
+
+            await this.handleCenterOn(adsumObjectsFromPlaces, centerOnOptions, stayOnCurrentFloor, ground, animated);
+        }
+    }
+
+    async selectPlace(place: Place, reset: boolean = true, centerOn: boolean = true): Promise<void> {
+        if (reset) {
+            this.reset();
+        }
+
+        const path = placesController.getPath(place.id);
+        await this.select(path.to.adsumObject, false, centerOn, false);
+    }
+
+    async select(adsumObject: ?AdsumObject3D, reset: boolean = true, centerOn: boolean = true, onlyIfPoi: boolean = true) {
+        if (reset) {
+            this.reset();
+        }
+
+        if (!adsumObject) {
+            return;
+        }
+
         // if no poi link to the place do not select
-        if (object && ACA.getPoisFromPlace(object.placeId).length === 0) {
-            return Promise.resolve();
+        if (onlyIfPoi) {
+            const place = ACA.getPlace(adsumObject.placeId);
+            if (place === null || place.pois.size === 0) {
+                return;
+            }
         }
 
-        // Make sure to unselect previously selected
-        this.reset();
+        this.selection.add(adsumObject);
 
-        this.current = object;
+        await this.highlight(adsumObject, centerOn);
+    }
 
-        if (this.current !== null && this.current.isBuilding) {
-            this.locked = true;
-            return this.highlightBuilding(this.current, centerOn)
-                .then(() => {
-                    this.locked = false;
-                });
-        } else if (this.current !== null && this.current.isSpace) {
-            this.locked = true;
-            return this.highlightSpace(this.current, centerOn)
-                .then(() => {
-                    this.locked = false;
-                });
-        } else if (this.current !== null && this.current.isLabel) {
-            this.locked = true;
-            return this.highlightLabel(this.current)
-                .then(() => {
-                    this.locked = false;
-                });
+    getSelection(): Array {
+        return Array.from(this.selection);
+    }
+
+    async highlight(adsumObject: ?AdsumObject3D, centerOn: boolean = false) {
+        let ground = null;
+        if (adsumObject.isBuilding) {
+            adsumObject.setColor(0x78e08f);
+            adsumObject.labels.forEach((label) => {
+                // label.setScale(3, 3, 3);
+                label.select();
+            });
+        } else if (adsumObject.isSpace) {
+            adsumObject.setColor(0x78e08f);
+            adsumObject.bounceUp(2);
+            adsumObject.labels.forEach((label) => {
+                // label.setScale(3, 3, 3);
+                label.select();
+            });
+            ground = adsumObject.parent;
+        } else if (adsumObject.isLabel) {
+            // adsumObject.setScale(3, 3, 3);
+            adsumObject.select();
+
+            const { parent } = adsumObject;
+            if (parent.isSpace) {
+                ground = parent.parent;
+            } else if (parent.isFloor) {
+                ground = parent;
+            }
+        } else {
+            return;
         }
 
-        return Promise.resolve();
+        if (centerOn) {
+            await this.handleCenterOn(
+                [adsumObject],
+                null, // TODO: pass centerOnOptions in the parameters
+                false,
+                ground,
+                true, // TODO: pass animated in the parameters
+            );
+        }
     }
 
-    getCurrent() {
-        return this.current;
+    async handleCenterOn(
+        adsumObjects: Array<?AdsumObject3D>,
+        centerOnOptions: CameraCenterOnOptions = null,
+        stayOnCurrentFloor: boolean = true,
+        ground: AdsumObject3D = null,
+        animated: boolean = true,
+    ) {
+        const registration = this.cancelSource.token.register(() => {
+            this.awm.cameraManager.reset();
+            this.awm.sceneManager.reset();
+        });
+
+        if (stayOnCurrentFloor) {
+            ground = this.awm.sceneManager.getCurrentFloor();
+        }
+
+        await this.awm.sceneManager.setCurrentFloor(ground, animated);
+
+        if (adsumObjects.length === 1) {
+            await this.awm.cameraManager.centerOn(adsumObjects[0], animated, centerOnOptions);
+        } else if (adsumObjects.length > 1) {
+            await this.awm.cameraManager.centerOnObjects(adsumObjects, animated, centerOnOptions);
+        }
+
+        registration.unregister();
     }
 
-    highlightBuilding(building, centerOn = false) {
-        let promise = Promise.resolve();
-        if (centerOn) promise = promise.then(() => this.awm.cameraManager.centerOn(building, true, this._cameraCenterOnOptions));
-        return promise
-            .then(() => {
-                building.setColor(0x78e08f);
+    // eslint-disable-next-line class-methods-use-this
+    unlight(adsumObject: ?AdsumObject3D): void {
+        if (adsumObject.isBuilding) {
+            adsumObject.resetColor();
+        } else if (adsumObject.isSpace) {
+            adsumObject.resetColor();
+            adsumObject.bounceDown();
+            adsumObject.labels.forEach((label) => {
+                // label.setScale(1, 1, 1);
+                label.unselect();
             });
+        } else if (adsumObject.isLabel) {
+            // adsumObject.setScale(1, 1, 1);
+            adsumObject.unselect();
+        }
     }
 
-    resetBuilding(building) {
-        building.resetColor();
-    }
-
-    highlightSpace(space, centerOn = false) {
-        let promise = Promise.resolve();
-        if (centerOn) promise = promise.then(() => this.awm.cameraManager.centerOn(space, true, this._cameraCenterOnOptions));
-        promise = promise.then(() => labelController.createPopOverOnAdsumObject(space));
-        return promise
-            .then(() => {
-                space.setColor(0x78e08f);
-                space.bounceUp(3);
-            });
-    }
-
-    highlightLabel(label) {
-        return this.awm.cameraManager.centerOn(label, true, this._cameraCenterOnOptions);
-    }
-
-    resetSpace(space) {
-        space.resetColor();
-        space.bounceDown();
+    unselect(adsumObject: AdsumObject3D) {
+        this.unlight(adsumObject);
+        this.selection.delete(adsumObject);
     }
 
     reset() {
-        // Make sure to unselect previously selected
-        if (this.current !== null && this.current.isBuilding) {
-            this.resetBuilding(this.current);
-        } else if (this.current !== null && this.current.isSpace) {
-            this.resetSpace(this.current);
-        }
-        labelController.removePopOver();
-        this.current = null;
+        this.cancelSource.cancel();
+
+        this.selection.forEach((adsumObject) => { this.unselect(adsumObject); });
+
+        this.dispatch(didResetSelectionAction());
+
+        this.cancelSource = new CancellationTokenSource();
     }
 }
 

@@ -1,153 +1,216 @@
 // @flow
 
-import CustomUserObject from '../kioskIndicator/CustomUserObject';
+import { CancellationTokenSource, CancelError } from 'prex-es5';
+import { Path, PathSection } from '@adactive/adsum-web-map';
+import selectionController from './SelectionController';
+import type { WillInitActionType } from '../actions/MainActions';
 
-import PathSectionDrawer from '../path/PathSectionDrawer';
-import customDotPathBuilder from '../path/CustomDotPathBuilder';
-
-import floorsController from './FloorsController';
-import labelController from './LabelController';
-import placesController from './PlacesController';
+import {
+    didDrawPathSectionEvent,
+    didResetPathEvent,
+    setCurrentPathAction,
+    willDrawPathSectionEvent,
+} from '../actions/WayfindingActions';
 
 class WayfindingController {
     constructor() {
         this.awm = null;
         this.current = null;
-        this.locked = false;
-        this.device = -1;
+        this.currentIndex = -1;
+
+        this.userObjectLabel = null;
+        this.getDrawPathSectionOptions = () => ({ drawOptions: null, setCurrentFloorOptions: null });
+
+        this.cancelSource = new CancellationTokenSource();
     }
 
-    init(awm, device) {
-        this.awm = awm;
-        this.device = device;
-        return customDotPathBuilder.initer(awm).then(
-            ()=>{
-                return this.loadUserObject();
+    init(action: WillInitActionType) {
+        this.awm = action.awm;
+        this.dispatch = action.store.dispatch;
+        this.userObjectLabel = action.userObjectLabel;
+        this.userObjectLabelOffset = this.userObjectLabel === null
+            ? null
+            : Object.assign({}, this.userObjectLabel.offset);
+
+        if (action.getDrawPathSectionOptions) {
+            this.getDrawPathSectionOptions = action.getDrawPathSectionOptions;
+        }
+
+        this.updateUserObjectLabelPosition();
+    }
+
+    updateUserObjectLabelPosition() {
+        if (this.userObjectLabel === null) {
+            return;
+        }
+
+        const { user } = this.awm.objectManager;
+
+        if (user === null || user.parent === null) {
+            if (this.userObjectLabel.parent !== null) {
+                this.awm.objectManager.removeLabel(this.userObjectLabel);
             }
-        )
+
+            return;
+        }
+
+        if (this.userObjectLabel.parent !== user.parent) {
+            this.awm.objectManager.addLabel(this.userObjectLabel, user.parent);
+        }
+        const { x, y, z } = user.getPosition();
+        this.userObjectLabel.moveTo(x, y, z);
+        this.userObjectLabel.moveBy(
+            this.userObjectLabelOffset.x,
+            this.userObjectLabelOffset.y,
+            this.userObjectLabelOffset.z,
+        );
     }
 
-    loadUserObject() {
-        const customUserObject = new CustomUserObject(this.awm, { placeId: Symbol('UserPlace'), id: Symbol('UserPositionId') });
-        this.awm.objectManager.user._dispose();
-        return customUserObject.createDefault(
-            this.awm.projector.meterToAdsumDistance(3),
-        ).then((customUserObj) => {
-            this.awm.objectManager.user = customUserObj;
-            this.awm.objectManager.user.animate();
-            return this.awm.setDeviceId(this.device, false);
-        });
-    }
-
-    getPath(object) {
-        if(object === null) {
-            return null;
+    setPath(path) {
+        if (path === null) {
+            throw new Error('Path not valid to be draw');
         }
 
-        return placesController.getPath(object.placeId);
-    }
-
-    goToPath(path) {
-        if (this.current !== null) {
-            // Remove previously drawn paths
-            this.reset();
+        if (!path.computed) {
+            console.error('WayfindingController.goToPath > Path must be computed before ', path);
+            throw new Error('Path not computed');
         }
 
-        if(path === null) {
-            return Promise.resolve();
+        if (path === this.current) {
+            this.reset(true);
+            return;
         }
 
-        if(!path.computed) {
-            console.error("WayfindingController.goToPath > Path must be computed before ", path);
-            return Promise.resolve();
-        }
+        this.reset();
 
         this.current = path;
+        this.currentIndex = -1;
 
-        return Promise.resolve()
-            .then(() => {
+        this.dispatch(setCurrentPathAction(this.current));
+    }
 
-                this.locked = true;
+    /**
+    * @public
+    * @param path
+    * @param pathSectionIndex
+    * @return {Promise<void>}
+    */
+    async drawPath(path: Path, pathSectionIndex: ?PathSection = null) {
+        try {
+            this.setPath(path);
 
-                const pathSections = this.current.getPathSections(true);
-                // TODO labelController.reset();
-                floorsController.computeStack(pathSections);
-                // TODO floorsController.explodeStack();
-                // TODO labelController.hideLabelsInStack(floorsController.getStack());
+            const pathSections = path.getPathSections(true);
+            const length = pathSectionIndex === null ? pathSections.length : pathSectionIndex + 1;
 
-                // TODO labelController.showLabelsOnPath(pathSections);
-
-                // The path is computed, and we have now access to path.pathSections which represents all steps
-                // We will chain our promises
-                let promise = Promise.resolve();
-                for (const pathSection of pathSections) {
-
-                    // Do the floor change
-                    const floor = pathSection.ground.isFloor ? pathSection.ground : null;
-
-                    promise = promise.then(() => floorsController.setCurrentFloor(floor === null ? null : floor.id));
-                    promise = promise.then( previousResult => this.assertNotLock(previousResult));
-                    // TODO promise = promise.then(() => sceneController.setCurrentFloorCustom(floor === null ? null : floor.id));
-                    // promise = promise.then(() => sceneController.setCurrentFloor(floor === null ? null : floor.id));
-
-                    //promise = promise.then(() => this.awm.cameraManager.centerOnFloor(floor));
-                    //promise = promise.then( previousResult => this.assertNotLock(previousResult));
-
-                    // Draw the step
-                    if(! pathSection.isInterGround()) { // TODO
-                        promise = promise.then(() => this.drawPathSection(pathSection));
-                        promise = promise.then( previousResult => this.assertNotLock(previousResult));
+            if (pathSectionIndex !== null) {
+                if (pathSectionIndex <= this.currentIndex) {
+                    for (let i = pathSectionIndex; i <= this.currentIndex; i++) {
+                        this.awm.wayfindingManager.removePathSection(pathSections[i]);
                     }
-
-                    // Scale label
-                    promise = promise.then(() => labelController.animateLabel(pathSection));
-
-                    // Add a delay of 1.5 seconds
-                    promise = promise.then(() => (this.locked) ? new Promise((resolve) => {
-                        setTimeout(resolve, 200);
-                    }) : Promise.resolve() );
+                } else {
+                    let current = null;
+                    let previous = null;
+                    for (let i = this.currentIndex + 1; i < pathSectionIndex; i++) {
+                        current = pathSections[i];
+                        // eslint-disable-next-line no-await-in-loop
+                        await this.drawPathSection(current, previous, false);
+                        previous = current;
+                    }
                 }
 
-                return promise.catch((e)=>{ if(e.message !== "Not Locked") return Promise.reject(e); });
-            });
+                this.currentIndex = pathSectionIndex - 1;
+            }
+
+            let current = null;
+            let previous = null;
+            for (let i = this.currentIndex + 1; i < length; i++) {
+                current = pathSections[i];
+                this.currentIndex = i;
+
+                this.dispatch(willDrawPathSectionEvent(current, previous, i));
+
+                // eslint-disable-next-line no-await-in-loop
+                await this.drawPathSection(current, previous);
+
+                this.dispatch(didDrawPathSectionEvent(current, previous, i));
+
+                previous = current;
+            }
+        } catch (e) {
+            if (e.message === 'Path was stopped' || e instanceof CancelError) {
+                console.warn(e.message);
+            } else {
+                throw e;
+            }
+        }
     }
 
-    drawPathSection(pathSection) {
-        this.awm.wayfindingManager.removePathSection(pathSection);
+    async drawPathSection(pathSection: PathSection, previousPathSection: ?PathSection = null, animated: boolean = true): Promise<void> {
+        const { drawOptions, setCurrentFloorOptions } = this.getDrawPathSectionOptions(pathSection);
 
-        if(!this.locked) {
-            return Promise.resolve();
+        if (previousPathSection === null || previousPathSection.isInterGround()) {
+            const registration = this.cancelSource.token.register(() => {
+                this.awm.sceneManager.reset();
+                this.awm.cameraManager.reset();
+            });
+
+            await this.awm.sceneManager.setCurrentFloor(pathSection.ground, animated, setCurrentFloorOptions);
+
+            this.cancelSource.token.throwIfCancellationRequested();
+
+            registration.unregister();
         }
 
-        const pathSectionObject = customDotPathBuilder.build(pathSection);
+        const registration2 = this.cancelSource.token.register(() => {
+            this.awm.wayfindingManager.removePathSection(pathSection);
+        });
 
-        const drawer = new PathSectionDrawer(
-            pathSectionObject,
-            this.awm.cameraManager,
-            this.awm.wayfindingManager.projector,
-        );
+        await this.awm.wayfindingManager.drawPathSection(pathSection, drawOptions, animated);
 
-        return drawer.draw().catch((e)=>{ if(e.message !== "Path was stopped") return Promise.reject(e); });
+        if (pathSection.to && pathSection.to.adsumObject) {
+            await selectionController.select(pathSection.to.adsumObject, true, false, true);
+
+            if (animated) {
+                let timeout = null;
+
+                const reg = this.cancelSource.token.register(() => { clearTimeout(timeout); });
+                await new Promise((resolve) => {
+                    timeout = setTimeout(resolve, 500);
+                });
+                reg.unregister();
+            }
+        }
+
+        registration2.unregister();
+
+        this.cancelSource.token.throwIfCancellationRequested();
     }
 
-    assertNotLock(previousResult) {
-        return !this.locked ? Promise.reject(new Error('Not Locked')) : Promise.resolve(previousResult);
+    async goToKioskLocation() {
+        const registration = this.cancelSource.token.register(() => {
+            this.awm.sceneManager.reset();
+            this.awm.cameraManager.reset();
+        });
+
+        await this.awm.cameraManager.setCurrentFloor(this.awm.objectManager.user.parent);
+        await this.awm.cameraManager.centerOnFloor(this.awm.objectManager.user.parent);
+
+        registration.unregister();
     }
 
-    goToKioskLocation() {
-        let promise = Promise.resolve();
-        promise = promise.then(() => floorsController.reset());
-        promise = promise.then(() => this.awm.cameraManager.centerOnFloor(this.awm.defaultFloor));
-        return promise;
-    }
+    reset(keepCurrent: boolean = false) {
+        this.cancelSource.cancel();
 
-    reset() {
-        if(this.current !== null) {
+        selectionController.reset();
+
+        if (!keepCurrent && this.current !== null) {
+            // Remove previously drawn paths
             this.awm.wayfindingManager.removePath(this.current);
             this.current = null;
+            this.dispatch(didResetPathEvent());
         }
-        this.locked = false;
-        return Promise.resolve();
+
+        this.cancelSource = new CancellationTokenSource();
     }
 }
 

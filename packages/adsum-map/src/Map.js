@@ -1,33 +1,47 @@
 // @flow
 
 import * as React from 'react';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, Store } from 'redux';
 import { connect } from 'react-redux';
+import type { AdsumWebMap, LabelObject, PathSection } from '@adactive/adsum-web-map';
 
-import { mapActions } from '../index';
+import { initAction, openAction, closeAction } from './actions/MainActions';
 
 import './map.css';
 
 import type { MapStateType } from './initialState';
 
 type MappedStatePropsType = {|
+    // eslint-disable-next-line react/no-unused-prop-types
     mapState: MapStateType
 |};
+
 type MappedDispatchPropsType = {|
-    init: (onClickFunc: () => any) => void,
-    willOpen: () => void,
-    willClose: () => void
+    init: (awm: AdsumWebMap, store: Store) => void,
+    open: () => void,
+    close: (reset: boolean) => void
 |};
+
 type OwnPropsType = {|
-    isOpen: boolean,
-    store: any,
+    awm: AdsumWebMap,
+    store: Store,
     onClick: () => any,
-    device: number,
-    display: string,
-    backgroundImage: string,
-    PopOver: any
+    isOpen: boolean,
+    children?: React.Node,
+    className?: string,
+    userObjectLabel?: ?LabelObject,
+    getDrawPathSectionOptions?: ?(pathSection: PathSection) => {
+        drawOptions: ?object,
+        setCurrentFloorOptions: ?object
+    },
+    resetOnClose: boolean,
+    zoom?: { min?: number, max?: number },
+    autoSelectOnClick: boolean,
+    backgroundImage?: ?string
 |};
+
 type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
+
 /**
  * Map widget: display map
  * @memberof module:Map
@@ -35,48 +49,61 @@ type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
  * @extends React.Component
  */
 class Map extends React.Component<PropsType> {
-    /**
-     * Initialize map
-     */
-    componentDidMount() {
-        const {
-            store,
-            onClick,
-            device,
-            display,
-            backgroundImage,
-            PopOver,
-        } = this.props;
-        this.props.init(store, device, display, backgroundImage, onClick, PopOver);
-    }
+    static defaultProps = {
+        resetOnClose: true,
+        autoSelectOnClick: true,
+    };
+
+    initialized: boolean = false;
 
     componentWillUpdate(nextProps: PropsType) {
         const {
-            isOpen,
-            willOpen,
-            willClose,
+            awm,
+            store,
+            onClick,
+            autoSelectOnClick,
+            init,
+            userObjectLabel,
+            getDrawPathSectionOptions,
+            zoom,
+            backgroundImage,
+        } = nextProps;
+
+        if (!this.initialized && awm !== null) {
+            init(
+                awm,
+                store,
+                onClick,
+                autoSelectOnClick,
+                userObjectLabel,
+                getDrawPathSectionOptions,
+                zoom,
+                backgroundImage,
+            );
+            this.initialized = true;
+        }
+
+        const {
+            isOpen, open, close, resetOnClose,
         } = this.props;
 
         if (!isOpen && nextProps.isOpen) {
-            willOpen();
+            open();
         } else if (isOpen && !nextProps.isOpen) {
-            willClose();
+            close(resetOnClose);
         }
     }
 
     render() {
         const {
             isOpen,
-            children
+            children,
+            className,
         } = this.props;
 
-        const classNames = ['map-wrapper'];
-        if (isOpen) classNames.push('open');
-
         return (
-            <div className={classNames.join(' ')}>
+            <div className={`map-wrapper ${isOpen ? 'open' : ''} ${className || ''}`}>
                 {children}
-                <div id="adsum-web-map-container" />
             </div>
         );
     }
@@ -87,12 +114,33 @@ const mapStateToProps = (state: MapStateType): MappedStatePropsType => ({
 });
 
 const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => bindActionCreators({
-    init: (store: any, device: number, display: string, backgroundImage: string, onClick: () => any, PopOver: any): void => dispatch(mapActions.init(store, device, display, backgroundImage, onClick, PopOver)),
-    willOpen: (): void => dispatch(mapActions.willOpen()),
-    willClose: (): void => dispatch(mapActions.willClose()),
+    init: (
+        awm: AdsumWebMap,
+        store: Store,
+        onClick: () => any,
+        autoSelectOnClick: boolean = true,
+        userObjectLabel: ?LabelObject = null,
+        getDrawPathSectionOptions: (pathSection: PathSection) => {
+            drawOptions: ?object,
+            setCurrentFloorOptions: ?object
+        } = null,
+        zoom: { min?: number, max?: number } = null,
+        backgroundImage: ?string = null,
+    ): void => dispatch(initAction(
+        awm,
+        store,
+        onClick,
+        autoSelectOnClick,
+        userObjectLabel,
+        getDrawPathSectionOptions,
+        zoom,
+        backgroundImage,
+    )),
+    open: (): void => dispatch(openAction()),
+    close: (reset: boolean): void => dispatch(closeAction(reset)),
 }, dispatch);
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(Map);

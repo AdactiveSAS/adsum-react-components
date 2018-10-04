@@ -9,7 +9,7 @@ export const types = {
     CLEAR_INACTIVITY_TIMER: 'ScreenSaver/CLEAR_INACTIVITY_TIMER',
     IS_HERE: 'ScreenSaver/IS_HERE',
     SET_MODAL_COUNTER: 'ScreenSaver/SET_MODAL_COUNTER',
-    DISABLE_MODAL: 'ScreenSaver/DISABLE_MODAL'
+    DISABLE_MODAL: 'ScreenSaver/DISABLE_MODAL',
 };
 
 export type OpenModalActionType = {| type: 'ScreenSaver/OPEN_MODAL', payload?: boolean |};
@@ -40,19 +40,11 @@ export type IsHereActionCreatorType = () => IsHereActionType;
 export type SetModalCounterActionCreatorType = (modalTimer: number) => SetModalCounterActionType;
 export type DisableModalActionCreatorType = () => DisableModalActionType;
 
-export const openModal: OpenModalActionCreatorType
-    = (payload?: boolean): OpenModalActionType => ({ type: types.OPEN_MODAL, payload });
-export const closeModal: CloseModalActionCreatorType
-    = (payload?: boolean | string): CloseModalActionType => ({ type: types.CLOSE_MODAL, payload });
-export const decrementModal: DecrementModalTimerActionCreatorType
-    = (): DecrementModalTimerActionType => ({ type: types.DECREMENT_MODAL_TIMER });
-export const openContent: OpenContentActionCreatorType
-    = (): OpenContentActionType => ({ type: types.OPEN_CONTENT });
-export const closeContent: CloseContentActionCreatorType
-    = (payload?: boolean | 'openContent'): CloseContentActionType => ({ type: types.CLOSE_CONTENT, payload });
-export const isHere: IsHereActionCreatorType
-    = (): IsHereActionType => ({ type: types.IS_HERE });
-export const setModalCounter: SetModalCounterActionCreatorType
-    = (modalTimer: number): SetModalCounterActionType => ({ type: types.SET_MODAL_COUNTER, modalTimer });
-export const disableModal: DisableModalActionCreatorType
-    = (): DisableModalActionType => ({ type: types.DISABLE_MODAL });
+export const openModal: OpenModalActionCreatorType = (payload?: boolean): OpenModalActionType => ({ type: types.OPEN_MODAL, payload });
+export const closeModal: CloseModalActionCreatorType = (payload?: boolean | string): CloseModalActionType => ({ type: types.CLOSE_MODAL, payload });
+export const decrementModal: DecrementModalTimerActionCreatorType = (): DecrementModalTimerActionType => ({ type: types.DECREMENT_MODAL_TIMER });
+export const openContent: OpenContentActionCreatorType = (): OpenContentActionType => ({ type: types.OPEN_CONTENT });
+export const closeContent: CloseContentActionCreatorType = (payload?: boolean | 'openContent'): CloseContentActionType => ({ type: types.CLOSE_CONTENT, payload });
+export const isHere: IsHereActionCreatorType = (): IsHereActionType => ({ type: types.IS_HERE });
+export const setModalCounter: SetModalCounterActionCreatorType = (modalTimer: number): SetModalCounterActionType => ({ type: types.SET_MODAL_COUNTER, modalTimer });
+export const disableModal: DisableModalActionCreatorType = (): DisableModalActionType => ({ type: types.DISABLE_MODAL });

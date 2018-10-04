@@ -1,0 +1,39 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
+jobs:
+  lint:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/node:9
+    steps:
+      - checkout
+      - restore_cache: # special step to restore the dependency cache
+          keys:
+            # Find a cache corresponding to this specific yarn.lock checksum
+            # when this file is changed, this key will fail
+            - yarn-cache-{{ checksum "yarn.lock" }}
+            # Find the most recently generated cache used from any branch
+            - yarn-cache-
+      - run:
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
+      - run: yarn install
+      - save_cache:
+          key: yarn-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules
+            - ~/.cache/yarn
+            - packages/*/node_modules
+      - run: yarn run lint
+workflows:
+  version: 2
+  deploy:
+    jobs:
+      - lint:
+          filters:
+            tags: # Runs on every branch & every tags
+              only: /.*/
+
