@@ -24,7 +24,7 @@ export function selectAction(
     reset: boolean = true,
     centerOn: boolean = false,
     onlyIfPoi: boolean = true,
-    highlightColor: string = '#78e08f',
+    highlightColor: ?string = null,
 ): WillSelectActionType {
     return {
         type: types.WILL_SELECT,
@@ -47,7 +47,7 @@ export function selectPlaceAction(
     place: Place,
     reset: boolean = true,
     centerOn: boolean = false,
-    highlightColor: string = '#78e08f',
+    highlightColor: ?string = null,
 ): WillSelectPlaceActionType {
     return {
         type: types.WILL_SELECT_A_PLACE,
@@ -77,7 +77,7 @@ export function selectPoiAction(
     stayOnCurrentFloor: boolean = true,
     ground: ?AdsumObject3D = null,
     animated: boolean = true,
-    highlightColor: string = '#78e08f',
+    highlightColor: ?string = null,
 ): WillSelectPoiActionType {
     return {
         type: types.WILL_SELECT_A_POI,
