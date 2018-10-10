@@ -11,17 +11,9 @@ class ClientAPI {
     }
 
     async init(config) {
-        const {
-            endpoint, key, site, username,
-        } = config;
-
-        this.entityManager = new EntityManager({
-            endpoint,
-            site,
-            username,
-            key,
-            cacheManager: new DistCacheManager('/local'),
-        });
+        this.entityManager = new EntityManager(
+            Object.assign({}, config, { cacheManager: new DistCacheManager('/local') })
+        );
     }
 
     async load(cacheFirst = true, allowOutdatedCache = true) {
