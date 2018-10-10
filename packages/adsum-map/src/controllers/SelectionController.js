@@ -19,6 +19,7 @@ class SelectionController {
     init(action: WillInitActionType): SelectionController {
         this.awm = action.awm;
         this.dispatch = action.store.dispatch;
+        this.highlightColor = action.highlightColor;
 
         return this;
     }
@@ -31,13 +32,14 @@ class SelectionController {
         stayOnCurrentFloor: boolean = true,
         ground: ?AdsumObject3D = null,
         animated: boolean = true,
+        highlightColor: ?string = null,
     ): Promise<void> {
         if (reset) {
             this.reset();
         }
         const places = ACA.getPlaces(poi.places);
 
-        await Promise.all(places.map((place: Place): Promise<void> => this.selectPlace(place, false, false)));
+        await Promise.all(places.map((place: Place): Promise<void> => this.selectPlace(place, false, false, highlightColor)));
 
         if (centerOn) {
             const adsumObjectsFromPlaces = places.map((place: Place): AdsumObject3D => placesController.getPath(place.id).to.adsumObject);
@@ -46,16 +48,27 @@ class SelectionController {
         }
     }
 
-    async selectPlace(place: Place, reset: boolean = true, centerOn: boolean = true): Promise<void> {
+    async selectPlace(
+        place: Place,
+        reset: boolean = true,
+        centerOn: boolean = true,
+        highlightColor: ?string = null,
+    ): Promise<void> {
         if (reset) {
             this.reset();
         }
 
         const path = placesController.getPath(place.id);
-        await this.select(path.to.adsumObject, false, centerOn, false);
+        await this.select(path.to.adsumObject, false, centerOn, false, highlightColor);
     }
 
-    async select(adsumObject: ?AdsumObject3D, reset: boolean = true, centerOn: boolean = true, onlyIfPoi: boolean = true) {
+    async select(
+        adsumObject: ?AdsumObject3D,
+        reset: boolean = true,
+        centerOn: boolean = true,
+        onlyIfPoi: boolean = true,
+        highlightColor: ?string = null,
+    ) {
         if (reset) {
             this.reset();
         }
@@ -74,23 +87,29 @@ class SelectionController {
 
         this.selection.add(adsumObject);
 
-        await this.highlight(adsumObject, centerOn);
+        await this.highlight(adsumObject, centerOn, highlightColor);
     }
 
     getSelection(): Array {
         return Array.from(this.selection);
     }
 
-    async highlight(adsumObject: ?AdsumObject3D, centerOn: boolean = false) {
+    async highlight(adsumObject: ?AdsumObject3D, centerOn: boolean = false, highlightColor: ?string = null) {
         let ground = null;
+
+        if (!highlightColor) {
+            // eslint-disable-next-line prefer-destructuring
+            highlightColor = this.highlightColor;
+        }
+
         if (adsumObject.isBuilding) {
-            adsumObject.setColor(0x78e08f);
+            adsumObject.setColor(highlightColor);
             adsumObject.labels.forEach((label) => {
                 // label.setScale(3, 3, 3);
                 label.select();
             });
         } else if (adsumObject.isSpace) {
-            adsumObject.setColor(0x78e08f);
+            adsumObject.setColor(highlightColor);
             adsumObject.bounceUp(2);
             adsumObject.labels.forEach((label) => {
                 // label.setScale(3, 3, 3);

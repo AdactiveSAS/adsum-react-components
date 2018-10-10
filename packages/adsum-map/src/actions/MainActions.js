@@ -36,7 +36,8 @@ export type WillInitActionType = {|
     },
     zoom?: { min?: number, max?: number },
     autoSelectOnClick?: boolean,
-    backgroundImage?: ?string
+    backgroundImage?: ?string,
+    highlightColor?: string,
 |};
 export function initAction(
     awm: AdsumWebMap,
@@ -50,6 +51,7 @@ export function initAction(
     } = null,
     zoom: { min?: number, max?: number } = null,
     backgroundImage: ?string = null,
+    highlightColor: string = '#78e08f',
 ): WillInitActionType {
     return {
         type: types.WILL_INIT,
@@ -61,6 +63,7 @@ export function initAction(
         getDrawPathSectionOptions,
         zoom,
         backgroundImage,
+        highlightColor,
     };
 }
 
