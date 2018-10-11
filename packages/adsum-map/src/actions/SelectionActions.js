@@ -16,15 +16,23 @@ export type WillSelectActionType = {|
   adsumObject: ?AdsumObject3D,
   reset: boolean,
   centerOn: boolean,
-  onlyIfPoi: boolean
+  onlyIfPoi: boolean,
+  highlightColor: string,
 |};
-export function selectAction(adsumObject: ?AdsumObject3D, reset: boolean = true, centerOn: boolean = false, onlyIfPoi: boolean = true): WillSelectActionType {
+export function selectAction(
+    adsumObject: ?AdsumObject3D,
+    reset: boolean = true,
+    centerOn: boolean = false,
+    onlyIfPoi: boolean = true,
+    highlightColor: ?string = null,
+): WillSelectActionType {
     return {
         type: types.WILL_SELECT,
         adsumObject,
         reset,
         centerOn,
         onlyIfPoi,
+        highlightColor,
     };
 }
 
@@ -32,14 +40,21 @@ export type WillSelectPlaceActionType = {|
   type: types.WILL_SELECT_A_PLACE,
   place: Place,
   reset: boolean,
-  centerOn: boolean
+  centerOn: boolean,
+  highlightColor: string,
 |};
-export function selectPlaceAction(place: Place, reset: boolean = true, centerOn: boolean = false): WillSelectPlaceActionType {
+export function selectPlaceAction(
+    place: Place,
+    reset: boolean = true,
+    centerOn: boolean = false,
+    highlightColor: ?string = null,
+): WillSelectPlaceActionType {
     return {
         type: types.WILL_SELECT_A_PLACE,
         place,
         reset,
         centerOn,
+        highlightColor,
     };
 }
 
@@ -51,7 +66,8 @@ export type WillSelectPoiActionType = {|
   centerOnOptions: CameraCenterOnOptions,
   stayOnCurrentFloor: boolean,
   ground: ?AdsumObject3D,
-  animated: boolean
+  animated: boolean,
+  highlightColor: string,
 |};
 export function selectPoiAction(
     poi: Poi,
@@ -61,6 +77,7 @@ export function selectPoiAction(
     stayOnCurrentFloor: boolean = true,
     ground: ?AdsumObject3D = null,
     animated: boolean = true,
+    highlightColor: ?string = null,
 ): WillSelectPoiActionType {
     return {
         type: types.WILL_SELECT_A_POI,
@@ -71,6 +88,7 @@ export function selectPoiAction(
         stayOnCurrentFloor,
         ground,
         animated,
+        highlightColor,
     };
 }
 

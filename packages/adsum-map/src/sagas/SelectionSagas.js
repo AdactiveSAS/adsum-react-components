@@ -12,7 +12,11 @@ function* onSelect(action: WillSelectActionType): Generator {
         yield delay(200);
         yield call(
             [selectionController, selectionController.select],
-            action.adsumObject, action.reset, action.centerOn, action.onlyIfPoi,
+            action.adsumObject,
+            action.reset,
+            action.centerOn,
+            action.onlyIfPoi,
+            action.highlightColor,
         );
 
         yield put(didSelectAction(selectionController.getSelection()));
@@ -34,6 +38,7 @@ function* onSelectPoi(action: WillSelectPoiActionType): Generator {
             action.stayOnCurrentFloor,
             action.ground,
             action.animated,
+            action.highlightColor,
         );
 
         yield put(didSelectAction(selectionController.getSelection()));
@@ -48,7 +53,10 @@ function* onSelectPlace(action: WillSelectPlaceActionType): Generator {
         yield delay(200);
         yield call(
             [selectionController, selectionController.selectPlace],
-            action.place, action.reset, action.centerOn,
+            action.place,
+            action.reset,
+            action.centerOn,
+            action.highlightColor,
         );
 
         yield put(didSelectAction(selectionController.getSelection()));

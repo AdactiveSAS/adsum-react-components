@@ -37,7 +37,8 @@ type OwnPropsType = {|
     resetOnClose: boolean,
     zoom?: { min?: number, max?: number },
     autoSelectOnClick: boolean,
-    backgroundImage?: ?string
+    backgroundImage?: ?string,
+    highlightColor?: string,
 |};
 
 type PropsType = MappedStatePropsType & MappedDispatchPropsType & OwnPropsType;
@@ -52,6 +53,7 @@ class Map extends React.Component<PropsType> {
     static defaultProps = {
         resetOnClose: true,
         autoSelectOnClick: true,
+        highlightColor: '#78e08f',
     };
 
     initialized: boolean = false;
@@ -67,6 +69,7 @@ class Map extends React.Component<PropsType> {
             getDrawPathSectionOptions,
             zoom,
             backgroundImage,
+            highlightColor,
         } = nextProps;
 
         if (!this.initialized && awm !== null) {
@@ -79,6 +82,7 @@ class Map extends React.Component<PropsType> {
                 getDrawPathSectionOptions,
                 zoom,
                 backgroundImage,
+                highlightColor,
             );
             this.initialized = true;
         }
@@ -126,6 +130,7 @@ const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => bindActionC
         } = null,
         zoom: { min?: number, max?: number } = null,
         backgroundImage: ?string = null,
+        highlightColor: string = '#78e08f',
     ): void => dispatch(initAction(
         awm,
         store,
@@ -135,6 +140,7 @@ const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => bindActionC
         getDrawPathSectionOptions,
         zoom,
         backgroundImage,
+        highlightColor,
     )),
     open: (): void => dispatch(openAction()),
     close: (reset: boolean): void => dispatch(closeAction(reset)),
