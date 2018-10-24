@@ -140,7 +140,7 @@ OR
 ```
 
 ### Props
- 
+
 ```javascript
 type PropsType = {|
     +listClassNames?: string,
@@ -195,7 +195,6 @@ type ListEnumType = 'simple' | 'variable' | 'uniform';
 
 ### Less only
     `npx @adactive/@adactive/az-scroller copy --less-only`
-    
+
 ### Full copy
     `npx @adactive/@adactive/az-scroller copy`
-        
