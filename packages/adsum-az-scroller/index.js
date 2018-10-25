@@ -1,10 +1,10 @@
 // @flow
 
-import AzScroller from './src/AzScroller';
+import AzScroller from './src/azScroller';
 import type {
     ListItemType,
     SectionHeaderInfoType,
-} from './src/AzScroller';
+} from './src/azScroller';
 
 export default AzScroller;
 export {

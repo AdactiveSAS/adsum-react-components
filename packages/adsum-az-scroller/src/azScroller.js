@@ -4,7 +4,7 @@ import * as React from 'react';
 import ReactList from 'react-list';
 import classNames from 'classnames';
 
-import AlphabetList from './subComponents/AlphabetList';
+import AlphabetList from './subComponents/alphabetList';
 
 export type ListItemType = Object;
 export type SectionHeaderInfoType = {
