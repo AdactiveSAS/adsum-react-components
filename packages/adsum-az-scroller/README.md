@@ -11,11 +11,11 @@ Made with <3 for easier touch experience.
 
 ## Getting started
 
-```javascript
+```shell
     npm i --save-dev @adactive/az-scroller
 ```
 OR
-```javascript
+```shell
     yarn add --dev @adactive/az-scroller
 ```
 
@@ -143,34 +143,99 @@ OR
 
 ```javascript
 type PropsType = {|
-    +listClassNames?: string,
-    +alphabetListClassNames?: string,
-    +letterClassNames?: string,
-    +maxHeight: number,
-    +list: ListType,
-    +shouldShowSectionHeaders: boolean,
-    +renderListItem: (ListItemType, key: string | number) => Node,
-    +renderListSectionHeader: ?(headerInfo: SectionHeaderInfoType, key: string | number) => Node,
-    +sectionHeaderHeight?: number,
-    +listItemHeight?: number
+  list: ListType,
+  renderListItem?: (ListItemType, key: string | number) => React.Node,
+  renderListSectionHeader?: ?(headerInfo: SectionHeaderInfoType, key: string | number) => React.Node,
+  shouldShowSectionHeaders?: boolean,
+  listItemHeight?: ?number,
+  sectionHeaderHeight?: ?number,
+  wrapperClassNames?: Array<string>,
+  wrapperStyle?: ?CSSStyleDeclaration,
+  listClassNames?: Array<string>,
+  listStyle?: ?CSSStyleDeclaration,
+  alphabetListClassNames?: Array<string>,
+  alphabetListStyle?: ?CSSStyleDeclaration,
+  letterClassNames?: Array<string>,
+  letterStyle?: ?CSSStyleDeclaration,
+  letterHighlightedClassNames?: Array<string>,
+  letterHighlightedStyle?: ?CSSStyleDeclaration,
 |};
 
-
 static defaultProps = {
-    shouldShowSectionHeaders: false
-}
+        renderListItem: (listItem, key) => (
+            <div
+                key={key}
+                style={{
+                    boxSizing: 'border-box',
+                    height: '30px',
+                    padding: '10px 20px',
+                }}
+            >
+                {listItem.text}
+            </div>
+        ),
+        renderListSectionHeader: (headerInfo, key) => (
+            <div
+                key={key}
+                style={{
+                    boxSizing: 'border-box',
+                    height: '50px',
+                    padding: '20px 20px',
+                    border: 'solid 1px grey',
+                    fontWeight: 'bold',
+                }}
+            >
+                {headerInfo.letter}
+            </div>
+        ),
+        shouldShowSectionHeaders: false,
+        listItemHeight: null,
+        sectionHeaderHeight: null,
+        wrapperClassNames: [],
+        wrapperStyle: {
+            boxSizing: 'border-box',
+            width: '500px',
+            height: '500px',
+            border: 'solid 2px black',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+        },
+        listClassNames: [],
+        listStyle: {
+            overflow: 'auto',
+            maxHeight: '80%',
+        },
+        alphabetListClassNames: [],
+        alphabetListStyle: {
+            boxSizing: 'border-box',
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '20px 10px',
+        },
+        letterClassNames: [],
+        letterStyle: null,
+        letterHighlightedClassNames: [],
+        letterHighlightedStyle: {
+            color: 'red',
+            fontWeight: 'bold',
+        },
+    };
 ```
 
 ```javascript
-type ListItemType = Object;
-type SectionHeaderInfoType = { letter: string, type: 'SectionHeaderInfo' };
-type ListSectionType = {|
+export type ListItemType = Object;
+export type SectionHeaderInfoType = {
+  letter: string,
+  type: 'SectionHeaderInfo',
+};
+export type ListSectionType = {|
     sectionHeaderInfo: SectionHeaderInfoType,
-    items: Array<ListItemType>
+    items: Array<ListItemType>,
 |};
-type ListType = Array<ListSectionType>;
-type LetterIndexesMappingType = { [string]: number };
-type ListEnumType = 'simple' | 'variable' | 'uniform';
+export type ListType = Array<ListSectionType>;
 ```
 
 **listClassNames** -> classNames, which will be added to list wrapper element

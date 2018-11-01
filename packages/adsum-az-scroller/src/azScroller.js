@@ -9,11 +9,11 @@ import AlphabetList from './subComponents/alphabetList';
 export type ListItemType = Object;
 export type SectionHeaderInfoType = {
   letter: string,
-  type: 'SectionHeaderInfo'
+  type: 'SectionHeaderInfo',
 };
 export type ListSectionType = {|
     sectionHeaderInfo: SectionHeaderInfoType,
-    items: Array<ListItemType>
+    items: Array<ListItemType>,
 |};
 export type ListType = Array<ListSectionType>;
 export type LetterIndexesMappingType = { [string]: number };
@@ -71,8 +71,8 @@ class AzScroller extends React.Component<PropsType, StateType> {
                     boxSizing: 'border-box',
                     height: '50px',
                     padding: '20px 20px',
-                    border: 'solid 1px grey',
                     fontWeight: 'bold',
+                    backgroundColor: 'light-grey',
                 }}
             >
                 {headerInfo.letter}
@@ -86,7 +86,6 @@ class AzScroller extends React.Component<PropsType, StateType> {
             boxSizing: 'border-box',
             width: '500px',
             height: '500px',
-            border: 'solid 2px black',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
@@ -172,7 +171,7 @@ class AzScroller extends React.Component<PropsType, StateType> {
         return item ? item.letter : null;
     };
 
-    getListType() {
+    getListType(): ListEnumType {
         const {
             listItemHeight, sectionHeaderHeight, shouldShowSectionHeaders
         } = this.props;
