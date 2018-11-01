@@ -10,6 +10,8 @@ import type {
 
 export default AzScroller;
 export {
+    ListType,
+    ListSectionType,
     ListItemType,
     SectionHeaderInfoType,
 };
