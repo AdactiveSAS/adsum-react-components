@@ -11,25 +11,26 @@ Made with <3 for easier touch experience.
 
 ## Getting started
 
-```shell
     npm i --save-dev @adactive/az-scroller
-```
+
 OR
-```shell
+
     yarn add --dev @adactive/az-scroller
-```
+
 
 ## How to use
+
+The only non-optional prop is the **list** you want to display. It has to be formated according to the
+example below :
 
 ```javascript
     import AzScroller from "@adactive/az-scroller";
      ...
      <AzScroller
-        maxHeight={220}
         list={[
             {
-                sectionHeaderInfo: {
-                    type: 'SectionHeaderInfo',
+                sectionHeader: {
+                    type: 'SectionHeader',
                     letter: 'A'
                 },
                 items: [
@@ -44,8 +45,8 @@ OR
                 ]
             },
             {
-                sectionHeaderInfo: {
-                    type: 'SectionHeaderInfo',
+                sectionHeader: {
+                    type: 'SectionHeader',
                     letter: 'B'
                 },
                 items: [
@@ -57,8 +58,8 @@ OR
                 ]
             },
             {
-                sectionHeaderInfo: {
-                    type: 'SectionHeaderInfo',
+                sectionHeader: {
+                    type: 'SectionHeader',
                     letter: 'C'
                 },
                 items: [
@@ -70,8 +71,8 @@ OR
                 ]
             },
             {
-                sectionHeaderInfo: {
-                    type: 'SectionHeaderInfo',
+                sectionHeader: {
+                    type: 'SectionHeader',
                     letter: 'E'
                 },
                 items: [
@@ -82,8 +83,8 @@ OR
                 ]
             },
             {
-                sectionHeaderInfo: {
-                    type: 'SectionHeaderInfo',
+                sectionHeader: {
+                    type: 'SectionHeader',
                     letter: 'M'
                 },
                 items: [
@@ -94,8 +95,8 @@ OR
                 ]
             },
             {
-                sectionHeaderInfo: {
-                    type: 'SectionHeaderInfo',
+                sectionHeader: {
+                    type: 'SectionHeader',
                     letter: 'S'
                 },
                 items: [
@@ -108,8 +109,8 @@ OR
                 ]
             },
             {
-                sectionHeaderInfo: {
-                    type: 'SectionHeaderInfo',
+                sectionHeader: {
+                    type: 'SectionHeader',
                     letter: 'W'
                 },
                 items: [
@@ -123,21 +124,10 @@ OR
                 ]
             }
         ]}
-        shouldShowSectionHeaders={true}
-        renderListItem={(listItem: ListItem, key: string | number): Node => (
-            <div key={key}>
-                {listItem.text}
-            </div>
-        )}
-        renderListSectionHeader={(headerInfo: SectionHeaderInfo, key: string | number): Node => (
-            <li key={key}>
-                {`Section header of letter ${key}`}
-            </li>
-        )}
-        sectionHeaderHeight={18}
-        listItemHeight={18}
       />
 ```
+
+
 
 ### Props
 
@@ -145,7 +135,7 @@ OR
 type PropsType = {|
   list: ListType,
   renderListItem?: (ListItemType, key: string | number) => React.Node,
-  renderListSectionHeader?: ?(headerInfo: SectionHeaderInfoType, key: string | number) => React.Node,
+  renderListSectionHeader?: ?(sectionHeader: SectionHeaderType, key: string | number) => React.Node,
   shouldShowSectionHeaders?: boolean,
   listItemHeight?: ?number,
   sectionHeaderHeight?: ?number,
@@ -174,7 +164,7 @@ static defaultProps = {
                 {listItem.text}
             </div>
         ),
-        renderListSectionHeader: (headerInfo, key) => (
+        renderListSectionHeader: (sectionHeader, key) => (
             <div
                 key={key}
                 style={{
@@ -185,7 +175,7 @@ static defaultProps = {
                     fontWeight: 'bold',
                 }}
             >
-                {headerInfo.letter}
+                {sectionHeader.letter}
             </div>
         ),
         shouldShowSectionHeaders: false,
@@ -227,39 +217,37 @@ static defaultProps = {
 
 ```javascript
 export type ListItemType = Object;
-export type SectionHeaderInfoType = {
+export type SectionHeaderType = {
   letter: string,
-  type: 'SectionHeaderInfo',
+  type: 'SectionHeader',
 };
 export type ListSectionType = {|
-    sectionHeaderInfo: SectionHeaderInfoType,
+    sectionHeader: SectionHeaderType,
     items: Array<ListItemType>,
 |};
 export type ListType = Array<ListSectionType>;
 ```
 
-**listClassNames** -> classNames, which will be added to list wrapper element
+**listClassNames** &rightarrow; classNames, which will be added to list wrapper element
 
-**alphabetListClassNames** -> classNames, which will be added to wrapper of alphabetList
+**alphabetListClassNames** &rightarrow; classNames, which will be added to wrapper of alphabetList
 
-**letterClassNames** -> classNames, which will be added to each letter in alphabetList
+**letterClassNames** &rightarrow; classNames, which will be added to each letter in alphabetList
 
-**maxHeight** -> the maximum height of the items list, at which the scrolling starts
+**maxHeight** &rightarrow; the maximum height of the items list, at which the scrolling starts
 
-**list** -> the list of items to scroll through
+**list** &rightarrow; the list of items to scroll through
 
-**shouldShowSectionHeader** -> shows if you need to display each section height, or you need just a list without any headers
+**shouldShowSectionHeader** &rightarrow; shows if you need to display each section height, or you need just a list without any headers
 
-**renderListItem** -> a function, which you should provide and which will be called for each listItem. Should return a JSX component
+**renderListItem** &rightarrow; a function, which you should provide and which will be called for each listItem. Should return a JSX component
 
-**renderListSectionHeader** -> same as renderListItem, but the purpose is to render list section headers
+**renderListSectionHeader** &rightarrow; same as renderListItem, but the purpose is to render list section headers
 
-**sectionHeaderHeight** and **listItemHeight** -> should be provided, if their heights are not equal. If not provided -> considered same height both.
+**sectionHeaderHeight** and **listItemHeight** &rightarrow; should be provided, if their heights are not equal. If not provided -> considered same height both.
 
 ## Copy component inside your project src folder  
 
-### Less only
-    `npx @adactive/@adactive/az-scroller copy --less-only`
+It will copy the component inside your project, in src/adsum-az-scroller.
 
-### Full copy
-    `npx @adactive/@adactive/az-scroller copy`
+    npx @adactive/az-scroller copy
