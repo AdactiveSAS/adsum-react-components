@@ -4,30 +4,31 @@ import * as React from 'react';
 import ReactList from 'react-list';
 import classNames from 'classnames';
 
-import AlphabetList from './subComponents/alphabetList';
+import AlphabetList from './subComponents/AlphabetList';
 
-export type ListItemType = Object;
-export type SectionHeaderInfoType = {
+export type SectionItemType = Object;
+export type SectionHeaderType = {
+  type: 'SectionHeader',
   letter: string,
-  type: 'SectionHeaderInfo',
 };
 export type ListSectionType = {|
-    sectionHeaderInfo: SectionHeaderInfoType,
-    items: Array<ListItemType>,
+    header: SectionHeaderType,
+    items: Array<SectionItemType>,
 |};
 export type ListType = Array<ListSectionType>;
-export type LetterIndexesMappingType = { [string]: number };
-export type ListEnumType = 'simple' | 'variable' | 'uniform';
+
+type LetterIndexesMappingType = { [string]: number };
+type ListEnumType = 'simple' | 'variable' | 'uniform';
 type mapLettersToIndexesOutputType = {
-    listToRender: Array<SectionHeaderInfoType | ListItemType>,
+    listToRender: Array<SectionHeaderType | SectionItemType>,
     letterIndexesMapping: LetterIndexesMappingType,
 };
 type PropsType = {|
   list: ListType,
-  renderListItem?: (ListItemType, key: string | number) => React.Node,
-  renderListSectionHeader?: ?(headerInfo: SectionHeaderInfoType, key: string | number) => React.Node,
+  renderSectionItem?: (item: SectionItemType, key: string | number) => React.Node,
+  renderSectionHeader?: ?(header: SectionHeaderType, key: string | number) => React.Node,
   shouldShowSectionHeaders?: boolean,
-  listItemHeight?: ?number,
+  sectionItemHeight?: ?number,
   sectionHeaderHeight?: ?number,
   wrapperClassNames?: Array<string>,
   wrapperStyle?: ?CSSStyleDeclaration,
@@ -41,7 +42,7 @@ type PropsType = {|
   letterHighlightedStyle?: ?CSSStyleDeclaration,
 |};
 type StateType = {|
-    listToRender: Array<SectionHeaderInfoType | ListItemType>,
+    listToRender: Array<SectionHeaderType | SectionItemType>,
     letterIndexesMapping: LetterIndexesMappingType,
     currentLetter: ?string,
 |};
@@ -52,7 +53,7 @@ type StateType = {|
  */
 class AzScroller extends React.Component<PropsType, StateType> {
     static defaultProps = {
-        renderListItem: (listItem, key) => (
+        renderSectionItem: (item, key) => (
             <div
                 key={key}
                 style={{
@@ -61,10 +62,10 @@ class AzScroller extends React.Component<PropsType, StateType> {
                     padding: '10px 20px',
                 }}
             >
-                {listItem.text}
+                {item.text}
             </div>
         ),
-        renderListSectionHeader: (headerInfo, key) => (
+        renderSectionHeader: (header, key) => (
             <div
                 key={key}
                 style={{
@@ -72,14 +73,14 @@ class AzScroller extends React.Component<PropsType, StateType> {
                     height: '50px',
                     padding: '20px 20px',
                     fontWeight: 'bold',
-                    backgroundColor: 'light-grey',
+                    backgroundColor: 'lightgrey',
                 }}
             >
-                {headerInfo.letter}
+                {header.letter}
             </div>
         ),
         shouldShowSectionHeaders: false,
-        listItemHeight: null,
+        sectionItemHeight: null,
         sectionHeaderHeight: null,
         wrapperClassNames: [],
         wrapperStyle: {
@@ -105,7 +106,9 @@ class AzScroller extends React.Component<PropsType, StateType> {
             padding: '20px 10px',
         },
         letterClassNames: [],
-        letterStyle: null,
+        letterStyle: {
+            outline: 'none',
+        },
         letterHighlightedClassNames: [],
         letterHighlightedStyle: {
             color: 'red',
@@ -173,11 +176,11 @@ class AzScroller extends React.Component<PropsType, StateType> {
 
     getListType(): ListEnumType {
         const {
-            listItemHeight, sectionHeaderHeight, shouldShowSectionHeaders
+            sectionItemHeight, sectionHeaderHeight, shouldShowSectionHeaders
         } = this.props;
 
         // heights are given
-        if (listItemHeight && sectionHeaderHeight) return 'variable';
+        if (sectionItemHeight && sectionHeaderHeight) return 'variable';
 
         // all items will be the same size
         if (!shouldShowSectionHeaders) return 'uniform';
@@ -206,20 +209,20 @@ class AzScroller extends React.Component<PropsType, StateType> {
 
         const letterIndexesMapping: LetterIndexesMappingType = {};
         let sectionIndex: number = 0;
-        let listToRender: Array<SectionHeaderInfoType | ListItemType> = [];
+        let listToRender: Array<SectionHeaderType | SectionItemType> = [];
 
         list.forEach((listSection: ListSectionType) => {
-            const { letter } = listSection.sectionHeaderInfo;
+            const { letter } = listSection.header;
             letterIndexesMapping[letter] = sectionIndex;
 
             sectionIndex += listSection.items.length;
 
             if (shouldShowSectionHeaders) {
-                listToRender.push(listSection.sectionHeaderInfo);
+                listToRender.push(listSection.header);
                 sectionIndex++;
             }
 
-            const items = listSection.items.map((item: ListItemType) => ({
+            const items = listSection.items.map((item: SectionItemType) => ({
                 ...item,
                 letter
             }));
@@ -235,36 +238,36 @@ class AzScroller extends React.Component<PropsType, StateType> {
 
     renderListItem = (index: number, key: number): React.Node => {
         const {
-            renderListItem, renderListSectionHeader, shouldShowSectionHeaders
+            renderSectionItem, renderSectionHeader, shouldShowSectionHeaders
         } = this.props;
         const { listToRender } = this.state;
 
         const itemToRender = listToRender[index];
 
-        if (!shouldShowSectionHeaders) return renderListItem(itemToRender, key);
+        if (!shouldShowSectionHeaders) return renderSectionItem(itemToRender, key);
 
         if (
             itemToRender.type
-          && itemToRender.type === 'SectionHeaderInfo'
-          && renderListSectionHeader
+          && itemToRender.type === 'SectionHeader'
+          && renderSectionHeader
         ) {
-            return renderListSectionHeader(itemToRender, key);
+            return renderSectionHeader(itemToRender, key);
         }
 
-        return renderListItem(itemToRender, key);
+        return renderSectionItem(itemToRender, key);
     };
 
     itemSizeGetter = (index: number): ?number => {
-        const { sectionHeaderHeight, listItemHeight } = this.props;
+        const { sectionHeaderHeight, sectionItemHeight } = this.props;
         const { listToRender } = this.state;
 
         const item = listToRender[index];
 
-        if (item.type && item.type === 'SectionHeaderInfo') {
+        if (item.type && item.type === 'SectionHeader') {
             return sectionHeaderHeight;
         }
 
-        return listItemHeight;
+        return sectionItemHeight;
     };
 
     updateCurrentLetter = (index: number = null) => {

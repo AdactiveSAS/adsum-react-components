@@ -36,10 +36,7 @@ class AlphabeticList extends React.Component<PropsType> {
         } = this.props;
 
         if (letterToHighlight === letter) {
-            return {
-                ...letterStyle,
-                ...letterHighlightedStyle,
-            };
+            return Object.assign({}, letterStyle, letterHighlightedStyle);
         }
 
         return letterStyle;
