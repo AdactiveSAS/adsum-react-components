@@ -213,8 +213,11 @@ class AzScroller extends React.Component<PropsType, StateType> {
 
         list.forEach((listSection: ListSectionType) => {
             const { letter } = listSection.header;
+
+            // Add letter to the indexes mapping with corresponding section index
             letterIndexesMapping[letter] = sectionIndex;
 
+            // Increase the section index with the number of items in the current section
             sectionIndex += listSection.items.length;
 
             if (shouldShowSectionHeaders) {

@@ -5,9 +5,9 @@
 
 Made with <3 for easier touch experience.
 
-![2018-05-11 0 17 34](https://user-images.githubusercontent.com/5297278/39992222-c13dfc3e-577a-11e8-9d6e-d6cbdd8f40e1.png)
+![Screenshot of AzScroller component](img/readMeImage.png)
 
-[Live examples here](https://adactivesas.github.io/adsum-react-components/packages/adsum-az-scroller/examples/index.html)
+[//]: # ([Live examples here](https://adactivesas.github.io/adsum-react-components/packages/adsum-az-scroller/examples/index.html)
 
 ## Getting started
 
@@ -20,124 +20,135 @@ OR
 
 ## How to use
 
-The only non-optional prop is the **list** you want to display. It has to be formated according to the
-example below :
+The only non-optional prop is the **list** you want to display. It has to be properly formatted, with
+the list divided in *Sections*, and each Section having a *Header* object and an *Items* array.
+
+See the example below:
 
 ```javascript
     import AzScroller from "@adactive/az-scroller";
-     ...
-     <AzScroller
-        list={[
-            {
-                sectionHeader: {
-                    type: 'SectionHeader',
-                    letter: 'A'
-                },
-                items: [
-                    { text: 'ABEL' },
-                    { text: 'ABRAHAM' },
-                    { text: 'ACHILLE' },
-                    { text: 'ADAM' },
-                    { text: 'ADÈLE' },
-                    { text: 'ADELINE' },
-                    { text: 'ADOLPHE' },
-                    { text: 'ANTOINE' },
-                ]
-            },
-            {
-                sectionHeader: {
-                    type: 'SectionHeader',
-                    letter: 'B'
-                },
-                items: [
-                    { text: 'BAPTISTE' },
-                    { text: 'BARBARA' },
-                    { text: 'BARNABÉ' },
-                    { text: 'BARTHÉLÉMY' },
-                    { text: 'BASILE' },
-                ]
-            },
-            {
-                sectionHeader: {
-                    type: 'SectionHeader',
-                    letter: 'C'
-                },
-                items: [
-                    { text: 'CERISE' },
-                    { text: 'CÉSAIRE' },
-                    { text: 'CHARLES' },
-                    { text: 'CHARLOT' },
-                    { text: 'CHRISTIAN' },
-                ]
-            },
-            {
-                sectionHeader: {
-                    type: 'SectionHeader',
-                    letter: 'E'
-                },
-                items: [
-                    { text: 'ESTELLE' },
-                    { text: 'ETHAN' },
-                    { text: 'ÉTIENNE' },
-                    { text: 'EUGÈNE' },
-                ]
-            },
-            {
-                sectionHeader: {
-                    type: 'SectionHeader',
-                    letter: 'M'
-                },
-                items: [
-                    { text: 'MICHÈLE' },
-                    { text: 'MOROINE' },
-                    { text: 'MURIELLE' },
-                    { text: 'MYLÈNE' },
-                ]
-            },
-            {
-                sectionHeader: {
-                    type: 'SectionHeader',
-                    letter: 'S'
-                },
-                items: [
-                    { text: 'SEBASTIAN' },
-                    { text: 'SEREN' },
-                    { text: 'STANLEY' },
-                    { text: 'STÉPHANE' },
-                    { text: 'SYBILLE' },
-                    { text: 'SYLVAIN' },
-                ]
-            },
-            {
-                sectionHeader: {
-                    type: 'SectionHeader',
-                    letter: 'W'
-                },
-                items: [
-                    { text: 'WANDY' },
-                    { text: 'WAN' },
-                    { text: 'WREN' },
-                    { text: 'WILGELM' },
-                    { text: 'WADE' },
-                    { text: 'WILLIAM' },
-                    { text: 'WINOC' }
-                ]
-            }
-        ]}
-      />
+    
+    // ...
+
+    const listExample = [
+         {
+             header: {
+                 type: 'SectionHeader',
+                 letter: 'A',
+             },
+             items: [
+                 { text: 'ABEL' },
+                 { text: 'ABRAHAM' },
+                 { text: 'ACHILLE' },
+                 { text: 'ADAM' },
+                 { text: 'ADÈLE' },
+                 { text: 'ADELINE' },
+                 { text: 'ADOLPHE' },
+                 { text: 'ANTOINE' },
+             ],
+         },
+         {
+             header: {
+                 type: 'SectionHeader',
+                 letter: 'B',
+             },
+             items: [
+                 { text: 'BAPTISTE' },
+                 { text: 'BARBARA' },
+                 { text: 'BARNABÉ' },
+                 { text: 'BARTHÉLÉMY' },
+                 { text: 'BASILE' },
+             ],
+         },
+         {
+             header: {
+                 type: 'SectionHeader',
+                 letter: 'C',
+             },
+             items: [
+                 { text: 'CERISE' },
+                 { text: 'CÉSAIRE' },
+                 { text: 'CHARLES' },
+                 { text: 'CHARLOT' },
+                 { text: 'CHRISTIAN' },
+             ],
+         },
+         {
+             header: {
+                 type: 'SectionHeader',
+                 letter: 'E',
+             },
+             items: [
+                 { text: 'ESTELLE' },
+                 { text: 'ETHAN' },
+                 { text: 'ÉTIENNE' },
+                 { text: 'EUGÈNE' },
+             ],
+         },
+         {
+             header: {
+                 type: 'SectionHeader',
+                 letter: 'M',
+             },
+             items: [
+                 { text: 'MICHÈLE' },
+                 { text: 'MOROINE' },
+                 { text: 'MURIELLE' },
+                 { text: 'MYLÈNE' },
+             ],
+         },
+         {
+             header: {
+                 type: 'SectionHeader',
+                 letter: 'S',
+             },
+             items: [
+                 { text: 'SEBASTIAN' },
+                 { text: 'SEREN' },
+                 { text: 'STANLEY' },
+                 { text: 'STÉPHANE' },
+                 { text: 'SYBILLE' },
+                 { text: 'SYLVAIN' },
+             ],
+         },
+         {
+             header: {
+                 type: 'SectionHeader',
+                 letter: 'W',
+             },
+             items: [
+                 { text: 'WANDY' },
+                 { text: 'WAN' },
+                 { text: 'WREN' },
+                 { text: 'WILGELM' },
+                 { text: 'WADE' },
+                 { text: 'WILLIAM' },
+                 { text: 'WINOC' },
+             ],
+         },
+     ];
+    
+    <AzScroller list={listExample} />
 ```
 
 
+**The *Header* object must have a `type: 'SectionHeader'` and a `letter: 'anyString'` field, those
+are mandatory. Plus, you must not use a `letter` field in any *Items*.**
 
-### Props
+Else, in the *Header* and the *Items* you can tweak the other fields and name them as you want, add fields, etc.
+You will be able to retrieve those fields in the `renderListItem` & `renderListSectionHeader` render
+methods.
+
+
+## Optional props
 
 ```javascript
 type PropsType = {|
   list: ListType,
-  renderListItem?: (ListItemType, key: string | number) => React.Node,
-  renderListSectionHeader?: ?(sectionHeader: SectionHeaderType, key: string | number) => React.Node,
+  renderSectionItem?: ?(item: SectionItemType, key: string | number) => React.Node,
+  renderSectionHeader?: ?(header: SectionHeaderType, key: string | number) => React.Node,
   shouldShowSectionHeaders?: boolean,
-  listItemHeight?: ?number,
+  sectionItemHeight?: ?number,
   sectionHeaderHeight?: ?number,
   wrapperClassNames?: Array<string>,
   wrapperStyle?: ?CSSStyleDeclaration,
@@ -150,101 +161,136 @@ type PropsType = {|
   letterHighlightedClassNames?: Array<string>,
   letterHighlightedStyle?: ?CSSStyleDeclaration,
 |};
-
-static defaultProps = {
-        renderListItem: (listItem, key) => (
-            <div
-                key={key}
-                style={{
-                    boxSizing: 'border-box',
-                    height: '30px',
-                    padding: '10px 20px',
-                }}
-            >
-                {listItem.text}
-            </div>
-        ),
-        renderListSectionHeader: (sectionHeader, key) => (
-            <div
-                key={key}
-                style={{
-                    boxSizing: 'border-box',
-                    height: '50px',
-                    padding: '20px 20px',
-                    border: 'solid 1px grey',
-                    fontWeight: 'bold',
-                }}
-            >
-                {sectionHeader.letter}
-            </div>
-        ),
-        shouldShowSectionHeaders: false,
-        listItemHeight: null,
-        sectionHeaderHeight: null,
-        wrapperClassNames: [],
-        wrapperStyle: {
-            boxSizing: 'border-box',
-            width: '500px',
-            height: '500px',
-            border: 'solid 2px black',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-        },
-        listClassNames: [],
-        listStyle: {
-            overflow: 'auto',
-            maxHeight: '80%',
-        },
-        alphabetListClassNames: [],
-        alphabetListStyle: {
-            boxSizing: 'border-box',
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: '20px 10px',
-        },
-        letterClassNames: [],
-        letterStyle: null,
-        letterHighlightedClassNames: [],
-        letterHighlightedStyle: {
-            color: 'red',
-            fontWeight: 'bold',
-        },
-    };
 ```
 
+#### list
+The list of items to scroll through.
+
+#### renderSectionItem
+A function, which you should provide and which will be called for each listItem.
+Should return a JSX component.
+
+#### renderSectionHeader
+Same as renderSectionItem, but the purpose is to render list section headers.
+
+#### shouldShowSectionHeaders
+Shows if you need to display each section height, or you need just a list without any headers.
+
+#### sectionItemHeight & sectionHeaderHeight
+Should be provided to assure a smooth scrolling experience. The easiest way to do that is to set a fixed
+height in the 2 render methods and pass them as props here as well (see Default Props section for 
+an example). **If you pass render methods, don't forget to pass the corresponding height, else default
+height from default props will be used, which can lead to UI issues.** For more indormations on the topic,
+take a look at *react-list* package which is used here: https://www.npmjs.com/package/react-list
+
+#### listClassNames & listStyle
+Modify the style of *list wrapper element* either with CSS classnames or inline style object, or both.
+
+#### alphabetListClassNames & alphabetListStyle
+Modify the style of *wrapper of alphabetList* either with CSS classnames or inline style object, or both.
+
+#### letterClassNames & letterStyle
+Modify the style of *each letter in alphabetList* either with CSS classnames or inline style object, or both.
+
+#### letterHighlightedClassNames & letterHighlightedStyle
+Modify the style of *the highlighted letter in alphabetList* either with CSS classnames or inline style object, or both.
+
+
+> Note that classnames props are **an array of strings** (one string for each classname you want to pass)
+and **not a single string with spaces**. So if you want to pass only one classname *'letter-class-name'* to letter
+for example, you must pass
 ```javascript
-export type ListItemType = Object;
+<AzScroller
+    list={listExample}
+    letterClassNames={["letter-class-name"]}
+/>
+```
+
+
+## Exported Types
+
+```javascript
+export type SectionItemType = Object;
 export type SectionHeaderType = {
-  letter: string,
   type: 'SectionHeader',
+  letter: string,
 };
 export type ListSectionType = {|
-    sectionHeader: SectionHeaderType,
-    items: Array<ListItemType>,
+    header: SectionHeaderType,
+    items: Array<SectionItemType>,
 |};
 export type ListType = Array<ListSectionType>;
 ```
 
-**listClassNames** &rightarrow; classNames, which will be added to list wrapper element
 
-**alphabetListClassNames** &rightarrow; classNames, which will be added to wrapper of alphabetList
+## Default props
 
-**letterClassNames** &rightarrow; classNames, which will be added to each letter in alphabetList
+```javascript
+static defaultProps = {
+    renderSectionItem: (item: SectionItemType, key: string | number) => (
+        <div
+            key={key}
+            style={{
+                boxSizing: 'border-box',
+                height: '30px',
+                padding: '10px 20px',
+            }}
+        >
+            {item.text}
+        </div>
+    ),
+    renderSectionHeader: (header: SectionHeaderType, key: string | number) => (
+        <div
+            key={key}
+            style={{
+                boxSizing: 'border-box',
+                height: '50px',
+                padding: '20px 20px',
+                fontWeight: 'bold',
+                backgroundColor: 'lightgrey',
+            }}
+        >
+            {header.letter}
+        </div>
+    ),
+    shouldShowSectionHeaders: false,
+    sectionItemHeight: null,
+    sectionHeaderHeight: null,
+    wrapperClassNames: [],
+    wrapperStyle: {
+        boxSizing: 'border-box',
+        width: '500px',
+        height: '500px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+    },
+    listClassNames: [],
+    listStyle: {
+        overflow: 'auto',
+        maxHeight: '80%',
+    },
+    alphabetListClassNames: [],
+    alphabetListStyle: {
+        boxSizing: 'border-box',
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '20px 10px',
+    },
+    letterClassNames: [],
+    letterStyle: {
+        outline: 'none',
+    },
+    letterHighlightedClassNames: [],
+    letterHighlightedStyle: {
+        color: 'red',
+        fontWeight: 'bold',
+    },
+};
+```
 
-**maxHeight** &rightarrow; the maximum height of the items list, at which the scrolling starts
-
-**list** &rightarrow; the list of items to scroll through
-
-**shouldShowSectionHeader** &rightarrow; shows if you need to display each section height, or you need just a list without any headers
-
-**renderListItem** &rightarrow; a function, which you should provide and which will be called for each listItem. Should return a JSX component
-
-**renderListSectionHeader** &rightarrow; same as renderListItem, but the purpose is to render list section headers
-
-**sectionHeaderHeight** and **listItemHeight** &rightarrow; should be provided, if their heights are not equal. If not provided -> considered same height both.
 
 ## Copy component inside your project src folder  
 
