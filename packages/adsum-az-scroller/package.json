@@ -1,6 +1,6 @@
 {
   "name": "@adactive/az-scroller",
-  "version": "2.0.0-alpha.3",
+  "version": "2.0.0-alpha.4",
   "description": "Adsum A-Z scrolling component",
   "main": "index.js",
   "author": "Stanley Ong <andrei.pavlov@adactive.com>",
