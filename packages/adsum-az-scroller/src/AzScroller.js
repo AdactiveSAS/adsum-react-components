@@ -95,6 +95,14 @@ class AzScroller extends React.Component<PropsType, StateType> {
     };
 
     static defaultStyleProps = {
+        wrapperStyle: {
+            boxSizing: 'border-box',
+            width: '500px',
+            height: '500px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+        },
         listStyle: {
             overflow: 'auto',
             maxHeight: '80%',
@@ -106,14 +114,6 @@ class AzScroller extends React.Component<PropsType, StateType> {
             justifyContent: 'space-between',
             alignItems: 'center',
             padding: '20px 10px',
-        },
-        wrapperStyle: {
-            boxSizing: 'border-box',
-            width: '500px',
-            height: '500px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
         },
         letterStyle: {
             outline: 'none',

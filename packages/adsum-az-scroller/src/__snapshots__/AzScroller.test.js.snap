@@ -1087,53 +1087,21 @@ ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <AzScroller
     alphabetListClassNames={Array []}
-    alphabetListStyle={
-      Object {
-        "alignItems": "center",
-        "boxSizing": "border-box",
-        "display": "flex",
-        "justifyContent": "space-between",
-        "padding": "20px 10px",
-        "width": "100%",
-      }
-    }
+    alphabetListStyle={null}
     letterClassNames={Array []}
     letterHighlightedClassNames={Array []}
-    letterHighlightedStyle={
-      Object {
-        "color": "red",
-        "fontWeight": "bold",
-      }
-    }
-    letterStyle={
-      Object {
-        "outline": "none",
-      }
-    }
+    letterHighlightedStyle={null}
+    letterStyle={null}
     list={Array []}
     listClassNames={Array []}
-    listStyle={
-      Object {
-        "maxHeight": "80%",
-        "overflow": "auto",
-      }
-    }
+    listStyle={null}
     renderSectionHeader={[Function]}
     renderSectionItem={[Function]}
     sectionHeaderHeight={null}
     sectionItemHeight={null}
     shouldShowSectionHeaders={false}
     wrapperClassNames={Array []}
-    wrapperStyle={
-      Object {
-        "boxSizing": "border-box",
-        "display": "flex",
-        "flexDirection": "column",
-        "height": "500px",
-        "justifyContent": "space-between",
-        "width": "500px",
-      }
-    }
+    wrapperStyle={null}
   />,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
@@ -1729,29 +1697,11 @@ ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <AzScroller
     alphabetListClassNames={Array []}
-    alphabetListStyle={
-      Object {
-        "alignItems": "center",
-        "boxSizing": "border-box",
-        "display": "flex",
-        "justifyContent": "space-between",
-        "padding": "20px 10px",
-        "width": "100%",
-      }
-    }
+    alphabetListStyle={null}
     letterClassNames={Array []}
     letterHighlightedClassNames={Array []}
-    letterHighlightedStyle={
-      Object {
-        "color": "red",
-        "fontWeight": "bold",
-      }
-    }
-    letterStyle={
-      Object {
-        "outline": "none",
-      }
-    }
+    letterHighlightedStyle={null}
+    letterStyle={null}
     list={
       Array [
         Object {
@@ -1930,28 +1880,14 @@ ShallowWrapper {
       ]
     }
     listClassNames={Array []}
-    listStyle={
-      Object {
-        "maxHeight": "80%",
-        "overflow": "auto",
-      }
-    }
+    listStyle={null}
     renderSectionHeader={[Function]}
     renderSectionItem={[Function]}
     sectionHeaderHeight={null}
     sectionItemHeight={null}
     shouldShowSectionHeaders={false}
     wrapperClassNames={Array []}
-    wrapperStyle={
-      Object {
-        "boxSizing": "border-box",
-        "display": "flex",
-        "flexDirection": "column",
-        "height": "500px",
-        "justifyContent": "space-between",
-        "width": "500px",
-      }
-    }
+    wrapperStyle={null}
   />,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],

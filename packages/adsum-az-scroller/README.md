@@ -269,6 +269,14 @@ static defaultProps = {
 };
 
 static defaultStyleProps = {
+    wrapperStyle: {
+        boxSizing: 'border-box',
+        width: '500px',
+        height: '500px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+    },
     listStyle: {
         overflow: 'auto',
         maxHeight: '80%',
@@ -280,14 +288,6 @@ static defaultStyleProps = {
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: '20px 10px',
-    },
-    wrapperStyle: {
-        boxSizing: 'border-box',
-        width: '500px',
-        height: '500px',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
     },
     letterStyle: {
         outline: 'none',
