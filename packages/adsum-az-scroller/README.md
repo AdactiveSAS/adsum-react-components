@@ -133,7 +133,7 @@ See the example below:
 
 
 **The *Header* object must have a `type: 'SectionHeader'` and a `letter: 'anyString'` field, those
-are mandatory. Plus, you must not use a `letter` field in any *Items*.**
+are mandatory. Plus, you must NOT use a `letter` field in any *Items*.**
 
 Else, in the *Header* and the *Items* you can tweak the other fields and name them as you want, add fields, etc.
 You will be able to retrieve those fields in the `renderListItem` & `renderListSectionHeader` render
@@ -257,20 +257,22 @@ static defaultProps = {
     sectionItemHeight: null,
     sectionHeaderHeight: null,
     wrapperClassNames: [],
-    wrapperStyle: {
-        boxSizing: 'border-box',
-        width: '500px',
-        height: '500px',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-    },
+    wrapperStyle: null,
     listClassNames: [],
+    listStyle: null,
+    alphabetListClassNames: [],
+    alphabetListStyle: null,
+    letterClassNames: [],
+    letterStyle: null,
+    letterHighlightedClassNames: [],
+    letterHighlightedStyle: null,
+};
+
+static defaultStyleProps = {
     listStyle: {
         overflow: 'auto',
         maxHeight: '80%',
     },
-    alphabetListClassNames: [],
     alphabetListStyle: {
         boxSizing: 'border-box',
         width: '100%',
@@ -279,11 +281,17 @@ static defaultProps = {
         alignItems: 'center',
         padding: '20px 10px',
     },
-    letterClassNames: [],
+    wrapperStyle: {
+        boxSizing: 'border-box',
+        width: '500px',
+        height: '500px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+    },
     letterStyle: {
         outline: 'none',
     },
-    letterHighlightedClassNames: [],
     letterHighlightedStyle: {
         color: 'red',
         fontWeight: 'bold',
@@ -291,6 +299,14 @@ static defaultProps = {
 };
 ```
 
+
+*Default style props* will apply if:
+- of course *the corresponding style prop is not passed*
+- AND *the corresponding classnames prop is not passed*
+
+
+**This means that passing a classname or a inline style object will desactivate the corresponding
+default style**
 
 ## Copy component inside your project src folder  
 

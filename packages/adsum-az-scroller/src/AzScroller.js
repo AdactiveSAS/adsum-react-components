@@ -83,20 +83,22 @@ class AzScroller extends React.Component<PropsType, StateType> {
         sectionItemHeight: null,
         sectionHeaderHeight: null,
         wrapperClassNames: [],
-        wrapperStyle: {
-            boxSizing: 'border-box',
-            width: '500px',
-            height: '500px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-        },
+        wrapperStyle: null,
         listClassNames: [],
+        listStyle: null,
+        alphabetListClassNames: [],
+        alphabetListStyle: null,
+        letterClassNames: [],
+        letterStyle: null,
+        letterHighlightedClassNames: [],
+        letterHighlightedStyle: null,
+    };
+
+    static defaultStyleProps = {
         listStyle: {
             overflow: 'auto',
             maxHeight: '80%',
         },
-        alphabetListClassNames: [],
         alphabetListStyle: {
             boxSizing: 'border-box',
             width: '100%',
@@ -105,11 +107,17 @@ class AzScroller extends React.Component<PropsType, StateType> {
             alignItems: 'center',
             padding: '20px 10px',
         },
-        letterClassNames: [],
+        wrapperStyle: {
+            boxSizing: 'border-box',
+            width: '500px',
+            height: '500px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+        },
         letterStyle: {
             outline: 'none',
         },
-        letterHighlightedClassNames: [],
         letterHighlightedStyle: {
             color: 'red',
             fontWeight: 'bold',
@@ -146,6 +154,18 @@ class AzScroller extends React.Component<PropsType, StateType> {
         }
 
         return null;
+    }
+
+    getInlineStyle(
+        classnames: Array<string>,
+        style: ?CSSStyleDeclaration,
+        defaultStyle: ?CSSStyleDeclaration,
+    ): ?CSSStyleDeclaration {
+        // If there is a style object or classnames, return style (even if null)
+        if (style || classnames.length) return style;
+
+        // Else, since no there is no style and no classnames, return the default style prop
+        return defaultStyle;
     }
 
     onLetterClicked = (index: number) => {
@@ -310,11 +330,12 @@ class AzScroller extends React.Component<PropsType, StateType> {
         const { listToRender } = this.state;
 
         const listType: ListEnumType = this.getListType();
+        const style = this.getInlineStyle(listClassNames, listStyle, AzScroller.defaultStyleProps.listStyle);
 
         return (
             <div
                 className={classNames(listClassNames)}
-                style={listStyle}
+                style={style}
                 onScroll={this.handleScroll}
             >
                 <ReactList
@@ -345,11 +366,23 @@ class AzScroller extends React.Component<PropsType, StateType> {
                 onLetterClicked={this.onLetterClicked}
                 letterIndexesMapping={letterIndexesMapping}
                 alphabetListClassNames={alphabetListClassNames}
-                alphabetListStyle={alphabetListStyle}
+                alphabetListStyle={this.getInlineStyle(
+                    alphabetListClassNames,
+                    alphabetListStyle,
+                    AzScroller.defaultStyleProps.alphabetListStyle,
+                )}
                 letterClassNames={letterClassNames}
-                letterStyle={letterStyle}
+                letterStyle={this.getInlineStyle(
+                    letterClassNames,
+                    letterStyle,
+                    AzScroller.defaultStyleProps.letterStyle,
+                )}
                 letterHighlightedClassNames={letterHighlightedClassNames}
-                letterHighlightedStyle={letterHighlightedStyle}
+                letterHighlightedStyle={this.getInlineStyle(
+                    letterHighlightedClassNames,
+                    letterHighlightedStyle,
+                    AzScroller.defaultStyleProps.letterHighlightedStyle,
+                )}
             />
         );
     }
@@ -357,10 +390,12 @@ class AzScroller extends React.Component<PropsType, StateType> {
     render(): Node {
         const { wrapperClassNames, wrapperStyle } = this.props;
 
+        const style = this.getInlineStyle(wrapperClassNames, wrapperStyle, AzScroller.defaultStyleProps.wrapperStyle);
+
         return (
             <div
                 className={classNames(wrapperClassNames)}
-                style={wrapperStyle}
+                style={style}
             >
                 {this.renderReactList()}
                 {this.renderAlphabetList()}
