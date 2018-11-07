@@ -185,6 +185,9 @@ const testSuiteTemplate = (props) => {
     });
 
     it('calls componentDidMount and only once', () => {
+        // Mocking unsupported JSDOM method window.scrollTo
+        window.scrollTo = jest.fn().mockImplementation(() => {});
+
         // Isolating the spy in a sandbox
         const sandbox = sinon.createSandbox();
 

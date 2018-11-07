@@ -239,210 +239,210 @@ ShallowWrapper {
   Symbol(enzyme.__unrendered__): <AzScroller
     alphabetListClassNames={Array []}
     alphabetListStyle={
-        Object {
-            "alignItems": "center",
-            "boxSizing": "border-box",
-            "display": "flex",
-            "justifyContent": "space-between",
-            "padding": "20px 10px",
-            "width": "100%",
-          }
+      Object {
+        "alignItems": "center",
+        "boxSizing": "border-box",
+        "display": "flex",
+        "justifyContent": "space-between",
+        "padding": "20px 10px",
+        "width": "100%",
+      }
     }
     letterClassNames={Array []}
     letterHighlightedClassNames={Array []}
     letterHighlightedStyle={
-        Object {
-            "color": "blue",
-          }
+      Object {
+        "color": "blue",
+      }
     }
     letterStyle={
-        Object {
-            "outline": "none",
-          }
+      Object {
+        "outline": "none",
+      }
     }
     list={
-        Array [
+      Array [
+        Object {
+          "header": Object {
+            "letter": "A",
+            "type": "SectionHeader",
+          },
+          "items": Array [
             Object {
-              "header": Object {
-                "letter": "A",
-                "type": "SectionHeader",
-              },
-              "items": Array [
-                Object {
-                  "text": "ABEL",
-                },
-                Object {
-                  "text": "ABRAHAM",
-                },
-                Object {
-                  "text": "ACHILLE",
-                },
-                Object {
-                  "text": "ADAM",
-                },
-                Object {
-                  "text": "ADÈLE",
-                },
-                Object {
-                  "text": "ADELINE",
-                },
-                Object {
-                  "text": "ADOLPHE",
-                },
-                Object {
-                  "text": "ANTOINE",
-                },
-              ],
+              "text": "ABEL",
             },
             Object {
-              "header": Object {
-                "letter": "B",
-                "type": "SectionHeader",
-              },
-              "items": Array [
-                Object {
-                  "text": "BAPTISTE",
-                },
-                Object {
-                  "text": "BARBARA",
-                },
-                Object {
-                  "text": "BARNABÉ",
-                },
-                Object {
-                  "text": "BARTHÉLÉMY",
-                },
-                Object {
-                  "text": "BASILE",
-                },
-              ],
+              "text": "ABRAHAM",
             },
             Object {
-              "header": Object {
-                "letter": "C",
-                "type": "SectionHeader",
-              },
-              "items": Array [
-                Object {
-                  "text": "CERISE",
-                },
-                Object {
-                  "text": "CÉSAIRE",
-                },
-                Object {
-                  "text": "CHARLES",
-                },
-                Object {
-                  "text": "CHARLOT",
-                },
-                Object {
-                  "text": "CHRISTIAN",
-                },
-              ],
+              "text": "ACHILLE",
             },
             Object {
-              "header": Object {
-                "letter": "E",
-                "type": "SectionHeader",
-              },
-              "items": Array [
-                Object {
-                  "text": "ESTELLE",
-                },
-                Object {
-                  "text": "ETHAN",
-                },
-                Object {
-                  "text": "ÉTIENNE",
-                },
-                Object {
-                  "text": "EUGÈNE",
-                },
-              ],
+              "text": "ADAM",
             },
             Object {
-              "header": Object {
-                "letter": "M",
-                "type": "SectionHeader",
-              },
-              "items": Array [
-                Object {
-                  "text": "MICHÈLE",
-                },
-                Object {
-                  "text": "MOROINE",
-                },
-                Object {
-                  "text": "MURIELLE",
-                },
-                Object {
-                  "text": "MYLÈNE",
-                },
-              ],
+              "text": "ADÈLE",
             },
             Object {
-              "header": Object {
-                "letter": "S",
-                "type": "SectionHeader",
-              },
-              "items": Array [
-                Object {
-                  "text": "SEBASTIAN",
-                },
-                Object {
-                  "text": "SEREN",
-                },
-                Object {
-                  "text": "STANLEY",
-                },
-                Object {
-                  "text": "STÉPHANE",
-                },
-                Object {
-                  "text": "SYBILLE",
-                },
-                Object {
-                  "text": "SYLVAIN",
-                },
-              ],
+              "text": "ADELINE",
             },
             Object {
-              "header": Object {
-                "letter": "W",
-                "type": "SectionHeader",
-              },
-              "items": Array [
-                Object {
-                  "text": "WANDY",
-                },
-                Object {
-                  "text": "WAN",
-                },
-                Object {
-                  "text": "WREN",
-                },
-                Object {
-                  "text": "WILGELM",
-                },
-                Object {
-                  "text": "WADE",
-                },
-                Object {
-                  "text": "WILLIAM",
-                },
-                Object {
-                  "text": "WINOC",
-                },
-              ],
+              "text": "ADOLPHE",
             },
-          ]
+            Object {
+              "text": "ANTOINE",
+            },
+          ],
+        },
+        Object {
+          "header": Object {
+            "letter": "B",
+            "type": "SectionHeader",
+          },
+          "items": Array [
+            Object {
+              "text": "BAPTISTE",
+            },
+            Object {
+              "text": "BARBARA",
+            },
+            Object {
+              "text": "BARNABÉ",
+            },
+            Object {
+              "text": "BARTHÉLÉMY",
+            },
+            Object {
+              "text": "BASILE",
+            },
+          ],
+        },
+        Object {
+          "header": Object {
+            "letter": "C",
+            "type": "SectionHeader",
+          },
+          "items": Array [
+            Object {
+              "text": "CERISE",
+            },
+            Object {
+              "text": "CÉSAIRE",
+            },
+            Object {
+              "text": "CHARLES",
+            },
+            Object {
+              "text": "CHARLOT",
+            },
+            Object {
+              "text": "CHRISTIAN",
+            },
+          ],
+        },
+        Object {
+          "header": Object {
+            "letter": "E",
+            "type": "SectionHeader",
+          },
+          "items": Array [
+            Object {
+              "text": "ESTELLE",
+            },
+            Object {
+              "text": "ETHAN",
+            },
+            Object {
+              "text": "ÉTIENNE",
+            },
+            Object {
+              "text": "EUGÈNE",
+            },
+          ],
+        },
+        Object {
+          "header": Object {
+            "letter": "M",
+            "type": "SectionHeader",
+          },
+          "items": Array [
+            Object {
+              "text": "MICHÈLE",
+            },
+            Object {
+              "text": "MOROINE",
+            },
+            Object {
+              "text": "MURIELLE",
+            },
+            Object {
+              "text": "MYLÈNE",
+            },
+          ],
+        },
+        Object {
+          "header": Object {
+            "letter": "S",
+            "type": "SectionHeader",
+          },
+          "items": Array [
+            Object {
+              "text": "SEBASTIAN",
+            },
+            Object {
+              "text": "SEREN",
+            },
+            Object {
+              "text": "STANLEY",
+            },
+            Object {
+              "text": "STÉPHANE",
+            },
+            Object {
+              "text": "SYBILLE",
+            },
+            Object {
+              "text": "SYLVAIN",
+            },
+          ],
+        },
+        Object {
+          "header": Object {
+            "letter": "W",
+            "type": "SectionHeader",
+          },
+          "items": Array [
+            Object {
+              "text": "WANDY",
+            },
+            Object {
+              "text": "WAN",
+            },
+            Object {
+              "text": "WREN",
+            },
+            Object {
+              "text": "WILGELM",
+            },
+            Object {
+              "text": "WADE",
+            },
+            Object {
+              "text": "WILLIAM",
+            },
+            Object {
+              "text": "WINOC",
+            },
+          ],
+        },
+      ]
     }
     listClassNames={Array []}
     listStyle={
-        Object {
-            "maxHeight": "60%",
-            "overflow": "auto",
-          }
+      Object {
+        "maxHeight": "60%",
+        "overflow": "auto",
+      }
     }
     renderSectionHeader={[Function]}
     renderSectionItem={[Function]}
@@ -451,16 +451,16 @@ ShallowWrapper {
     shouldShowSectionHeaders={true}
     wrapperClassNames={Array []}
     wrapperStyle={
-        Object {
-            "boxSizing": "border-box",
-            "display": "flex",
-            "flexDirection": "column",
-            "height": "900px",
-            "justifyContent": "space-between",
-            "width": "200px",
-          }
+      Object {
+        "boxSizing": "border-box",
+        "display": "flex",
+        "flexDirection": "column",
+        "height": "900px",
+        "justifyContent": "space-between",
+        "width": "200px",
+      }
     }
-/>,
+  />,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -479,66 +479,66 @@ ShallowWrapper {
           className=""
           onScroll={[Function]}
           style={
-                    Object {
-                              "maxHeight": "60%",
-                              "overflow": "auto",
-                            }
+            Object {
+              "maxHeight": "60%",
+              "overflow": "auto",
+            }
           }
->
+        >
           <ReactList
-                    axis="y"
-                    itemRenderer={[Function]}
-                    itemSizeGetter={[Function]}
-                    itemsRenderer={[Function]}
-                    length={46}
-                    minSize={1}
-                    pageSize={10}
-                    scrollParentGetter={[Function]}
-                    scrollParentViewportSizeGetter={[Function]}
-                    threshold={100}
-                    type="variable"
-                    useStaticSize={false}
-                    useTranslate3d={true}
+            axis="y"
+            itemRenderer={[Function]}
+            itemSizeGetter={[Function]}
+            itemsRenderer={[Function]}
+            length={46}
+            minSize={1}
+            pageSize={10}
+            scrollParentGetter={[Function]}
+            scrollParentViewportSizeGetter={[Function]}
+            threshold={100}
+            type="variable"
+            useStaticSize={false}
+            useTranslate3d={true}
           />
-</div>,
+        </div>,
         <AlphabeticList
           alphabetListClassNames={Array []}
           alphabetListStyle={
-                    Object {
-                              "alignItems": "center",
-                              "boxSizing": "border-box",
-                              "display": "flex",
-                              "justifyContent": "space-between",
-                              "padding": "20px 10px",
-                              "width": "100%",
-                            }
+            Object {
+              "alignItems": "center",
+              "boxSizing": "border-box",
+              "display": "flex",
+              "justifyContent": "space-between",
+              "padding": "20px 10px",
+              "width": "100%",
+            }
           }
           letterClassNames={Array []}
           letterHighlightedClassNames={Array []}
           letterHighlightedStyle={
-                    Object {
-                              "color": "blue",
-                            }
+            Object {
+              "color": "blue",
+            }
           }
           letterIndexesMapping={
-                    Object {
-                              "A": 0,
-                              "B": 9,
-                              "C": 15,
-                              "E": 21,
-                              "M": 26,
-                              "S": 31,
-                              "W": 38,
-                            }
+            Object {
+              "A": 0,
+              "B": 9,
+              "C": 15,
+              "E": 21,
+              "M": 26,
+              "S": 31,
+              "W": 38,
+            }
           }
           letterStyle={
-                    Object {
-                              "outline": "none",
-                            }
+            Object {
+              "outline": "none",
+            }
           }
           letterToHighlight={null}
           onLetterClicked={[Function]}
-/>,
+        />,
       ],
       "className": "",
       "style": Object {
@@ -571,7 +571,7 @@ ShallowWrapper {
             type="variable"
             useStaticSize={false}
             useTranslate3d={true}
-/>,
+          />,
           "className": "",
           "onScroll": [Function],
           "style": Object {
@@ -659,66 +659,66 @@ ShallowWrapper {
             className=""
             onScroll={[Function]}
             style={
-                        Object {
-                                    "maxHeight": "60%",
-                                    "overflow": "auto",
-                                  }
+              Object {
+                "maxHeight": "60%",
+                "overflow": "auto",
+              }
             }
->
+          >
             <ReactList
-                        axis="y"
-                        itemRenderer={[Function]}
-                        itemSizeGetter={[Function]}
-                        itemsRenderer={[Function]}
-                        length={46}
-                        minSize={1}
-                        pageSize={10}
-                        scrollParentGetter={[Function]}
-                        scrollParentViewportSizeGetter={[Function]}
-                        threshold={100}
-                        type="variable"
-                        useStaticSize={false}
-                        useTranslate3d={true}
+              axis="y"
+              itemRenderer={[Function]}
+              itemSizeGetter={[Function]}
+              itemsRenderer={[Function]}
+              length={46}
+              minSize={1}
+              pageSize={10}
+              scrollParentGetter={[Function]}
+              scrollParentViewportSizeGetter={[Function]}
+              threshold={100}
+              type="variable"
+              useStaticSize={false}
+              useTranslate3d={true}
             />
-</div>,
+          </div>,
           <AlphabeticList
             alphabetListClassNames={Array []}
             alphabetListStyle={
-                        Object {
-                                    "alignItems": "center",
-                                    "boxSizing": "border-box",
-                                    "display": "flex",
-                                    "justifyContent": "space-between",
-                                    "padding": "20px 10px",
-                                    "width": "100%",
-                                  }
+              Object {
+                "alignItems": "center",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "justifyContent": "space-between",
+                "padding": "20px 10px",
+                "width": "100%",
+              }
             }
             letterClassNames={Array []}
             letterHighlightedClassNames={Array []}
             letterHighlightedStyle={
-                        Object {
-                                    "color": "blue",
-                                  }
+              Object {
+                "color": "blue",
+              }
             }
             letterIndexesMapping={
-                        Object {
-                                    "A": 0,
-                                    "B": 9,
-                                    "C": 15,
-                                    "E": 21,
-                                    "M": 26,
-                                    "S": 31,
-                                    "W": 38,
-                                  }
+              Object {
+                "A": 0,
+                "B": 9,
+                "C": 15,
+                "E": 21,
+                "M": 26,
+                "S": 31,
+                "W": 38,
+              }
             }
             letterStyle={
-                        Object {
-                                    "outline": "none",
-                                  }
+              Object {
+                "outline": "none",
+              }
             }
             letterToHighlight={null}
             onLetterClicked={[Function]}
-/>,
+          />,
         ],
         "className": "",
         "style": Object {
@@ -751,7 +751,7 @@ ShallowWrapper {
               type="variable"
               useStaticSize={false}
               useTranslate3d={true}
-/>,
+            />,
             "className": "",
             "onScroll": [Function],
             "style": Object {
@@ -1088,35 +1088,35 @@ ShallowWrapper {
   Symbol(enzyme.__unrendered__): <AzScroller
     alphabetListClassNames={Array []}
     alphabetListStyle={
-        Object {
-            "alignItems": "center",
-            "boxSizing": "border-box",
-            "display": "flex",
-            "justifyContent": "space-between",
-            "padding": "20px 10px",
-            "width": "100%",
-          }
+      Object {
+        "alignItems": "center",
+        "boxSizing": "border-box",
+        "display": "flex",
+        "justifyContent": "space-between",
+        "padding": "20px 10px",
+        "width": "100%",
+      }
     }
     letterClassNames={Array []}
     letterHighlightedClassNames={Array []}
     letterHighlightedStyle={
-        Object {
-            "color": "red",
-            "fontWeight": "bold",
-          }
+      Object {
+        "color": "red",
+        "fontWeight": "bold",
+      }
     }
     letterStyle={
-        Object {
-            "outline": "none",
-          }
+      Object {
+        "outline": "none",
+      }
     }
     list={Array []}
     listClassNames={Array []}
     listStyle={
-        Object {
-            "maxHeight": "80%",
-            "overflow": "auto",
-          }
+      Object {
+        "maxHeight": "80%",
+        "overflow": "auto",
+      }
     }
     renderSectionHeader={[Function]}
     renderSectionItem={[Function]}
@@ -1125,16 +1125,16 @@ ShallowWrapper {
     shouldShowSectionHeaders={false}
     wrapperClassNames={Array []}
     wrapperStyle={
-        Object {
-            "boxSizing": "border-box",
-            "display": "flex",
-            "flexDirection": "column",
-            "height": "500px",
-            "justifyContent": "space-between",
-            "width": "500px",
-          }
+      Object {
+        "boxSizing": "border-box",
+        "display": "flex",
+        "flexDirection": "column",
+        "height": "500px",
+        "justifyContent": "space-between",
+        "width": "500px",
+      }
     }
-/>,
+  />,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -1153,57 +1153,57 @@ ShallowWrapper {
           className=""
           onScroll={[Function]}
           style={
-                    Object {
-                              "maxHeight": "80%",
-                              "overflow": "auto",
-                            }
+            Object {
+              "maxHeight": "80%",
+              "overflow": "auto",
+            }
           }
->
+        >
           <ReactList
-                    axis="y"
-                    itemRenderer={[Function]}
-                    itemSizeGetter={null}
-                    itemsRenderer={[Function]}
-                    length={0}
-                    minSize={1}
-                    pageSize={10}
-                    scrollParentGetter={[Function]}
-                    scrollParentViewportSizeGetter={[Function]}
-                    threshold={100}
-                    type="uniform"
-                    useStaticSize={false}
-                    useTranslate3d={true}
+            axis="y"
+            itemRenderer={[Function]}
+            itemSizeGetter={null}
+            itemsRenderer={[Function]}
+            length={0}
+            minSize={1}
+            pageSize={10}
+            scrollParentGetter={[Function]}
+            scrollParentViewportSizeGetter={[Function]}
+            threshold={100}
+            type="uniform"
+            useStaticSize={false}
+            useTranslate3d={true}
           />
-</div>,
+        </div>,
         <AlphabeticList
           alphabetListClassNames={Array []}
           alphabetListStyle={
-                    Object {
-                              "alignItems": "center",
-                              "boxSizing": "border-box",
-                              "display": "flex",
-                              "justifyContent": "space-between",
-                              "padding": "20px 10px",
-                              "width": "100%",
-                            }
+            Object {
+              "alignItems": "center",
+              "boxSizing": "border-box",
+              "display": "flex",
+              "justifyContent": "space-between",
+              "padding": "20px 10px",
+              "width": "100%",
+            }
           }
           letterClassNames={Array []}
           letterHighlightedClassNames={Array []}
           letterHighlightedStyle={
-                    Object {
-                              "color": "red",
-                              "fontWeight": "bold",
-                            }
+            Object {
+              "color": "red",
+              "fontWeight": "bold",
+            }
           }
           letterIndexesMapping={Object {}}
           letterStyle={
-                    Object {
-                              "outline": "none",
-                            }
+            Object {
+              "outline": "none",
+            }
           }
           letterToHighlight={null}
           onLetterClicked={[Function]}
-/>,
+        />,
       ],
       "className": "",
       "style": Object {
@@ -1236,7 +1236,7 @@ ShallowWrapper {
             type="uniform"
             useStaticSize={false}
             useTranslate3d={true}
-/>,
+          />,
           "className": "",
           "onScroll": [Function],
           "style": Object {
@@ -1317,57 +1317,57 @@ ShallowWrapper {
             className=""
             onScroll={[Function]}
             style={
-                        Object {
-                                    "maxHeight": "80%",
-                                    "overflow": "auto",
-                                  }
+              Object {
+                "maxHeight": "80%",
+                "overflow": "auto",
+              }
             }
->
+          >
             <ReactList
-                        axis="y"
-                        itemRenderer={[Function]}
-                        itemSizeGetter={null}
-                        itemsRenderer={[Function]}
-                        length={0}
-                        minSize={1}
-                        pageSize={10}
-                        scrollParentGetter={[Function]}
-                        scrollParentViewportSizeGetter={[Function]}
-                        threshold={100}
-                        type="uniform"
-                        useStaticSize={false}
-                        useTranslate3d={true}
+              axis="y"
+              itemRenderer={[Function]}
+              itemSizeGetter={null}
+              itemsRenderer={[Function]}
+              length={0}
+              minSize={1}
+              pageSize={10}
+              scrollParentGetter={[Function]}
+              scrollParentViewportSizeGetter={[Function]}
+              threshold={100}
+              type="uniform"
+              useStaticSize={false}
+              useTranslate3d={true}
             />
-</div>,
+          </div>,
           <AlphabeticList
             alphabetListClassNames={Array []}
             alphabetListStyle={
-                        Object {
-                                    "alignItems": "center",
-                                    "boxSizing": "border-box",
-                                    "display": "flex",
-                                    "justifyContent": "space-between",
-                                    "padding": "20px 10px",
-                                    "width": "100%",
-                                  }
+              Object {
+                "alignItems": "center",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "justifyContent": "space-between",
+                "padding": "20px 10px",
+                "width": "100%",
+              }
             }
             letterClassNames={Array []}
             letterHighlightedClassNames={Array []}
             letterHighlightedStyle={
-                        Object {
-                                    "color": "red",
-                                    "fontWeight": "bold",
-                                  }
+              Object {
+                "color": "red",
+                "fontWeight": "bold",
+              }
             }
             letterIndexesMapping={Object {}}
             letterStyle={
-                        Object {
-                                    "outline": "none",
-                                  }
+              Object {
+                "outline": "none",
+              }
             }
             letterToHighlight={null}
             onLetterClicked={[Function]}
-/>,
+          />,
         ],
         "className": "",
         "style": Object {
@@ -1400,7 +1400,7 @@ ShallowWrapper {
               type="uniform"
               useStaticSize={false}
               useTranslate3d={true}
-/>,
+            />,
             "className": "",
             "onScroll": [Function],
             "style": Object {
@@ -1730,211 +1730,211 @@ ShallowWrapper {
   Symbol(enzyme.__unrendered__): <AzScroller
     alphabetListClassNames={Array []}
     alphabetListStyle={
-        Object {
-            "alignItems": "center",
-            "boxSizing": "border-box",
-            "display": "flex",
-            "justifyContent": "space-between",
-            "padding": "20px 10px",
-            "width": "100%",
-          }
+      Object {
+        "alignItems": "center",
+        "boxSizing": "border-box",
+        "display": "flex",
+        "justifyContent": "space-between",
+        "padding": "20px 10px",
+        "width": "100%",
+      }
     }
     letterClassNames={Array []}
     letterHighlightedClassNames={Array []}
     letterHighlightedStyle={
-        Object {
-            "color": "red",
-            "fontWeight": "bold",
-          }
+      Object {
+        "color": "red",
+        "fontWeight": "bold",
+      }
     }
     letterStyle={
-        Object {
-            "outline": "none",
-          }
+      Object {
+        "outline": "none",
+      }
     }
     list={
-        Array [
+      Array [
+        Object {
+          "header": Object {
+            "letter": "A",
+            "type": "SectionHeader",
+          },
+          "items": Array [
             Object {
-              "header": Object {
-                "letter": "A",
-                "type": "SectionHeader",
-              },
-              "items": Array [
-                Object {
-                  "text": "ABEL",
-                },
-                Object {
-                  "text": "ABRAHAM",
-                },
-                Object {
-                  "text": "ACHILLE",
-                },
-                Object {
-                  "text": "ADAM",
-                },
-                Object {
-                  "text": "ADÈLE",
-                },
-                Object {
-                  "text": "ADELINE",
-                },
-                Object {
-                  "text": "ADOLPHE",
-                },
-                Object {
-                  "text": "ANTOINE",
-                },
-              ],
+              "text": "ABEL",
             },
             Object {
-              "header": Object {
-                "letter": "B",
-                "type": "SectionHeader",
-              },
-              "items": Array [
-                Object {
-                  "text": "BAPTISTE",
-                },
-                Object {
-                  "text": "BARBARA",
-                },
-                Object {
-                  "text": "BARNABÉ",
-                },
-                Object {
-                  "text": "BARTHÉLÉMY",
-                },
-                Object {
-                  "text": "BASILE",
-                },
-              ],
+              "text": "ABRAHAM",
             },
             Object {
-              "header": Object {
-                "letter": "C",
-                "type": "SectionHeader",
-              },
-              "items": Array [
-                Object {
-                  "text": "CERISE",
-                },
-                Object {
-                  "text": "CÉSAIRE",
-                },
-                Object {
-                  "text": "CHARLES",
-                },
-                Object {
-                  "text": "CHARLOT",
-                },
-                Object {
-                  "text": "CHRISTIAN",
-                },
-              ],
+              "text": "ACHILLE",
             },
             Object {
-              "header": Object {
-                "letter": "E",
-                "type": "SectionHeader",
-              },
-              "items": Array [
-                Object {
-                  "text": "ESTELLE",
-                },
-                Object {
-                  "text": "ETHAN",
-                },
-                Object {
-                  "text": "ÉTIENNE",
-                },
-                Object {
-                  "text": "EUGÈNE",
-                },
-              ],
+              "text": "ADAM",
             },
             Object {
-              "header": Object {
-                "letter": "M",
-                "type": "SectionHeader",
-              },
-              "items": Array [
-                Object {
-                  "text": "MICHÈLE",
-                },
-                Object {
-                  "text": "MOROINE",
-                },
-                Object {
-                  "text": "MURIELLE",
-                },
-                Object {
-                  "text": "MYLÈNE",
-                },
-              ],
+              "text": "ADÈLE",
             },
             Object {
-              "header": Object {
-                "letter": "S",
-                "type": "SectionHeader",
-              },
-              "items": Array [
-                Object {
-                  "text": "SEBASTIAN",
-                },
-                Object {
-                  "text": "SEREN",
-                },
-                Object {
-                  "text": "STANLEY",
-                },
-                Object {
-                  "text": "STÉPHANE",
-                },
-                Object {
-                  "text": "SYBILLE",
-                },
-                Object {
-                  "text": "SYLVAIN",
-                },
-              ],
+              "text": "ADELINE",
             },
             Object {
-              "header": Object {
-                "letter": "W",
-                "type": "SectionHeader",
-              },
-              "items": Array [
-                Object {
-                  "text": "WANDY",
-                },
-                Object {
-                  "text": "WAN",
-                },
-                Object {
-                  "text": "WREN",
-                },
-                Object {
-                  "text": "WILGELM",
-                },
-                Object {
-                  "text": "WADE",
-                },
-                Object {
-                  "text": "WILLIAM",
-                },
-                Object {
-                  "text": "WINOC",
-                },
-              ],
+              "text": "ADOLPHE",
             },
-          ]
+            Object {
+              "text": "ANTOINE",
+            },
+          ],
+        },
+        Object {
+          "header": Object {
+            "letter": "B",
+            "type": "SectionHeader",
+          },
+          "items": Array [
+            Object {
+              "text": "BAPTISTE",
+            },
+            Object {
+              "text": "BARBARA",
+            },
+            Object {
+              "text": "BARNABÉ",
+            },
+            Object {
+              "text": "BARTHÉLÉMY",
+            },
+            Object {
+              "text": "BASILE",
+            },
+          ],
+        },
+        Object {
+          "header": Object {
+            "letter": "C",
+            "type": "SectionHeader",
+          },
+          "items": Array [
+            Object {
+              "text": "CERISE",
+            },
+            Object {
+              "text": "CÉSAIRE",
+            },
+            Object {
+              "text": "CHARLES",
+            },
+            Object {
+              "text": "CHARLOT",
+            },
+            Object {
+              "text": "CHRISTIAN",
+            },
+          ],
+        },
+        Object {
+          "header": Object {
+            "letter": "E",
+            "type": "SectionHeader",
+          },
+          "items": Array [
+            Object {
+              "text": "ESTELLE",
+            },
+            Object {
+              "text": "ETHAN",
+            },
+            Object {
+              "text": "ÉTIENNE",
+            },
+            Object {
+              "text": "EUGÈNE",
+            },
+          ],
+        },
+        Object {
+          "header": Object {
+            "letter": "M",
+            "type": "SectionHeader",
+          },
+          "items": Array [
+            Object {
+              "text": "MICHÈLE",
+            },
+            Object {
+              "text": "MOROINE",
+            },
+            Object {
+              "text": "MURIELLE",
+            },
+            Object {
+              "text": "MYLÈNE",
+            },
+          ],
+        },
+        Object {
+          "header": Object {
+            "letter": "S",
+            "type": "SectionHeader",
+          },
+          "items": Array [
+            Object {
+              "text": "SEBASTIAN",
+            },
+            Object {
+              "text": "SEREN",
+            },
+            Object {
+              "text": "STANLEY",
+            },
+            Object {
+              "text": "STÉPHANE",
+            },
+            Object {
+              "text": "SYBILLE",
+            },
+            Object {
+              "text": "SYLVAIN",
+            },
+          ],
+        },
+        Object {
+          "header": Object {
+            "letter": "W",
+            "type": "SectionHeader",
+          },
+          "items": Array [
+            Object {
+              "text": "WANDY",
+            },
+            Object {
+              "text": "WAN",
+            },
+            Object {
+              "text": "WREN",
+            },
+            Object {
+              "text": "WILGELM",
+            },
+            Object {
+              "text": "WADE",
+            },
+            Object {
+              "text": "WILLIAM",
+            },
+            Object {
+              "text": "WINOC",
+            },
+          ],
+        },
+      ]
     }
     listClassNames={Array []}
     listStyle={
-        Object {
-            "maxHeight": "80%",
-            "overflow": "auto",
-          }
+      Object {
+        "maxHeight": "80%",
+        "overflow": "auto",
+      }
     }
     renderSectionHeader={[Function]}
     renderSectionItem={[Function]}
@@ -1943,16 +1943,16 @@ ShallowWrapper {
     shouldShowSectionHeaders={false}
     wrapperClassNames={Array []}
     wrapperStyle={
-        Object {
-            "boxSizing": "border-box",
-            "display": "flex",
-            "flexDirection": "column",
-            "height": "500px",
-            "justifyContent": "space-between",
-            "width": "500px",
-          }
+      Object {
+        "boxSizing": "border-box",
+        "display": "flex",
+        "flexDirection": "column",
+        "height": "500px",
+        "justifyContent": "space-between",
+        "width": "500px",
+      }
     }
-/>,
+  />,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -1971,67 +1971,67 @@ ShallowWrapper {
           className=""
           onScroll={[Function]}
           style={
-                    Object {
-                              "maxHeight": "80%",
-                              "overflow": "auto",
-                            }
+            Object {
+              "maxHeight": "80%",
+              "overflow": "auto",
+            }
           }
->
+        >
           <ReactList
-                    axis="y"
-                    itemRenderer={[Function]}
-                    itemSizeGetter={null}
-                    itemsRenderer={[Function]}
-                    length={39}
-                    minSize={1}
-                    pageSize={10}
-                    scrollParentGetter={[Function]}
-                    scrollParentViewportSizeGetter={[Function]}
-                    threshold={100}
-                    type="uniform"
-                    useStaticSize={false}
-                    useTranslate3d={true}
+            axis="y"
+            itemRenderer={[Function]}
+            itemSizeGetter={null}
+            itemsRenderer={[Function]}
+            length={39}
+            minSize={1}
+            pageSize={10}
+            scrollParentGetter={[Function]}
+            scrollParentViewportSizeGetter={[Function]}
+            threshold={100}
+            type="uniform"
+            useStaticSize={false}
+            useTranslate3d={true}
           />
-</div>,
+        </div>,
         <AlphabeticList
           alphabetListClassNames={Array []}
           alphabetListStyle={
-                    Object {
-                              "alignItems": "center",
-                              "boxSizing": "border-box",
-                              "display": "flex",
-                              "justifyContent": "space-between",
-                              "padding": "20px 10px",
-                              "width": "100%",
-                            }
+            Object {
+              "alignItems": "center",
+              "boxSizing": "border-box",
+              "display": "flex",
+              "justifyContent": "space-between",
+              "padding": "20px 10px",
+              "width": "100%",
+            }
           }
           letterClassNames={Array []}
           letterHighlightedClassNames={Array []}
           letterHighlightedStyle={
-                    Object {
-                              "color": "red",
-                              "fontWeight": "bold",
-                            }
+            Object {
+              "color": "red",
+              "fontWeight": "bold",
+            }
           }
           letterIndexesMapping={
-                    Object {
-                              "A": 0,
-                              "B": 8,
-                              "C": 13,
-                              "E": 18,
-                              "M": 22,
-                              "S": 26,
-                              "W": 32,
-                            }
+            Object {
+              "A": 0,
+              "B": 8,
+              "C": 13,
+              "E": 18,
+              "M": 22,
+              "S": 26,
+              "W": 32,
+            }
           }
           letterStyle={
-                    Object {
-                              "outline": "none",
-                            }
+            Object {
+              "outline": "none",
+            }
           }
           letterToHighlight={null}
           onLetterClicked={[Function]}
-/>,
+        />,
       ],
       "className": "",
       "style": Object {
@@ -2064,7 +2064,7 @@ ShallowWrapper {
             type="uniform"
             useStaticSize={false}
             useTranslate3d={true}
-/>,
+          />,
           "className": "",
           "onScroll": [Function],
           "style": Object {
@@ -2153,67 +2153,67 @@ ShallowWrapper {
             className=""
             onScroll={[Function]}
             style={
-                        Object {
-                                    "maxHeight": "80%",
-                                    "overflow": "auto",
-                                  }
+              Object {
+                "maxHeight": "80%",
+                "overflow": "auto",
+              }
             }
->
+          >
             <ReactList
-                        axis="y"
-                        itemRenderer={[Function]}
-                        itemSizeGetter={null}
-                        itemsRenderer={[Function]}
-                        length={39}
-                        minSize={1}
-                        pageSize={10}
-                        scrollParentGetter={[Function]}
-                        scrollParentViewportSizeGetter={[Function]}
-                        threshold={100}
-                        type="uniform"
-                        useStaticSize={false}
-                        useTranslate3d={true}
+              axis="y"
+              itemRenderer={[Function]}
+              itemSizeGetter={null}
+              itemsRenderer={[Function]}
+              length={39}
+              minSize={1}
+              pageSize={10}
+              scrollParentGetter={[Function]}
+              scrollParentViewportSizeGetter={[Function]}
+              threshold={100}
+              type="uniform"
+              useStaticSize={false}
+              useTranslate3d={true}
             />
-</div>,
+          </div>,
           <AlphabeticList
             alphabetListClassNames={Array []}
             alphabetListStyle={
-                        Object {
-                                    "alignItems": "center",
-                                    "boxSizing": "border-box",
-                                    "display": "flex",
-                                    "justifyContent": "space-between",
-                                    "padding": "20px 10px",
-                                    "width": "100%",
-                                  }
+              Object {
+                "alignItems": "center",
+                "boxSizing": "border-box",
+                "display": "flex",
+                "justifyContent": "space-between",
+                "padding": "20px 10px",
+                "width": "100%",
+              }
             }
             letterClassNames={Array []}
             letterHighlightedClassNames={Array []}
             letterHighlightedStyle={
-                        Object {
-                                    "color": "red",
-                                    "fontWeight": "bold",
-                                  }
+              Object {
+                "color": "red",
+                "fontWeight": "bold",
+              }
             }
             letterIndexesMapping={
-                        Object {
-                                    "A": 0,
-                                    "B": 8,
-                                    "C": 13,
-                                    "E": 18,
-                                    "M": 22,
-                                    "S": 26,
-                                    "W": 32,
-                                  }
+              Object {
+                "A": 0,
+                "B": 8,
+                "C": 13,
+                "E": 18,
+                "M": 22,
+                "S": 26,
+                "W": 32,
+              }
             }
             letterStyle={
-                        Object {
-                                    "outline": "none",
-                                  }
+              Object {
+                "outline": "none",
+              }
             }
             letterToHighlight={null}
             onLetterClicked={[Function]}
-/>,
+          />,
         ],
         "className": "",
         "style": Object {
@@ -2246,7 +2246,7 @@ ShallowWrapper {
               type="uniform"
               useStaticSize={false}
               useTranslate3d={true}
-/>,
+            />,
             "className": "",
             "onScroll": [Function],
             "style": Object {

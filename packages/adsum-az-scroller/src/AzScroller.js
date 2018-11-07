@@ -25,7 +25,7 @@ type mapLettersToIndexesOutputType = {
 };
 type PropsType = {|
   list: ListType,
-  renderSectionItem?: (item: SectionItemType, key: string | number) => React.Node,
+  renderSectionItem?: ?(item: SectionItemType, key: string | number) => React.Node,
   renderSectionHeader?: ?(header: SectionHeaderType, key: string | number) => React.Node,
   shouldShowSectionHeaders?: boolean,
   sectionItemHeight?: ?number,
@@ -53,7 +53,7 @@ type StateType = {|
  */
 class AzScroller extends React.Component<PropsType, StateType> {
     static defaultProps = {
-        renderSectionItem: (item, key) => (
+        renderSectionItem: (item: SectionItemType, key: string | number) => (
             <div
                 key={key}
                 style={{
@@ -65,7 +65,7 @@ class AzScroller extends React.Component<PropsType, StateType> {
                 {item.text}
             </div>
         ),
-        renderSectionHeader: (header, key) => (
+        renderSectionHeader: (header: SectionHeaderType, key: string | number) => (
             <div
                 key={key}
                 style={{
@@ -136,7 +136,7 @@ class AzScroller extends React.Component<PropsType, StateType> {
         }
     }
 
-    getCurrentLetter() {
+    getCurrentLetter(): ?string {
         if (this.reactListComponent && this.reactListComponent.current) {
             const reactListRef = this.reactListComponent.current;
             const visibleItems = reactListRef.getVisibleRange();
@@ -168,7 +168,7 @@ class AzScroller extends React.Component<PropsType, StateType> {
         }
     };
 
-    getLetterFromIndex = (index: number): string => {
+    getLetterFromIndex = (index: number): ?string => {
         const { listToRender } = this.state;
         const item = listToRender ? listToRender[index] : null;
         return item ? item.letter : null;
@@ -270,7 +270,7 @@ class AzScroller extends React.Component<PropsType, StateType> {
         return sectionItemHeight;
     };
 
-    updateCurrentLetter = (index: number = null) => {
+    updateCurrentLetter = (index: ?number = null) => {
         let currentLetter = null;
 
         if (index) { // index of letter to update is specified
@@ -302,7 +302,7 @@ class AzScroller extends React.Component<PropsType, StateType> {
         this.goToTheTop();
     }
 
-    renderReactList(): Element<'div'> {
+    renderReactList(): Node {
         const { listClassNames, listStyle } = this.props;
         const { listToRender } = this.state;
 
@@ -328,7 +328,7 @@ class AzScroller extends React.Component<PropsType, StateType> {
         );
     }
 
-    renderAlphabetList(): Element<'div'> {
+    renderAlphabetList(): Node {
         const {
             alphabetListClassNames, alphabetListStyle,
             letterClassNames, letterStyle,
@@ -351,7 +351,7 @@ class AzScroller extends React.Component<PropsType, StateType> {
         );
     }
 
-    render(): React.Node {
+    render(): Node {
         const { wrapperClassNames, wrapperStyle } = this.props;
 
         return (

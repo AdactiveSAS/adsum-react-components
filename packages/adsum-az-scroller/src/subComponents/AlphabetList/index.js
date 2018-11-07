@@ -5,14 +5,14 @@ import classNames from 'classnames';
 
 type PropsType = {|
     letterToHighlight: ?string,
-    onLetterClicked: (index: number) => () => void,
+    onLetterClicked: (index: number) => () => any,
     letterIndexesMapping: { [string]: number },
     alphabetListClassNames?: Array<string>,
     alphabetListStyle?: ?CSSStyleDeclaration,
     letterClassNames?: Array<string>,
     letterStyle?: ?CSSStyleDeclaration,
     letterHighlightedClassNames?: Array<string>,
-    letterHighlightedStyle?: ?CCSSStyleDeclaration,
+    letterHighlightedStyle?: ?CSSStyleDeclaration,
 |};
 
 /**
@@ -30,7 +30,7 @@ class AlphabeticList extends React.Component<PropsType> {
         letterHighlightedStyle: null,
     };
 
-    getLetterStyle(letter) {
+    getLetterStyle(letter: string): CSSStyleDeclaration {
         const {
             letterToHighlight, letterStyle, letterHighlightedStyle
         } = this.props;
@@ -42,7 +42,7 @@ class AlphabeticList extends React.Component<PropsType> {
         return letterStyle;
     }
 
-    renderLetter = (letter) => {
+    renderLetter = (letter: string): React.Element<'div'> => {
         const {
             onLetterClicked, letterToHighlight, letterIndexesMapping,
             letterClassNames, letterHighlightedClassNames
@@ -70,7 +70,7 @@ class AlphabeticList extends React.Component<PropsType> {
         );
     };
 
-    render(): React.Node {
+    render(): React.Element<'div'> {
         const {
             letterIndexesMapping, alphabetListClassNames, alphabetListStyle
         } = this.props;
