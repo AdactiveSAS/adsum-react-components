@@ -5,7 +5,7 @@
 
 Made with <3 for easier touch experience.
 
-![Screenshot of AzScroller component](img/readMeImage.png)
+![Screenshot of AzScroller component](img\readMeImage.png)
 
 [//]: # ([Live examples here](https://adactivesas.github.io/adsum-react-components/packages/adsum-az-scroller/examples/index.html)
 
