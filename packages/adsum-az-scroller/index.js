@@ -1,7 +1,6 @@
 // @flow
 
-import AzScroller from './src/azScroller';
-import type { ListItemType, SectionHeaderInfoType } from './src/azScroller';
+import AzScroller from './src/AzScroller';
 
 export default AzScroller;
-export { ListItemType, SectionHeaderInfoType };
+export * from './src/AzScroller';
