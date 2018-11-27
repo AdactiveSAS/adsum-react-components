@@ -6,3 +6,5 @@
 /node_modules
 lerna-debug.log
 .npmrc
+/packages/**/*.css.map
+/packages/**/*.css
