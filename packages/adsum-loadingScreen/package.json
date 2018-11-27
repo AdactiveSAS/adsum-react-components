@@ -21,5 +21,8 @@
     "adsum",
     "react",
     "redux"
-  ]
+  ],
+  "bin": {
+    "arc-loading-screen": "./cli.js"
+  }
 }
