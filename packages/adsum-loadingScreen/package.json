@@ -1,0 +1,25 @@
+{
+  "name": "@adactive/arc-loading-screen",
+  "version": "0.0.1",
+  "description": "Adsum Loading Screen Component",
+  "main": "index.js",
+  "author": "Basile Nouvellet <basile.nouvellet@adactive.com>",
+  "license": "UNLISENCED",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/AdactiveSAS/adsum-react-components.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AdactiveSAS/adsum-react-components.git/issues"
+  },
+  "scripts": {},
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "adsum",
+    "react",
+    "redux"
+  ]
+}

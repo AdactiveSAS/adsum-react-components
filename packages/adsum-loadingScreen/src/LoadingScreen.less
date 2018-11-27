@@ -1,0 +1,51 @@
+.loadingScreen {
+  z-index: 99;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: all;
+  display: grid;
+  grid-template-columns: 50%;
+  grid-template-rows: 3fr 10em 1fr 4em 4em 3fr;
+  justify-items: center;
+  align-items: center;
+  justify-content: center;
+  grid-row-gap: 2em;
+  grid-template-areas:  "."
+                        "logo"
+                        "."
+                        "bar"
+                        "percentage"
+                        ".";
+
+  .logo-wrapper{
+    grid-area: logo;
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
+
+  .progression-bar-wrapper {
+    grid-area: bar;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    border-radius: 30px;
+    padding: 5px;
+
+    .progression-bar {
+      height: 100%;
+      border-radius: inherit;
+    }
+  }
+
+  .percentage-number {
+    grid-area: percentage;
+    font-weight: bold;
+    font-size: 2.5em;
+  }
+}
