@@ -1,6 +1,6 @@
 {
   "name": "@adactive/arc-search",
-  "version": "2.1.0-alpha.1",
+  "version": "2.1.0-rc.0",
   "description": "Adsum Search Component",
   "main": "index.js",
   "author": "Stanley Ong <stanley.ong@adactive.com>",
