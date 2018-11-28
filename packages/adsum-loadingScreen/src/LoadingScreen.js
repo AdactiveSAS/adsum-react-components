@@ -7,7 +7,7 @@ import type { Element } from 'react';
 import type { LoadingScreenReducerStateType } from './LoadingScreenReducer';
 
 import './LoadingScreen.css';
-import adactiveLogo from './assets/adactive-logo.png';
+import adactiveLogo from './assets/img/adactive-logo.png';
 
 type AppStateType = {|
     loadingScreen: LoadingScreenReducerStateType,
