@@ -18,7 +18,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "build-css": "node-less-chokidar packages",
-    "precommit": "build-css",
+    "precommit": "yarn run build-css",
     "lint": "eslint packages"
   },
   "dependencies": {},

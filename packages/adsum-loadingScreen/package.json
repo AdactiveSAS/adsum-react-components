@@ -1,9 +1,9 @@
 {
-  "name": "@adactive/arc-qrcode",
+  "name": "@adactive/arc-loading-screen",
   "version": "2.1.0-alpha.1",
-  "description": "Adsum QrCode Component",
+  "description": "Adsum Loading Screen Component",
   "main": "index.js",
-  "author": "Stanley Ong <stanley.ong@adactive.com>",
+  "author": "Basile Nouvellet <basile.nouvellet@adactive.com>",
   "license": "UNLISENCED",
   "readmeFilename": "README.md",
   "repository": {
@@ -14,32 +14,27 @@
     "url": "https://github.com/AdactiveSAS/adsum-react-components.git/issues"
   },
   "scripts": {},
-  "publishConfig": {
-    "access": "public"
-  },
   "dependencies": {
     "chalk": "^1.1.3",
     "commander": "^2.9.0",
-    "qrcode.es": "^1.0.0",
-    "react-responsive-modal": "^3.0.3"
+    "prex-es5": "^0.4.2"
   },
   "devDependencies": {
     "prop-types": "^15.6.1",
-    "react": "^16.3.1"
+    "react": "^16.3.1",
+    "react-redux": "^5.0.7",
+    "redux": "^3.7.2",
+    "redux-saga": "^0.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "keywords": [
     "adsum",
     "react",
     "redux"
   ],
-  "files": [
-    "index.js",
-    "src",
-    "CHANGELOG.md",
-    "README.md",
-    "cli.js"
-  ],
   "bin": {
-    "arc-qrCode": "./cli.js"
+    "arc-loading-screen": "./cli.js"
   }
 }
