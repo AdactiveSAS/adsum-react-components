@@ -1,6 +1,7 @@
 ![react-badge](https://img.shields.io/badge/react-js-53c1de.svg?style=flat)
 ![touch-badge](https://img.shields.io/badge/for-touch--screen-ff69b4.svg?style=flat)
 ![licence-badge](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat)
+[![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lernajs.io/)
 
 <p align="center">
   <a href="http://adactive.com">
@@ -17,6 +18,7 @@ This is a mono-repo has been create to share and collaborate on components for i
   
 ## What's inside ? 
 
+ - [adsum-loading-screen](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-loadingScreen)
  - [adsum-az-scroller](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-az-scroller)
  - [adsum-carousel](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-carousel)
  - [adsum-clock](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-clock)
