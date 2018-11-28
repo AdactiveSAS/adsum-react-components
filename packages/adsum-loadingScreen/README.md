@@ -3,7 +3,7 @@
 
 # Loading Screen
 
-![Screenshot of LoadingScreen component](https://user-images.githubusercontent.com/24209524/48125401-87349f00-e2b9-11e8-88fc-b8e844914d7d.png)
+![Screenshot of LoadingScreen component](https://user-images.githubusercontent.com/24209524/49127057-e443d380-f300-11e8-95e2-86531a0353fd.png)
 
 ## Getting started
 
