@@ -137,6 +137,9 @@ export default combineReducers(appState);
 
 ```
 
+>Be sure to have **adsum-logo.png** in your **public/assets/img/** folder
+if you want the default logo
+
 ## Optional props
 
 ```javascript
@@ -245,7 +248,7 @@ static defaultProps = {
     minPercentage: 10,
     mainColor: '#6EC8F1', // same blue color as splashscreen in Adsum AdLoader
     barColor: 'white',
-    logo: adactiveLogo,
+    logo: '/assets/img/adsum-logo.png',
 };
 
 ```
