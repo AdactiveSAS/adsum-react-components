@@ -17,6 +17,7 @@ This is a mono-repo has been create to share and collaborate on components for i
   
 ## What's inside ? 
 
+ - [adsum-loading-screen](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-loadingScreen)
  - [adsum-az-scroller](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-az-scroller)
  - [adsum-carousel](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-carousel)
  - [adsum-clock](https://github.com/AdactiveSAS/adsum-react-components/tree/master/packages/adsum-clock)
