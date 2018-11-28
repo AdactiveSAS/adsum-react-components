@@ -7,7 +7,6 @@ import type { Element } from 'react';
 import type { LoadingScreenReducerStateType } from './LoadingScreenReducer';
 
 import './LoadingScreen.css';
-import adactiveLogo from './assets/img/adactive-logo.png';
 
 type AppStateType = {|
     loadingScreen: LoadingScreenReducerStateType,
@@ -39,7 +38,7 @@ class LoadingScreen extends React.Component<PropsType> {
         minPercentage: 10,
         mainColor: '#6EC8F1',
         barColor: 'white',
-        logo: adactiveLogo,
+        logo: '/assets/img/adsum-logo.png',
     };
 
     getPercentage() {
