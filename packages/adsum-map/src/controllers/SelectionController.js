@@ -89,7 +89,7 @@ class SelectionController {
 
         await this.highlight(adsumObject, centerOn, highlightColor);
 
-        this.dispatch(didSelectAction(adsumObject));
+        this.dispatch(didSelectAction([adsumObject]));
     }
 
     getSelection(): Array {
