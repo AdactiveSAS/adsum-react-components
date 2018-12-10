@@ -1,6 +1,6 @@
 {
   "name": "@adactive/arc-map",
-  "version": "2.1.2-rc.1",
+  "version": "2.1.2",
   "description": "Adsum Map Component",
   "main": "index.js",
   "author": "Antoine Bigard <antoine.bigard@adactive.com>",
