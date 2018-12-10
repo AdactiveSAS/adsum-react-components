@@ -7,7 +7,7 @@ import type { AdsumObject3D, CameraCenterOnOptions } from '@adactive/adsum-web-m
 import placesController from './PlacesController';
 import type { WillInitActionType } from '../actions/MainActions';
 
-import { didResetSelectionAction } from '../actions/SelectionActions';
+import { didResetSelectionAction, didSelectAction } from '../actions/SelectionActions';
 
 class SelectionController {
     constructor() {
@@ -88,6 +88,8 @@ class SelectionController {
         this.selection.add(adsumObject);
 
         await this.highlight(adsumObject, centerOn, highlightColor);
+
+        this.dispatch(didSelectAction([adsumObject]));
     }
 
     getSelection(): Array {
