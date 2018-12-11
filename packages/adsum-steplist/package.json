@@ -1,6 +1,6 @@
 {
   "name": "@adactive/arc-steplist",
-  "version": "0.0.1",
+  "version": "2.2.0-alpha.0",
   "description": "Adsum Steplist Component",
   "main": "index.js",
   "author": "Basile Nouvellet <basile.nouvellet@ponts.org>",
