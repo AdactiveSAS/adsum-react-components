@@ -1,0 +1,33 @@
+{
+  "name": "@adactive/arc-steplist",
+  "version": "0.0.1",
+  "description": "Adsum Steplist Component",
+  "main": "index.js",
+  "author": "Basile Nouvellet <basile.nouvellet@ponts.org>",
+  "license": "UNLISENCED",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/AdactiveSAS/adsum-react-components.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AdactiveSAS/adsum-react-components.git/issues"
+  },
+  "scripts": {},
+  "dependencies": {
+    "chalk": "^1.1.3",
+    "commander": "^2.9.0",
+    "prex-es5": "^0.4.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "adsum",
+    "react",
+    "redux"
+  ],
+  "bin": {
+    "arc-steplist": "./cli.js"
+  }
+}
