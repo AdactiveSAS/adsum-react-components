@@ -146,7 +146,7 @@ class Step extends React.Component<PropsType, StateType> {
     // ------------------------------------------ Render ------------------------------------------
     render(): React.Element<'div'> {
         const {
-            renderStep, renderStepTail, step, onClick
+            renderStep, renderStepTail, step, onClick,
         } = this.props;
         const { mode } = this.state;
 

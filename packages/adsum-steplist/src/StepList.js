@@ -1,18 +1,16 @@
 // @flow
+/* eslint-disable */
 
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import type { Path } from '@adactive/adsum-web-map';
 import { MainActions, WayfindingActions } from '@adactive/arc-map';
+import type { MapReducerStateType } from '@adactive/arc-map/src/initialState';
+import type { Path } from '@adactive/adsum-web-map';
 
-import Step from './subComponents/Step';
-
-import type { AppStateType } from '../../rootReducer';
+import Step, { type RenderStepTailType, type RenderStepType } from './subComponents/Step';
 
 import './StepList.css';
-
-import type { RenderStepType, RenderStepTailType } from './subComponents/Step';
 
 export type StepType = {|
     index: number,
@@ -157,7 +155,7 @@ class StepList extends React.Component<PropsType, StateType> {
         drawPathSection(placeId, stepIndex);
     };
 
-    generateSteps(path): Array<StepType> {
+    generateSteps(path: Path): Array<StepType> {
         if (!path) return [];
 
         // generate steps
@@ -214,11 +212,9 @@ class StepList extends React.Component<PropsType, StateType> {
 
         // need this workaround to force selection on last step
         // since we are adding first step manually to the steps array
-        // set mode to 'current' if drawing is finished
-        if (
-            currentSectionIndex === steps.length - 2
-            && !drawing
-        ) currentSectionIndex = steps.length - 1;
+        // set last step mode to 'current' if drawing is finished
+        const shouldApplyWorkaround = currentSectionIndex === steps.length - 2 && !drawing;
+        if (shouldApplyWorkaround) currentSectionIndex = steps.length - 1;
 
         return steps.map((step: StepType): React.Element<typeof Step> => (
             <Step
@@ -246,18 +242,18 @@ class StepList extends React.Component<PropsType, StateType> {
     }
 }
 
-const mapStateToProps = (state: AppStateType): MappedStatePropsType => ({
-    wayfindingState: state.map.wayfindingState,
-    getPath: state.map.getPath,
+const mapStateToProps = ({ map } : { map: MapReducerStateType }): MappedStatePropsType => ({
+    wayfindingState: map.wayfindingState,
+    getPath: map.getPath,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => ({
     goToPlace: (placeId: number): void => {
         dispatch(MainActions.resetAction());
         dispatch(WayfindingActions.goToPlaceAction(placeId));
     },
     drawPathSection: (placeId: number, pathSectionIndex: number) => {
-        dispatch(WayfindingActions.drawPathSectionAction(placeId, pathSectionIndex)); // TODO: to comment
+        dispatch(WayfindingActions.drawPathSectionAction(placeId, pathSectionIndex));
     },
 });
 
