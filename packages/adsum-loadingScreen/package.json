@@ -1,9 +1,9 @@
 {
   "name": "@adactive/arc-loading-screen",
-  "version": "2.1.1",
+  "version": "2.2.0-alpha.1",
   "description": "Adsum Loading Screen Component",
   "main": "index.js",
-  "author": "Basile Nouvellet <basile.nouvellet@adactive.com>",
+  "author": "Basile Nouvellet <basile.nouvellet@ponts.org>",
   "license": "UNLISENCED",
   "readmeFilename": "README.md",
   "repository": {

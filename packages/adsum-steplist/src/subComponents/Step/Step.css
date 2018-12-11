@@ -1,0 +1,46 @@
+.step {
+  flex: 2;
+  box-sizing: border-box;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1em;
+}
+.step .badge {
+  width: 2.5em;
+  height: 2.5em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  background-color: cornflowerblue;
+  color: white;
+  font-weight: bold;
+}
+.step .message {
+  font-weight: bold;
+}
+.tail {
+  flex: 1;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.tail .circle {
+  border-radius: 30%;
+}
+.tail .circle::before {
+  content: "";
+  display: block;
+  padding-top: 100%;
+}
+@keyframes blink {
+  from {
+    background-color: transparent;
+  }
+  to {
+    background-color: cornflowerblue;
+  }
+}
