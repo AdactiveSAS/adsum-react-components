@@ -1,6 +1,6 @@
 {
   "name": "@adactive/adsum-utils",
-  "version": "2.2.0-rc.2",
+  "version": "2.2.0-rc.3",
   "description": "Adsum Component utils",
   "main": "index.js",
   "author": "Stanley Ong <stanley.ong@adactive.com>",
