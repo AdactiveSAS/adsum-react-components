@@ -93,10 +93,10 @@ export type RenderStepTailType = (mode: StepModeType, step: StepType) => ?Node;
 
 ```
 
-#### placeId
+### placeId
 Place ID of the place targeted by the steplist. This is the only necessary prop of the component.
     
-#### messages
+### messages
 Customize message shown on each step, following this structure:
 
 ```js
@@ -145,7 +145,7 @@ defaultMessages = (step: StepType) => {
 
 ```
 
-#### stepStyle
+### stepStyle
 Customize style of each step, following this structure:
 
 ```js
@@ -193,7 +193,7 @@ defaultStepStyle = {
 
 ```
 
-#### renderStep
+### renderStep
 Overwrite the default render step function. This is one step further than just customizing the
 style with **stepStyle** prop.
 
@@ -234,7 +234,7 @@ defaultRenderStep = (
 
 ```
 
-#### renderStepTail
+### renderStepTail
 Same as **renderStep**, but for the step tail: the space before each step.
 
 >If you want to remove the tails, simply pass a function that returns **null**.
