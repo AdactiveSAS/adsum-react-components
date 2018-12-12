@@ -44,6 +44,7 @@ class MyComponent extends React.Component {
 
 type OwnPropsType = {|
     placeId: ?number,
+    pmr: boolean, // optional
     messages: MessagesType, // optional
     stepStyle: StepStyleType, // optional
     renderStep: RenderStepType, // optional
@@ -96,6 +97,16 @@ export type RenderStepTailType = (mode: StepModeType, step: StepType) => ?Node;
 ### placeId
 Place ID of the place targeted by the steplist. This is the only necessary prop of the component.
     
+### pmr
+Draw the wayfinding with PMR (avoid stairs, use elevator instead) or not.
+
+##### default value
+```js
+
+defaultPmr = false
+
+```
+
 ### messages
 Customize message shown on each step, following this structure:
 

@@ -53,11 +53,12 @@ type MappedStatePropsType = {|
     +getPath: ?(id: number, pmr: boolean) => ?Path,
 |};
 type MappedDispatchPropsType = {|
-    +goToPlace: (placeId: ?number) => void,
-    +drawPathSection: (placeId: ?number, stepIndex: number) => void,
+    +goToPlace: (placeId: ?number, pmr: boolean) => void,
+    +drawPathSection: (placeId: ?number, stepIndex: number, pmr: boolean) => void,
 |};
 type OwnPropsType = {|
     placeId: ?number,
+    pmr: boolean, // optional
     messages: MessagesType, // optional
     stepStyle: StepStyleType, // optional
     renderStep: RenderStepType, // optional
@@ -71,6 +72,7 @@ type StateType = {|
 
 class StepList extends React.Component<PropsType, StateType> {
     static defaultProps = {
+        pmr: false,
         messages: (step: StepType) => {
             const { floor } = step;
 
@@ -203,9 +205,10 @@ class StepList extends React.Component<PropsType, StateType> {
     }
 
     componentDidUpdate(prevProps: PropsType) {
-        const { placeId } = this.props;
+        const { placeId, pmr } = this.props;
 
-        if (prevProps.placeId !== placeId) this.init();
+        // if placeId or pmr changes, reload the steplist
+        if (prevProps.placeId !== placeId || prevProps.pmr !== pmr) this.init();
     }
 
     addMessageToStep = (step: StepType, index: number, steps: Array<StepType>) => {
@@ -231,12 +234,14 @@ class StepList extends React.Component<PropsType, StateType> {
     };
 
     onStepClick = (stepIndex: number) => () => {
-        const { goToPlace, drawPathSection, placeId } = this.props;
         const { steps } = this.state;
+        const {
+            goToPlace, drawPathSection, placeId, pmr
+        } = this.props;
 
         // if is first step, restart the whole wayfinding
         if (stepIndex === 0) {
-            goToPlace(placeId);
+            goToPlace(placeId, pmr);
             return;
         }
 
@@ -244,7 +249,7 @@ class StepList extends React.Component<PropsType, StateType> {
         if (stepIndex === steps.length - 1) return;
 
         // else draw path section of the selected step
-        drawPathSection(placeId, stepIndex);
+        drawPathSection(placeId, stepIndex, pmr);
     };
 
     generateSteps(path: Path): Array<StepType> {
@@ -352,15 +357,15 @@ const mapStateToProps = ({ map }: { map: MapReducerStateType }): MappedStateProp
 });
 
 const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => ({
-    goToPlace: (placeId: ?number): void => {
+    goToPlace: (placeId: ?number, pmr: boolean): void => {
         dispatch(MainActions.resetAction());
         if (placeId) {
-            dispatch(WayfindingActions.goToPlaceAction(placeId));
+            dispatch(WayfindingActions.goToPlaceAction(placeId, pmr));
         }
     },
-    drawPathSection: (placeId: ?number, pathSectionIndex: number) => {
+    drawPathSection: (placeId: ?number, pathSectionIndex: number, pmr: boolean) => {
         if (placeId) {
-            dispatch(WayfindingActions.drawPathSectionAction(placeId, pathSectionIndex));
+            dispatch(WayfindingActions.drawPathSectionAction(placeId, pathSectionIndex, pmr));
         }
     },
 });
