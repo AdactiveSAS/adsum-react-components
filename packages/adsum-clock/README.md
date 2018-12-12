@@ -9,11 +9,11 @@ The clock component is, in reality, a wrapper function, which wraps the componen
 ## Getting started
 
 ```javascript
-    npm i --save-dev @adactive/arc-clock
+    npm i --save @adactive/arc-clock
 ```
 OR
 ```javascript
-    yarn add --dev @adactive/arc-clock
+    yarn add @adactive/arc-clock
 ```
 
 ```javascript

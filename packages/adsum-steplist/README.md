@@ -7,12 +7,11 @@
 
 ## Getting started
 
-    npm i --save-dev @adactive/arc-steplist
+    npm i --save @adactive/arc-steplist
 
 OR
 
-    yarn add --dev @adactive/arc-steplist
-
+    yarn add @adactive/arc-steplist
 
 ## How to use
 
