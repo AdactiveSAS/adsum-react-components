@@ -110,10 +110,12 @@ type MessagesType = (step: StepType) => {|
 
 ```
 
+- **firstStep**: the first step.
+- **lastStep**: the last step.
 - **isInterfloor**: steps where the floor is different from the previous one.
 - **default**: message for steps that don't fall into any of the previous categories.
 
-###### default value
+##### default value
 ```js
 
 defaultMessages = (step: StepType) => {
@@ -167,10 +169,10 @@ export type StepStyleType = {|
 >Be aware that you don't have to modify all the styles. For examples, you can modify only the
 'isNext' style, and the others default styles will be kept.
 
-If you want to modify the style of the whole step list, you can overwrite the **steplist**
+If you want to modify the style of the whole step list, you can overwrite the **'steplist'**
 classname in your component stylesheet.
 
-###### default value
+##### default value
 ```js
 
 defaultStepStyle = {
@@ -209,7 +211,7 @@ export type RenderStepType = (
 This is a function that return some JSX,for you to be able to use the *current mode*, the *step*,
 the *stepStyle* and the default *click handler* in your own steps.
 
-###### default value
+##### default value
 ```js
 
 defaultRenderStep = (
@@ -245,7 +247,7 @@ export type RenderStepTailType = (mode: StepModeType, step: StepType) => ?Node;
 
 Again, this a function, so you can use the *current mode* and the *step* in your own step tails.
 
-###### default value
+##### default value
 ```js
 
 defaultRenderStepTail = (mode: StepModeType, step: StepType) => {
