@@ -38,7 +38,7 @@ class MyComponent extends React.Component {
 
 ```
 
-## Optional props
+## Props
 
 ```js
 
