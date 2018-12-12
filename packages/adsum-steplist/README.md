@@ -3,7 +3,9 @@
 
 # Step List
 
-![Screenshot of Step List component](https://user-images.githubusercontent.com/24209524/49843968-01e26400-fdfc-11e8-85d6-0433036a44d0.png)
+![Screenshot of Step List component](
+https://user-images.githubusercontent.com/24209524/49843968-01e26400-fdfc-11e8-85d6-0433036a44d0.png
+)
 
 ## Getting started
 
@@ -109,7 +111,37 @@ type MessagesType = (step: StepType) => {|
 ```
 
 - **isInterfloor**: steps where the floor is different from the previous one.
-- **default**: default message for steps that don't fall into any of the previous categories.
+- **default**: message for steps that don't fall into any of the previous categories.
+
+###### default value
+```js
+
+defaultMessages = (step: StepType) => {
+    const { floor } = step;
+
+    let floorName = null;
+    let upOrDown = '';
+
+    if (floor) {
+        const { name, deltaAltitudeWithPrevStep } = floor;
+
+        // floor name
+        floorName = name;
+
+        // interfloor direction
+        if (deltaAltitudeWithPrevStep > 0) upOrDown = ' up'; // space before on purpose
+        else if (deltaAltitudeWithPrevStep < 0) upOrDown = ' down'; // same
+    }
+
+    return {
+        firstStep: `Start here${floorName ? `, at ${floorName}` : ''}`,
+        lastStep: 'You are at your destination',
+        isInterfloor: floorName ? `Go${upOrDown} to ${floorName}` : 'Change floor',
+        default: 'Continue',
+    };
+}
+
+```
 
 #### stepStyle
 Customize style of each step, following this structure:
@@ -138,6 +170,27 @@ export type StepStyleType = {|
 If you want to modify the style of the whole step list, you can overwrite the **steplist**
 classname in your component stylesheet.
 
+###### default value
+```js
+
+defaultStepStyle = {
+    default: {
+        transition: 'all .5s',
+    },
+    isDone: {
+        opacity: 0.3,
+    },
+    current: {
+        backgroundColor: 'green',
+    },
+    isNext: {
+        backgroundColor: 'lightgreen',
+    },
+    isNotDoneYet: {},
+}
+
+```
+
 #### renderStep
 Overwrite the default render step function. This is one step further than just customizing the
 style with **stepStyle** prop.
@@ -156,6 +209,29 @@ export type RenderStepType = (
 This is a function that return some JSX,for you to be able to use the *current mode*, the *step*,
 the *stepStyle* and the default *click handler* in your own steps.
 
+###### default value
+```js
+
+defaultRenderStep = (
+    mode: StepModeType,
+    step: StepType,
+    stepStyle: StepStyleType,
+    onClick: (stepIndex: number) => () => void,
+) => (
+    <div
+        className="step"
+        style={stepStyle}
+        onClick={onClick(step.index)}
+        role="complementary"
+        onKeyDown={() => {}}
+    >
+        <div className="badge">{step.index + 1}</div>
+        <div className="message">{step.message}</div>
+    </div>
+)
+
+```
+
 #### renderStepTail
 Same as **renderStep**, but for the step tail: the space before each step.
 
@@ -169,104 +245,45 @@ export type RenderStepTailType = (mode: StepModeType, step: StepType) => ?Node;
 
 Again, this a function, so you can use the *current mode* and the *step* in your own step tails.
 
-## Default props
-
+###### default value
 ```js
 
-static defaultProps = {
-    messages: (step: StepType) => {
-        const { floor } = step;
-    
-        let floorName = null;
-        let upOrDown = '';
-    
-        if (floor) {
-            const { name, deltaAltitudeWithPrevStep } = floor;
-    
-            // floor name
-            floorName = name;
-    
-            // interfloor direction
-            if (deltaAltitudeWithPrevStep > 0) upOrDown = ' up'; // space before on purpose
-            else if (deltaAltitudeWithPrevStep < 0) upOrDown = ' down'; // same
+defaultRenderStepTail = (mode: StepModeType, step: StepType) => {
+    if (step.index === 0) return null; // no tail before first step
+
+    const numberOfCircles = 4;
+
+    // [0, 1, ..., numberOfCircles - 1]
+    const dumbArrayToMap = [...Array(numberOfCircles).keys()];
+
+    const delayBetweenEachCircle = 1 / 10;
+
+    // wait for the last circle to finish + add 1 more delay to make it smoother
+    const animationDuration = (numberOfCircles + 2) * delayBetweenEachCircle;
+
+    const circleStyle = delay => (
+        {
+            width: `${100 / (numberOfCircles * 3)}%`,
+            maxWidth: '1em',
+            animation: mode !== 'isNext' ? null // animation only if step is next
+                : `blink ${animationDuration}s linear ${delay}s infinite alternate`,
         }
-    
-        return {
-            firstStep: `Start here${floorName ? `, at ${floorName}` : ''}`,
-            lastStep: 'You are at your destination',
-            isInterfloor: floorName ? `Go${upOrDown} to ${floorName}` : 'Change floor',
-            default: 'Continue',
-        };
-    },
-    stepStyle: {
-        default: {
-            transition: 'all .5s',
-        },
-        isDone: {
-            opacity: 0.3,
-        },
-        current: {
-            backgroundColor: 'green',
-        },
-        isNext: {
-            backgroundColor: 'lightgreen',
-        },
-        isNotDoneYet: {},
-    },
-    renderStep: (
-        mode: StepModeType,
-        step: StepType,
-        stepStyle: StepStyleType,
-        onClick: (stepIndex: number) => () => void,
-    ) => (
-        <div
-            className="step"
-            style={stepStyle}
-            onClick={onClick(step.index)}
-            role="complementary"
-            onKeyDown={() => {}}
-        >
-            <div className="badge">{step.index + 1}</div>
-            <div className="message">{step.message}</div>
+    );
+
+    return (
+        <div className="tail">
+            {dumbArrayToMap.map(index => (
+                <div
+                    // 'index' as key is ok here,
+                    // because no modification will happen on numberOfCircles array
+                    key={index}
+                    className="circle"
+                    style={circleStyle(index * delayBetweenEachCircle)}
+                />
+            ))}
         </div>
-    ),
-    renderStepTail: (mode: StepModeType, step: StepType) => {
-        if (step.index === 0) return null; // no tail before first step
-
-        const numberOfCircles = 4;
-
-        // [0, 1, ..., numberOfCircles - 1]
-        const dumbArrayToMap = [...Array(numberOfCircles).keys()];
-
-        const delayBetweenEachCircle = 1 / 10;
-
-        // wait for the last circle to finish + add 1 more delay to make it smoother
-        const animationDuration = (numberOfCircles + 2) * delayBetweenEachCircle;
-
-        const circleStyle = delay => (
-            {
-                width: `${100 / (numberOfCircles * 3)}%`,
-                maxWidth: '1em',
-                animation: mode !== 'isNext' ? null // animation only if step is next
-                    : `blink ${animationDuration}s linear ${delay}s infinite alternate`,
-            }
-        );
-
-        return (
-            <div className="tail">
-                {dumbArrayToMap.map(index => (
-                    <div
-                        // 'index' as key is ok here,
-                        // because no modification will happen on numberOfCircles array
-                        key={index}
-                        className="circle"
-                        style={circleStyle(index * delayBetweenEachCircle)}
-                    />
-                ))}
-            </div>
-        );
-    },
-};
+    );
+}
 
 ```
 
