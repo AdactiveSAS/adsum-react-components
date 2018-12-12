@@ -17,8 +17,8 @@ export type StepType = {|
     floor: ?{|
         id: number,
         name: ?string,
+        deltaAltitudeWithPrevStep: number,
     |},
-    interfloor: boolean,
     message: string,
 |};
 
@@ -65,39 +65,56 @@ type StateType = {|
 class StepList extends React.Component<PropsType, StateType> {
     static defaultProps = {
         messages: (step: StepType) => {
-            const floorName = step.floor && step.floor.name;
+            const { floor } = step;
+
+            let floorName = null;
+            let upOrDown = '';
+
+            if (floor) {
+                const { name, deltaAltitudeWithPrevStep } = floor;
+
+                // floor name
+                floorName = name;
+
+                // interfloor direction
+                if (deltaAltitudeWithPrevStep > 0) upOrDown = ' up'; // space before on purpose
+                else if (deltaAltitudeWithPrevStep < 0) upOrDown = ' down'; // same
+            }
 
             return {
                 firstStep: `Start here${floorName ? `, at ${floorName}` : ''}`,
                 lastStep: 'You are at your destination',
-                isInterfloor: floorName ? `Go to ${floorName}` : 'Change floor',
+                isInterfloor: floorName ? `Go${upOrDown} to ${floorName}` : 'Change floor',
                 default: 'Continue',
             };
         },
     };
 
-    static convertSectionToStep(section, index: number, sections: Array<*>): StepType {
+    static convertSectionToStep(section: *, index: number, sections: Array<*>): StepType {
         const { ground } = section;
-
-        // is interfloor?
-        const prevSection = index > 0 ? sections[index - 1] : null;
-        const interfloor = prevSection ? prevSection.ground !== section.ground : false;
 
         // floor name
         const floorName = ground && ground.name
             ? ground.name.replace('_', ' ')
             : null;
 
+        // is interfloor?
+        // yes if delta altitude with previous step is !== 0
+        const prevSection = index > 0 ? sections[index - 1] : null;
+        const deltaAltitudeWithPrevStep = prevSection
+            ? ground.altitude - prevSection.ground.altitude
+            : 0;
+
         // floor
         const floor = {
             id: ground.id,
             name: floorName,
+            deltaAltitudeWithPrevStep,
         };
 
         return {
             index: index + 1, // because we add a first step manually
             floor,
-            interfloor,
             message: '', // will be filled later
         };
     }
@@ -132,7 +149,7 @@ class StepList extends React.Component<PropsType, StateType> {
         else if (index === steps.length - 1) step.message = messages.lastStep;
 
         // step is interfloor
-        else if (step.interfloor) step.message = messages.isInterfloor;
+        else if (step.floor && step.floor.deltaAltitudeWithPrevStep !== 0) step.message = messages.isInterfloor;
 
         // default
         else step.message = messages.default;
@@ -163,20 +180,26 @@ class StepList extends React.Component<PropsType, StateType> {
             .map(StepList.convertSectionToStep);
 
         // manually add first step
-        const firstStep = {
-            index: 0,
-            floor: null, // we do not need it
-            interfloor: false,
-            message: '', // will be filled later
-        };
-        steps.splice(0, 0, firstStep);
+        if (steps.length > 0) {
+            const firstStep = {
+                index: 0,
+                floor: {
+                    ...steps[0].floor, // copy floor from first step
+                    deltaAltitudeWithPrevStep: 0, // overwrite delta altitude to 0
+                },
+                message: '', // will be filled later
+            };
+            steps.splice(0, 0, firstStep);
+        }
 
         // manually add a last step only if path is longer than 2 steps
         if (steps.length > 2) {
             const lastStep = {
                 index: steps.length,
-                floor: null, // we do not need it
-                interfloor: false,
+                floor: {
+                    ...steps[steps.length - 1].floor, // copy floor from last step
+                    deltaAltitudeWithPrevStep: 0, // overwrite delta altitude to 0
+                },
                 message: '', // will be filled later
             };
             steps.splice(steps.length, steps.length, lastStep);
@@ -242,7 +265,7 @@ class StepList extends React.Component<PropsType, StateType> {
     }
 }
 
-const mapStateToProps = ({ map } : { map: MapReducerStateType }): MappedStatePropsType => ({
+const mapStateToProps = ({ map }: { map: MapReducerStateType }): MappedStatePropsType => ({
     wayfindingState: map.wayfindingState,
     getPath: map.getPath,
 });

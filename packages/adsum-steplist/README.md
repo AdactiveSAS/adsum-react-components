@@ -87,8 +87,8 @@ export type StepType = {|
     floor: ?{|
         id: number,
         name: ?string,
+        deltaAltitudeWithPrevStep: number,
     |},
-    interfloor: boolean,
     message: string,
 |};
 
@@ -176,12 +176,26 @@ Again, this a function, so you can use the *current mode* and the *step* in your
 
 static defaultProps = {
     messages: (step: StepType) => {
-        const floorName = step.floor && step.floor.name;
+        const { floor } = step;
+    
+        let floorName = null;
+        let upOrDown = '';
+    
+        if (floor) {
+            const { name, deltaAltitudeWithPrevStep } = floor;
+    
+            // floor name
+            floorName = name;
+    
+            // interfloor direction
+            if (deltaAltitudeWithPrevStep > 0) upOrDown = ' up'; // space before on purpose
+            else if (deltaAltitudeWithPrevStep < 0) upOrDown = ' down'; // same
+        }
     
         return {
             firstStep: `Start here${floorName ? `, at ${floorName}` : ''}`,
             lastStep: 'You are at your destination',
-            isInterfloor: floorName ? `Go to ${floorName}` : 'Change floor',
+            isInterfloor: floorName ? `Go${upOrDown} to ${floorName}` : 'Change floor',
             default: 'Continue',
         };
     },
