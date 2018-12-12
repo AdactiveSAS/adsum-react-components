@@ -43,10 +43,10 @@ class MyComponent extends React.Component {
 
 type OwnPropsType = {|
     placeId: ?number,
-    messages?: MessagesType,
-    stepStyle?: StepStyleType,
-    renderStep?: RenderStepType,
-    renderStepTail?: RenderStepTailType,
+    messages: MessagesType, // optional
+    stepStyle: StepStyleType, // optional
+    renderStep: RenderStepType, // optional
+    renderStepTail: RenderStepTailType, // optional
 |};
 
 ```
@@ -55,32 +55,6 @@ type OwnPropsType = {|
 enhance your flow typing in your app.
 
 ```js
-
-type MessagesType = (step: StepType) => {|
-    firstStep?: string,
-    lastStep?: string,
-    isInterfloor?: string,
-    default?: string,
-|};
-
-export type StepStyleType = {|
-    default?: CSSStyleDeclaration,
-    isDone?: CSSStyleDeclaration,
-    current?: CSSStyleDeclaration,
-    isNext?: CSSStyleDeclaration,
-    isNotDoneYet?: CSSStyleDeclaration,
-|};
-
-export type StepModeType = 'isDone' | 'current' | 'isNext' | 'isNotDoneYet';
-
-export type RenderStepType = (
-    mode: StepModeType,
-    step: StepType,
-    stepStyle: StepStyleType,
-    onClick: (stepIndex: number) => () => void,
-) => ?Node;
-
-export type RenderStepTailType = (mode: StepModeType, step: StepType) => ?Node;
 
 export type StepType = {|
     index: number,
@@ -91,6 +65,30 @@ export type StepType = {|
     |},
     message: string,
 |};
+
+export type MessagesType = (step: StepType) => {|
+    firstStep?: string,
+    lastStep?: string,
+    isInterfloor?: string,
+    default?: string,
+|};
+
+export type StepStyleType = {|
+    default?: { [key: string]: string},
+    isDone?: { [key: string]: string},
+    current?: { [key: string]: string},
+    isNext?: { [key: string]: string},
+    isNotDoneYet?: { [key: string]: string},
+|};
+
+export type RenderStepType = (
+    mode: StepModeType,
+    step: StepType,
+    stepStyle: StepStyleType,
+    onClick: (stepIndex: number) => () => void,
+) => ?Node;
+
+export type RenderStepTailType = (mode: StepModeType, step: StepType) => ?Node;
 
 ```
 
@@ -161,6 +159,8 @@ the *stepStyle* and the default *click handler* in your own steps.
 
 #### renderStepTail
 Same as **renderStep**, but for the step tail: the space before each step.
+
+>If you want to remove the tails, simply pass a function that returns **null**.
 
 ```js
 
