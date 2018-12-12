@@ -11,11 +11,11 @@
 ## Getting started
 
 ```javascript
-    npm i --save-dev @adactive/arc-itemcarousel
+    npm i --save @adactive/arc-itemcarousel
 ```
 OR
 ```javascript
-    yarn add --dev @adactive/arc-itemcarousel
+    yarn add @adactive/arc-itemcarousel
 ```
 
 ```javascript

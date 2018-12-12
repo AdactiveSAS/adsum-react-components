@@ -1,7 +1,7 @@
 {
-  "name": "@adactive/arc-loading-screen",
+  "name": "@adactive/arc-steplist",
   "version": "2.2.0-rc.4",
-  "description": "Adsum Loading Screen Component",
+  "description": "Adsum Steplist Component",
   "main": "index.js",
   "author": "Basile Nouvellet <basile.nouvellet@ponts.org>",
   "license": "UNLISENCED",
@@ -19,13 +19,6 @@
     "commander": "^2.9.0",
     "prex-es5": "^0.4.2"
   },
-  "devDependencies": {
-    "prop-types": "^15.6.1",
-    "react": "^16.3.1",
-    "react-redux": "^5.0.7",
-    "redux": "^3.7.2",
-    "redux-saga": "^0.16.0"
-  },
   "publishConfig": {
     "access": "public"
   },
@@ -35,6 +28,6 @@
     "redux"
   ],
   "bin": {
-    "arc-loading-screen": "./cli.js"
+    "arc-steplist": "./cli.js"
   }
 }

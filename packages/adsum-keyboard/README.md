@@ -7,11 +7,11 @@
 ## Getting started
 
 ```javascript
-    npm i --save-dev @adactive/arc-keyboard
+    npm i --save @adactive/arc-keyboard
 ```
 OR
 ```javascript
-    yarn add --dev @adactive/arc-keyboard
+    yarn add @adactive/arc-keyboard
 ```
 
 ```javascript

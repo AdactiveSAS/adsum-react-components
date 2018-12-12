@@ -3,11 +3,11 @@
 ## Getting started
 
 ```javascript
-    npm i --save-dev @adactive/arc-qrcode
+    npm i --save @adactive/arc-qrcode
 ```
 OR
 ```javascript
-    yarn add --dev @adactive/arc-qrcode
+    yarn add @adactive/arc-qrcode
 ```
 
 ### Usage
