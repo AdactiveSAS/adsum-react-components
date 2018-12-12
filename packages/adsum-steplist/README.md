@@ -1,260 +1,267 @@
 ![react-badge](https://img.shields.io/badge/react-js-53c1de.svg?style=flat)
 ![touch-badge](https://img.shields.io/badge/for-touch--screen-ff69b4.svg?style=flat)
 
-# Loading Screen
+# Step List
 
 ![Screenshot of LoadingScreen component](https://user-images.githubusercontent.com/24209524/49127057-e443d380-f300-11e8-95e2-86531a0353fd.png)
 
 ## Getting started
 
-    npm i --save-dev @adactive/arc-loading-screen
+    npm i --save-dev @adactive/arc-steplist
 
 OR
 
-    yarn add --dev @adactive/arc-loading-screen
+    yarn add --dev @adactive/arc-steplist
 
 
 ## How to use
 
 Just add the component as below:
 
-```javascript
+```js
 
 import * as React from 'react';
 
-/*...*/
-
-// import LoadingScreen component and Actions
-import LoadingScreen, { LoadingScreenActions } from '@adactive/arc-loading-screen';
-
-import ACA from '@adactive/adsum-utils/services/ClientAPI';
-import deviceConfig from './services/Config';
+// import StepList component
+import StepList from '@adactive/arc-steplist';
 
 /*...*/
 
-class App extends React.Component<PropsType, StateType> {
-    state = {
-        configLoaded: false,
-        mapLoaded: false,
-    };
-
-    /*...*/
-
-    componentDidMount() {
-        // use setPercentage to dispatch LoadingScreen action
-        const { setPercentage } = this.props;
-
-        deviceConfig.init()
-            // 10 %
-            .then((): void => setPercentage(10))
-            .then((): void => ACA.init(deviceConfig.config.api))
-            // 25 %
-            .then((): void => setPercentage(25))
-            .then((): void => ACA.load())
-            // 75 %
-            .then((): void => setPercentage(75))
-            .then(() => {
-                this.awm = new AdsumWebMap({/*...*/});
-
-                // 90 %
-                setPercentage(90);
-                this.setState({ configLoaded: true });
-            });
-    }
-
-    componentDidUpdate() {
-        // use setPercentage to dispatch LoadingScreen action
-        const { mapState, setPercentage } = this.props;
-        const { mapLoaded, configLoaded } = this.state;
-
-        if (configLoaded && !mapLoaded && mapState === 'idle') {
-            // 100 %, because app will be ready when mapLoaded set to true
-            setPercentage(100);
-            this.setState({ mapLoaded: true });
-        }
-    }
-
-    renderMap = () => {/*...*/};
-
-    render(): Element<'div'> {
+class MyComponent extends React.Component {
+    render() {
         return (
-            <div className="App">
-                <LoadingScreen />
-
-                <Header logo={logo} />
-
-                { this.renderMap() }
-            </div>
+            <StepList placeId={placeId} />
         );
     }
 }
-    
-const mapStateToProps = (state: AppStateType): MappedStatePropsType => ({
-    mapState: state.map.state,
-    /*...*/
-});
-
-const mapDispatchToProps = (dispatch: *): MappedDispatchPropsType => ({
-    // allow us to dispatch LoadingScreen setPercentage action
-    setPercentage: (percentage: ?number): void => {
-        dispatch(LoadingScreenActions.setPercentage(percentage));
-    },
-    /*...*/
-});
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(App);
 
 ```
-
-Do not forget to link the reducer to your app root reducer in **rootReducer.js**:
-
-```javascript
-
-import { combineReducers } from 'redux';
-import { routerReducer } from 'react-router-redux';
- 
-/*...*/
-
-// import LoadingScreen reducer
-import loadingScreen from '@adactive/arc-loading-screen/src/LoadingScreenReducer';
-// import LoadingScreen reducer type
-import type { LoadingScreenReducerType } from '@adactive/arc-loading-screen/src/LoadingScreenReducer';
-
-export type AppStateType = {|
-    /*...*/
-    loadingScreen: LoadingScreenReducerType,
-|};
-
-const appState: AppStateType = {
-    /*...*/
-    loadingScreen,
-};
-
-export default combineReducers(appState);
-
-```
-
->Be sure to have **adsum-logo.png** in your **public/assets/img/** folder
-if you want the default logo
 
 ## Optional props
 
-```javascript
+```js
 
 type OwnPropsType = {|
-    open?: boolean,
-    hideLogo?: boolean,
-    hidePercentage?: boolean,
-    hideBar?: boolean,
-    transition?: ?string,
-    minPercentage?: ?number,
-    mainColor?: string,
-    barColor?: string,
-    logo?: Object | string,
+    placeId: ?number,
+    messages?: MessagesType,
+    stepStyle?: StepStyleType,
+    renderStep?: RenderStepType,
+    renderStepTail?: RenderStepTailType,
 |};
 
 ```
 
-#### open
-Control the opening of the loading screen.
-Note that **Loading Screen closes automatically when it reaches 100%**,
-so NO NEED to link ```mapLoaded``` to ```open``` prop as below if you set percentage to 100%
-at some point in your code:
+>You can see here as well what flow types are exported. You can import them from the component to
+enhance your flow typing in your app.
 
-```javascript
+```js
 
-<LoadingScreen
-    open={!mapLoaded} // not needed
-/>
+type MessagesType = (step: StepType) => {|
+    firstStep?: string,
+    lastStep?: string,
+    isInterfloor?: string,
+    default?: string,
+|};
 
-```
+export type StepStyleType = {|
+    default?: CSSStyleDeclaration,
+    isDone?: CSSStyleDeclaration,
+    current?: CSSStyleDeclaration,
+    isNext?: CSSStyleDeclaration,
+    isNotDoneYet?: CSSStyleDeclaration,
+|};
 
-#### hideLogo
-Hide Logo in the Loading Screen when set to ```true```.
+export type StepModeType = 'isDone' | 'current' | 'isNext' | 'isNotDoneYet';
 
-#### hidePercentage
-Hide Percentage number in the Loading Screen when set to ```true```.
+export type RenderStepType = (
+    mode: StepModeType,
+    step: StepType,
+    stepStyle: StepStyleType,
+    onClick: (stepIndex: number) => () => void,
+) => ?Node;
 
-#### hideBar
-Hide Loading Bar in the Loading Screen when set to ```true```.
+export type RenderStepTailType = (mode: StepModeType, step: StepType) => ?Node;
 
-#### transition
-Set transition of the Loading Bar width.
-Can be useful to adjust transition duration: if Loading Screen is going to be displayed for a long
-time, we have enough time to set a bigger transition duration for a prettier design.
-On the contrary, timing needs to be low when Loading Bar loads quickly.
-
-#### minPercentage
-Set minPercentage. Set percentage in redux store is used only when greater than minPercentage.
-This is a sort of design workaround for the rounded radius and padding getting messed up when
-Loading Bar is too small.
-
-#### mainColor
-Set Loading Screen background color.
-
-#### barColor
-Set Loading Bar & percentage color.
-
-#### logo
-Set displayed logo. Better effect with a PNG file with transparent background.
-
-## Redux
-
-```javascript
-
-type LoadingScreenReducerStateType = {|
-    percentage: ?number,
+export type StepType = {|
+    index: number,
+    floor: ?{|
+        id: number,
+        name: ?string,
+    |},
+    interfloor: boolean,
+    message: string,
 |};
 
 ```
 
->The only value in the Loading Screen redux store is ```percentage```.
-
-
-2 actions are available:
-- **setPercentage**: set percentage to the given value.
+#### placeId
+Place ID of the place targeted by the steplist. This is the only necessary prop of the component.
     
-```javascript
+#### messages
+Customize message shown on each step, following this structure:
 
-    LoadingScreenActions.setPercentage(80); // set percentage to 80 %
+```js
+
+type MessagesType = (step: StepType) => {|
+    firstStep?: string,
+    lastStep?: string,
+    isInterfloor?: string,
+    default?: string,
+|};
 
 ```
-    
-- **addPercentage**: add the given value to the current percentage.
 
-```javascript
+- **isInterfloor**: steps where the floor is different from the previous one.
+- **default**: default message for all the steps that don't fall into any of the previous categories.
 
-    LoadingScreenActions.setPercentage(10); // set percentage to 10 %
+#### stepStyle
+Customize style of each step, following this structure:
 
-    /*...*/
+```js
 
-    LoadingScreenActions.addPercentage(20); // percentage is now 30 %
+export type StepStyleType = {|
+    default?: CSSStyleDeclaration,
+    isDone?: CSSStyleDeclaration,
+    current?: CSSStyleDeclaration,
+    isNext?: CSSStyleDeclaration,
+    isNotDoneYet?: CSSStyleDeclaration,
+|};
 
 ```
+
+- **default**: style applied to each step, whatever their current mode.
+- **isDone**: style added to step that are done.
+- **current**: style added to current step.
+- **isNext**: style added to the step just after the current step.
+- **isNotDoneYet**: style added to the steps that are after the 'isNext' step, that are not yet done.
+
+>Be aware that you don't have to modify all the styles. For examples, you can modify only the
+'isNext' style, and the others default styles will be kept.
+
+placeId: ?number,
+    messages?: MessagesType,
+    stepStyle?: StepStyleType,
+    renderStep?: RenderStepType,
+    renderStepTail?: RenderStepTailType,
+
+#### renderStep
+Overwrite the default render step function. This is one step further than just customizing the
+style with **stepStyle** prop.
+
+```js
+
+export type RenderStepType = (
+    mode: StepModeType,
+    step: StepType,
+    stepStyle: StepStyleType,
+    onClick: (stepIndex: number) => () => void,
+) => ?Node;
+
+```
+
+This is a function that return some JSX,for you to be able to use the *current mode*, the *step*, the
+*stepStyle* and the default *click handler* in your own steps.
+
+#### renderStepTail
+Same as **renderStep**, but for the step tail: the space before each step.
+
+```js
+
+export type RenderStepTailType = (mode: StepModeType, step: StepType) => ?Node;
+
+```
+
+Again, this a function, so you can use the *current mode* and the *step* in your own step tails.
 
 ## Default props
 
-```javascript
+```js
 
 static defaultProps = {
-    open: true,
-    hideLogo: false,
-    hidePercentage: false,
-    hideBar: false,
-    transition: 'width .1s ease-in-out',
-    minPercentage: 10,
-    mainColor: '#6EC8F1', // same blue color as splashscreen in Adsum AdLoader
-    barColor: 'white',
-    logo: '/assets/img/adsum-logo.png',
+    messages: (step: StepType) => {
+        const floorName = step.floor && step.floor.name;
+    
+        return {
+            firstStep: `Start here${floorName ? `, at ${floorName}` : ''}`,
+            lastStep: 'You are at your destination',
+            isInterfloor: floorName ? `Go to ${floorName}` : 'Change floor',
+            default: 'Continue',
+        };
+    },
+    stepStyle: {
+        default: {
+            transition: 'all .5s',
+        },
+        isDone: {
+            opacity: 0.3,
+        },
+        current: {
+            backgroundColor: 'green',
+        },
+        isNext: {
+            backgroundColor: 'lightgreen',
+        },
+        isNotDoneYet: {},
+    },
+    renderStep: (
+        mode: StepModeType,
+        step: StepType,
+        stepStyle: StepStyleType,
+        onClick: (stepIndex: number) => () => void,
+    ) => (
+        <div
+            className="step"
+            style={stepStyle}
+            onClick={onClick(step.index)}
+            role="complementary"
+            onKeyDown={() => {}}
+        >
+            <div className="badge">{step.index + 1}</div>
+            <div className="message">{step.message}</div>
+        </div>
+    ),
+    renderStepTail: (mode: StepModeType, step: StepType) => {
+        if (step.index === 0) return null; // no tail before first step
+
+        const numberOfCircles = 4;
+
+        // [0, 1, ..., numberOfCircles - 1]
+        const dumbArrayToMap = [...Array(numberOfCircles).keys()];
+
+        const delayBetweenEachCircle = 1 / 10;
+
+        // wait for the last circle to finish + add 1 more delay to make it smoother
+        const animationDuration = (numberOfCircles + 2) * delayBetweenEachCircle;
+
+        const circleStyle = delay => (
+            {
+                width: `${100 / (numberOfCircles * 3)}%`,
+                maxWidth: '1em',
+                animation: mode !== 'isNext' ? null // animation only if step is next
+                    : `blink ${animationDuration}s linear ${delay}s infinite alternate`,
+            }
+        );
+
+        return (
+            <div className="tail">
+                {dumbArrayToMap.map(index => (
+                    <div
+                        // 'index' as key is ok here,
+                        // because no modification will happen on numberOfCircles array
+                        key={index}
+                        className="circle"
+                        style={circleStyle(index * delayBetweenEachCircle)}
+                    />
+                ))}
+            </div>
+        );
+    },
 };
 
 ```
 
 ## Copy component inside your project src folder  
 
-It will copy the component inside your project, in **src/components/adsum-loading-screen/**.
+It will copy the component inside your project, in **src/components/adsum-steplist/**.
 
-    npx @adactive/arc-loading-screen copy
+    npx @adactive/arc-steplist copy

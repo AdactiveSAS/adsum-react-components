@@ -13,7 +13,7 @@ export type RenderStepType = (
     mode: StepModeType,
     step: StepType,
     stepStyle: StepStyleType,
-    onClick: () => void,
+    onClick: (stepIndex: number) => () => void,
 ) => ?Node;
 
 export type RenderStepTailType = (mode: StepModeType, step: StepType) => ?Node;

@@ -151,7 +151,7 @@ class StepList extends React.Component<PropsType, StateType> {
         // if is last step, do nothing
         if (stepIndex === steps.length - 1) return;
 
-        // else draw wayfinding starting on the selected step
+        // else draw path section of the selected step
         drawPathSection(placeId, stepIndex);
     };
 
