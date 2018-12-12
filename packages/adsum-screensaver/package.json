@@ -1,6 +1,6 @@
 {
   "name": "@adactive/arc-screensaver",
-  "version": "2.2.0-rc.0",
+  "version": "2.2.0-rc.1",
   "description": "Adsum Screensaver Component",
   "main": "index.js",
   "author": "Andrei Pavlov <andrei.pavlov@adactive.com>",
