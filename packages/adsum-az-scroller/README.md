@@ -11,11 +11,11 @@ Made with <3 for easier touch experience.
 
 ## Getting started
 
-    npm i --save-dev @adactive/az-scroller
+    npm i --save @adactive/az-scroller
 
 OR
 
-    yarn add --dev @adactive/az-scroller
+    yarn add @adactive/az-scroller
 
 
 ## How to use

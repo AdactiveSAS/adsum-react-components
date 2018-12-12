@@ -34,11 +34,11 @@ So, screensaver component have several dependencies:
 So, you should add a screenSaverReducer to combinedReducers and ScreenSaverSagas to the rootSaga.
 
 ```javascript
-    npm i --save-dev @adactive/arc-screensaver
+    npm i --save @adactive/arc-screensaver
 ```
 OR
 ```javascript
-    yarn add --dev @adactive/arc-screensaver
+    yarn add @adactive/arc-screensaver
 ```
 
 ```javascript

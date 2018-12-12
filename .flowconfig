@@ -1,8 +1,18 @@
 [ignore]
-node_modules/@adactive/**/*.js
+# not flow-typed yet (TODO)
+<PROJECT_ROOT>/packages/adsum-az-scroller/.*
+<PROJECT_ROOT>/packages/adsum-carousel/.*
+<PROJECT_ROOT>/packages/adsum-clock/.*
+<PROJECT_ROOT>/packages/adsum-itemCarousel/.*
+<PROJECT_ROOT>/packages/adsum-keyboard/.*
+<PROJECT_ROOT>/packages/adsum-loadingScreen/.*
+<PROJECT_ROOT>/packages/adsum-map/.*
+<PROJECT_ROOT>/packages/adsum-qrCode/.*
+<PROJECT_ROOT>/packages/adsum-screensaver/.*
+<PROJECT_ROOT>/packages/adsum-search/.*
+<PROJECT_ROOT>/packages/adsum-utils/.*
 
 [include]
-src/**/*.js
 
 [libs]
 

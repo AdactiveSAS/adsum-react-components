@@ -7,11 +7,11 @@
 
 ## Getting started
 
-    npm i --save-dev @adactive/arc-loading-screen
+    npm i --save @adactive/arc-loading-screen
 
 OR
 
-    yarn add --dev @adactive/arc-loading-screen
+    yarn add @adactive/arc-loading-screen
 
 
 ## How to use

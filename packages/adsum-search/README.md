@@ -9,11 +9,11 @@
 ## Getting started
 
 ```javascript
-    npm i --save-dev @adactive/arc-search
+    npm i --save @adactive/arc-search
 ```
 OR
 ```javascript
-    yarn add --dev @adactive/arc-search
+    yarn add @adactive/arc-search
 ```
 
 ```javascript
