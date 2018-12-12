@@ -3,7 +3,7 @@
 
 # Step List
 
-![Screenshot of LoadingScreen component](https://user-images.githubusercontent.com/24209524/49127057-e443d380-f300-11e8-95e2-86531a0353fd.png)
+![Screenshot of Step List component](https://user-images.githubusercontent.com/24209524/49843968-01e26400-fdfc-11e8-85d6-0433036a44d0.png)
 
 ## Getting started
 
@@ -112,7 +112,7 @@ type MessagesType = (step: StepType) => {|
 ```
 
 - **isInterfloor**: steps where the floor is different from the previous one.
-- **default**: default message for all the steps that don't fall into any of the previous categories.
+- **default**: default message for steps that don't fall into any of the previous categories.
 
 #### stepStyle
 Customize style of each step, following this structure:
@@ -133,16 +133,13 @@ export type StepStyleType = {|
 - **isDone**: style added to step that are done.
 - **current**: style added to current step.
 - **isNext**: style added to the step just after the current step.
-- **isNotDoneYet**: style added to the steps that are after the 'isNext' step, that are not yet done.
+- **isNotDoneYet**: style added to the steps that are after the 'isNext' step, not done yet.
 
 >Be aware that you don't have to modify all the styles. For examples, you can modify only the
 'isNext' style, and the others default styles will be kept.
 
-placeId: ?number,
-    messages?: MessagesType,
-    stepStyle?: StepStyleType,
-    renderStep?: RenderStepType,
-    renderStepTail?: RenderStepTailType,
+If you want to modify the style of the whole step list, you can overwrite the **steplist**
+classname in your component stylesheet.
 
 #### renderStep
 Overwrite the default render step function. This is one step further than just customizing the
@@ -159,8 +156,8 @@ export type RenderStepType = (
 
 ```
 
-This is a function that return some JSX,for you to be able to use the *current mode*, the *step*, the
-*stepStyle* and the default *click handler* in your own steps.
+This is a function that return some JSX,for you to be able to use the *current mode*, the *step*,
+the *stepStyle* and the default *click handler* in your own steps.
 
 #### renderStepTail
 Same as **renderStep**, but for the step tail: the space before each step.
