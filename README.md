@@ -1,6 +1,6 @@
 
 # DEPRECATED
-AdactiveAsia will be maintaining this application from 13th December:
+## AdactiveAsia will be maintaining this application from 13th December:
  - [Link Here](https://github.com/adactiveasia/adsum-react-components)
 
 ![react-badge](https://img.shields.io/badge/react-js-53c1de.svg?style=flat)
