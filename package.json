@@ -1,6 +1,7 @@
 {
   "name": "adsum-react-components-mono-repo",
   "private": true,
+  "version": "1.0.0",
   "devDependencies": {
     "babel-eslint": "^10.0.1",
     "babel-loader": "^7.1.2",
