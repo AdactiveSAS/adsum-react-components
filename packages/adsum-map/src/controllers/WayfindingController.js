@@ -93,9 +93,10 @@ class WayfindingController {
     * @public
     * @param path
     * @param pathSectionIndex
+    * @param animated
     * @return {Promise<void>}
     */
-    async drawPath(path: Path, pathSectionIndex: ?PathSection = null) {
+    async drawPath(path: Path, pathSectionIndex: ?PathSection = null, animated: ?boolean = true) {
         try {
             this.setPath(path);
 
@@ -130,7 +131,7 @@ class WayfindingController {
                 this.dispatch(willDrawPathSectionEvent(current, previous, i));
 
                 // eslint-disable-next-line no-await-in-loop
-                await this.drawPathSection(current, previous);
+                await this.drawPathSection(current, previous, animated);
 
                 this.dispatch(didDrawPathSectionEvent(current, previous, i));
 
