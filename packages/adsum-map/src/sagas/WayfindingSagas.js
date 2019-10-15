@@ -11,11 +11,13 @@ import { didDrawAction, types } from '../actions/WayfindingActions';
 import { didCatchErrorAction } from '../actions/MainActions';
 
 function* onGoToPlace(action: WillGoToPlaceActionType): Generator {
+    const { placeId, pmr, animated } = action;
+
     try {
         yield delay(200);
-        const path = placesController.getPath(action.placeId, action.pmr);
-        yield call([wayfindingController, wayfindingController.drawPath], path);
-        put(didDrawAction(action.placeId, action.pmr));
+        const path = placesController.getPath(placeId, pmr);
+        yield call([wayfindingController, wayfindingController.drawPath], path, null, animated);
+        put(didDrawAction(placeId, pmr));
     } catch (e) {
         console.error('Error while drawing path in Go To Place method', action, e);
         yield put(didCatchErrorAction());
@@ -26,7 +28,7 @@ function* onGoToPoi(action: WillGoToPoiActionType): Generator {
     try {
         yield delay(200);
         const path = placesController.getClosestPathFromPoiId(action.poiId, action.pmr);
-        yield call([wayfindingController, wayfindingController.drawPath], path);
+        yield call([wayfindingController, wayfindingController.drawPath], path, null, action.animated);
         put(didDrawAction(path.to.placeId, action.pmr));
     } catch (e) {
         console.error('Error while drawing path in Go To POI method', action, e);
@@ -38,7 +40,7 @@ function* onDrawPathSection(action: WillDrawPathSectionActionType): Generator {
     try {
         yield delay(200);
         const path = placesController.getPath(action.placeId, action.pmr);
-        yield call([wayfindingController, wayfindingController.drawPath], path, action.pathSectionIndex);
+        yield call([wayfindingController, wayfindingController.drawPath], path, action.pathSectionIndex, action.animated);
         put(didDrawAction(action.placeId, action.pmr, action.pathSectionIndex));
     } catch (e) {
         console.error('Error while drawing path in Draw Path Section method', action, e);
