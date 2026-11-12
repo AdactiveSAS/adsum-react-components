@@ -17,26 +17,30 @@ export const types = {
 export type WillGoToPlaceActionType = {|
   type: types.WILL_DRAW_TO_PLACE,
   placeId: ?number,
-  pmr: boolean
+  pmr: boolean,
+  animated: boolean
 |};
-export function goToPlaceAction(placeId: ?number, pmr: boolean = false): WillGoToPlaceActionType {
+export function goToPlaceAction(placeId: ?number, pmr: boolean = false, animated: boolean = true): WillGoToPlaceActionType {
     return {
         type: types.WILL_DRAW_TO_PLACE,
         placeId,
         pmr,
+        animated
     };
 }
 
 export type WillGoToPoiActionType = {|
   type: types.WILL_DRAW_TO_POI,
   poiId: ?number,
-  pmr: boolean
+  pmr: boolean,
+  animated: boolean
 |};
-export function goToPoiAction(poiId: ?number, pmr: boolean = false): WillGoToPoiActionType {
+export function goToPoiAction(poiId: ?number, pmr: boolean = false, animated: true): WillGoToPoiActionType {
     return {
         type: types.WILL_DRAW_TO_POI,
         poiId,
         pmr,
+        animated
     };
 }
 
@@ -59,14 +63,16 @@ export type WillDrawPathSectionActionType = {|
   type: types.WILL_DRAW_TO_PLACE,
   placeId: ?number,
   pathSectionIndex: number,
-  pmr: boolean
+  pmr: boolean,
+  animated: boolean
 |};
-export function drawPathSectionAction(placeId: ?number, pathSectionIndex: number, pmr: boolean = false): WillDrawPathSectionActionType {
+export function drawPathSectionAction(placeId: ?number, pathSectionIndex: number, pmr: boolean = false, animated: boolean = true): WillDrawPathSectionActionType {
     return {
         type: types.WILL_DRAW_PATH_SECTION,
         placeId,
         pathSectionIndex,
         pmr,
+        animated
     };
 }
 
